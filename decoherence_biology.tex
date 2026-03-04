@@ -39,7 +39,7 @@
 \newtheorem{conjecture}[theorem]{Conjecture}
 
 % Title information
-\title{Information Geometry of the Quantum-Classical Transition in Biological Systems}
+\title{Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport}
 \author{Ian Todd\\
 Sydney Medical School\\
 University of Sydney\\
@@ -52,7 +52,7 @@ Sydney, NSW, Australia\\
 \maketitle
 
 \begin{abstract}
-Decoherence drives the quantum-to-classical transition, but its information-geometric structure---the precise dimensional and metric changes it imposes on quantum state space---has not been quantified in the Bures/Fisher--Rao framework. We show that decoherence is a dimensional collapse: the dephasing channel maps a $(d^2{-}1)$-dimensional quantum manifold onto the $(d{-}1)$-dimensional classical probability simplex, annihilating the $d^2{-}d$ coherence directions while preserving the $d{-}1$ population dimensions. At diagonal states, the classical and quantum tangent subspaces are Bures-orthogonal. We compute the exact Bures principal angle $\theta_B$ between these subspaces at every full-rank qubit state, obtaining $\cos^2\theta_B = r_z^2 r_\perp^2/[(1{-}r_\perp^2)(1{-}r_z^2)]$, where $r_z$ is the population imbalance and $r_\perp$ the coherence magnitude. For $d \geq 3$, Bures-orthogonality fails whenever a nonzero coherence has a decoupled spectator index, and a perturbative formula quantifies the departure. We apply this framework to the Fenna--Matthews--Olson photosynthetic complex ($d = 7$), where decoherence collapses 48 quantum dimensions to 6 classical dimensions. Computing the six Bures principal angles as a function of dephasing strength, we find that the quantum-classical transition is rapid: at physiological dephasing rates ($\gamma \sim 50$--$200$\,cm$^{-1}$), all principal angles exceed $89^\circ$ and the system is geometrically nearly classical, with strong quantum-classical mixing confined to much weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
+Decoherence drives the quantum-to-classical transition, but its information-geometric structure---the precise dimensional and metric changes it imposes on quantum state space---has not been quantified in the Bures/Fisher--Rao framework. We show that decoherence is a dimensional collapse: the dephasing channel maps a $(d^2{-}1)$-dimensional quantum manifold onto the $(d{-}1)$-dimensional classical probability simplex, annihilating the $d^2{-}d$ coherence directions while preserving the $d{-}1$ population dimensions. At diagonal states, the classical and quantum tangent subspaces are Bures-orthogonal. We compute the exact Bures principal angle $\theta_B$ between these subspaces at every full-rank qubit state, obtaining $\cos^2\theta_B = r_z^2 r_\perp^2/[(1{-}r_\perp^2)(1{-}r_z^2)]$, where $r_z$ is the population imbalance and $r_\perp$ the coherence magnitude. For $d \geq 3$, a perturbative formula and spectator criterion quantify the departure from orthogonality. We apply this framework to the Fenna--Matthews--Olson photosynthetic complex ($d = 7$), where decoherence collapses 48 quantum dimensions to 6 classical dimensions. Using a Haken--Strobl model with reaction-centre trapping, we reproduce the environment-assisted quantum transport (ENAQT) efficiency peak at $\gamma_{\mathrm{opt}} \approx 100$--$150$\,cm$^{-1}$ and simultaneously compute the six Bures principal angles. At the ENAQT optimum, all principal angles exceed $89^\circ$: biologically optimal transport occurs in a regime that is geometrically close to classical, with strong quantum-classical mixing confined to weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
 \end{abstract}
 
 %% ============================================================
@@ -321,7 +321,7 @@ Theorem~\ref{thm:spectator-orthogonality} proves this conjecture whenever the co
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{fig6_qudit_angles.pdf}
+\includegraphics[width=\textwidth]{fig5_qudit_angles.pdf}
 \caption{\textbf{Numerical survey of qudit principal angles.}  For each dimension $d \in \{3, 5, 7\}$, random full-rank density matrices are drawn from the Hilbert--Schmidt measure (blue histogram), and the minimum principal angle $\min_a \theta_a$ between the diagonal and off-diagonal tangent subspaces is computed via the Bures metric. The dashed red line marks $90^\circ$ (perfect orthogonality). No state approaches orthogonality; the distribution shifts further from $90^\circ$ as $d$ increases, supporting Conjecture~\ref{conj:global-orthogonality}. The $d = 7$ panel corresponds to the FMO Hilbert space dimension.}
 \label{fig:qudit-angles}
 \end{figure}
@@ -386,33 +386,37 @@ For the seven-site FMO complex ($d = 7$):
 \end{itemize}
 Decoherence annihilates $d^2 - d = 42$ off-diagonal (coherence) dimensions---seven-eighths of the information-geometric degrees of freedom. The surviving 6-dimensional simplex encodes the classical site populations $\{p_1, \ldots, p_7\}$ (with $\sum_k p_k = 1$), which describe the probability of finding the excitation at each chromophore.
 
-Under progressive Haken--Strobl dephasing \cite{haken1973exactly} at rate $\gamma$, the density matrix evolves according to the Lindblad master equation
+Under Haken--Strobl dephasing \cite{haken1973exactly} at rate $\gamma$ and trapping at the reaction-centre site~3 at rate $\Gamma_{\mathrm{trap}}$, the density matrix evolves as
 \begin{equation}
 \label{eq:lindblad}
-\dot{\rho} = -\frac{i}{\hbar}[H_{\mathrm{FMO}}, \rho] + \gamma \sum_{k=1}^7 \left(|k\rangle\langle k| \rho |k\rangle\langle k| - \frac{1}{2}\{|k\rangle\langle k|, \rho\}\right),
+\dot{\rho} = -\frac{i}{\hbar}[H_{\mathrm{FMO}}, \rho] + \gamma \sum_{k=1}^7 \left(|k\rangle\langle k| \rho |k\rangle\langle k| - \frac{1}{2}\{|k\rangle\langle k|, \rho\}\right) - \frac{\Gamma_{\mathrm{trap}}}{2}\{|3\rangle\langle 3|, \rho\}.
 \end{equation}
-where the first term generates unitary evolution (which creates and rotates coherences, and redistributes populations) and the second term dephases coherences at rate $\gamma$. In the pure-dephasing limit ($H = 0$), this channel preserves populations and drives off-diagonal elements $\rho_{kl} \to e^{-\gamma t}\rho_{kl}$; the full dynamics~\eqref{eq:lindblad} is a competition between coherent Hamiltonian evolution and incoherent dephasing.
+The first term generates unitary evolution, the second dephases coherences at rate $\gamma$, and the third removes population into the reaction-centre sink ($\Gamma_{\mathrm{trap}} = 1\,\mathrm{ps}^{-1}$, following \cite{rebentrost2009environment}). The transport efficiency is $\eta = \Gamma_{\mathrm{trap}} \int_0^T \langle 3|\rho(t)|3\rangle\,dt$.
 
-\subsection{Geometry of the quantum-classical split in FMO}
-\label{sec:fmo-geometry}
+For the geometry analysis, we also consider the dephasing-only model ($\Gamma_{\mathrm{trap}} = 0$), which preserves total population and allows clean comparison of states across dephasing rates. In the pure-dephasing limit ($H = 0$, $\Gamma_{\mathrm{trap}} = 0$), off-diagonal elements decay as $\rho_{kl} \to e^{-\gamma t}\rho_{kl}$; the full dynamics~\eqref{eq:lindblad} is a competition between coherent Hamiltonian evolution, incoherent dephasing, and trapping.
 
-Theorems~\ref{thm:qudit-angles} and~\ref{thm:spectator-orthogonality} establish that for $d \geq 3$, the Bures-orthogonal decomposition $T_\rho^{\mathrm{diag}} \perp_{g_B} T_\rho^{\mathrm{off}}$ fails whenever $\rho$ carries nonzero off-diagonal entries. For the FMO complex ($d = 7$), the diagonal and off-diagonal tangent subspaces have dimensions $d - 1 = 6$ and $d^2 - d = 42$ respectively, and their relative orientation is described by $d - 1 = 6$ principal angles $\theta_1 \leq \cdots \leq \theta_6$.
-
-We compute these principal angles numerically at each dephasing rate $\gamma$ by evolving~\eqref{eq:lindblad} from an initial excitation at site~1 for 5\,ps, then computing the Bures-metric cross-Gram matrix between diagonal and off-diagonal basis directions and extracting singular values (see Appendix). Figure~\ref{fig:fmo-collapse} shows the results.
-
-At weak dephasing ($\gamma \lesssim 1$\,cm$^{-1}$), the minimum principal angle drops below $50^\circ$: the classical population subspace and the quantum coherence subspace are far from orthogonal, meaning that population parameters and coherence parameters are strongly mixed in the Fisher information sense. At moderate dephasing ($\gamma \sim 5$--$20$\,cm$^{-1}$), all angles are in the range $70^\circ$--$85^\circ$: the quantum-classical split is approaching but has not yet reached orthogonality. At strong dephasing ($\gamma > 50$\,cm$^{-1}$), all six angles are within a few degrees of $90^\circ$ and the decomposition is effectively classical.
-
-\subsection{ENAQT and the classical limit}
+\subsection{Transport efficiency and ENAQT}
 \label{sec:fmo-enaqt}
 
-ENAQT \cite{rebentrost2009environment,plenio2008dephasing} occurs because pure quantum evolution can trap excitations in interference patterns, while moderate dephasing breaks destructive interference and opens transport channels. The ENAQT optimal dephasing rate for FMO models with a reaction-centre sink is $\gamma_{\mathrm{opt}} \sim 50$--$200$\,cm$^{-1}$ depending on model details \cite{rebentrost2009environment,cao2020quantum}.
+ENAQT \cite{rebentrost2009environment,plenio2008dephasing} occurs because pure quantum evolution can trap excitations in interference patterns, while moderate dephasing breaks destructive interference and opens transport channels. Figure~\ref{fig:fmo-collapse}(a) shows the transport efficiency $\eta(\gamma)$ computed from~\eqref{eq:lindblad} for both natural entry points: site~1 (from the baseplate) and site~6 (from the CsmA antenna).
 
-Our principal angle analysis places this regime in geometric context. The physiological dephasing range ($\gamma \sim 50$--$200$\,cm$^{-1}$, corresponding to decoherence times ${\sim}\,50$--$200$\,fs at 300\,K) falls in the region where all principal angles exceed $89^\circ$ (Figure~\ref{fig:fmo-collapse}). That is, FMO at physiological conditions is geometrically close to classical: the quantum-classical split is nearly orthogonal. The biologically relevant quantum effects arise from the \emph{small residual departure} from classical orthogonality, not from a regime of strong quantum-classical mixing. The most geometrically interesting transition---where angles pass through $45^\circ$--$80^\circ$---occurs at dephasing rates ($\gamma \sim 1$--$20$\,cm$^{-1}$) well below the physiological range.
+Both initial conditions produce a clear ENAQT peak: efficiency rises from low values at $\gamma \to 0$ (quantum localization), reaches a maximum at $\gamma_{\mathrm{opt}} \approx 100$--$150$\,cm$^{-1}$, and slowly declines at large $\gamma$ (classical hopping limit). The optimal dephasing rate falls within the physiological range for FMO at 300\,K ($\gamma \sim 50$--$200$\,cm$^{-1}$ \cite{cao2020quantum}), consistent with the ENAQT literature \cite{rebentrost2009environment}.
+
+\subsection{Geometry of the quantum-classical split}
+\label{sec:fmo-geometry}
+
+We now ask: what does the ENAQT regime look like in the information geometry of the quantum-classical transition?
+
+For the FMO complex ($d = 7$), the diagonal and off-diagonal tangent subspaces have dimensions $d - 1 = 6$ and $d^2 - d = 42$ respectively, and their relative orientation is described by $d - 1 = 6$ principal angles $\theta_1 \leq \cdots \leq \theta_6$. We compute these at each dephasing rate $\gamma$ by evolving the dephasing-only model ($\Gamma_{\mathrm{trap}} = 0$) for 5\,ps, then extracting the Bures-metric cross-Gram matrix between diagonal and off-diagonal basis directions (see Appendix). Figure~\ref{fig:fmo-collapse}(b) shows the minimum principal angle $\theta_{\min}(\gamma)$ for both site~1 and site~6 initial excitations.
+
+The two initial conditions produce nearly identical angle curves, confirming that the geometric structure of the quantum-classical transition is robust to the choice of entry point. At weak dephasing ($\gamma \lesssim 1$\,cm$^{-1}$), the minimum principal angle drops below $50^\circ$: the classical population subspace and the quantum coherence subspace are far from orthogonal, meaning that population and coherence parameters are strongly mixed in the Fisher information sense. At moderate dephasing ($\gamma \sim 5$--$20$\,cm$^{-1}$), angles are in the range $70^\circ$--$85^\circ$. At the ENAQT optimal dephasing rate ($\gamma_{\mathrm{opt}} \approx 100$--$150$\,cm$^{-1}$), all six angles exceed $89^\circ$ and the state is geometrically close to classical. The dotted vertical lines in Figure~\ref{fig:fmo-collapse}(b) mark the efficiency-peak $\gamma$ values from panel~(a), showing that optimal transport occurs in a regime where the quantum-classical split is nearly orthogonal.
+
+This quantitative result reveals that ENAQT does not require a regime of strong quantum-classical mixing. The biologically relevant quantum effects arise from the \emph{small residual departure} from classical orthogonality: the system exploits the last few degrees of geometric non-orthogonality before full classical decoupling. The most geometrically interesting transition---where angles pass through $45^\circ$--$80^\circ$---occurs at dephasing rates ($\gamma \sim 1$--$20$\,cm$^{-1}$) well below the physiological range.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{fig4_fmo_collapse.pdf}
-\caption{\textbf{Bures principal angles in the FMO complex.} The six principal angles $\theta_1, \ldots, \theta_6$ between the diagonal (classical) and off-diagonal (quantum) tangent subspaces of the Bures metric, plotted as a function of Haken--Strobl dephasing rate $\gamma$, for the FMO state after 5\,ps of evolution from site~1 excitation. The shaded band spans the minimum to maximum angle. At weak dephasing the subspaces are far from orthogonal (strong quantum-classical mixing); at physiological dephasing rates (shaded region, $\gamma \sim 50$--$200$\,cm$^{-1}$) all angles exceed $89^\circ$ and the system is geometrically nearly classical.}
+\includegraphics[width=\textwidth]{fig4_fmo_collapse.pdf}
+\caption{\textbf{Transport efficiency and Bures geometry in the FMO complex.} \textbf{(a)}~Transport efficiency $\eta$ as a function of Haken--Strobl dephasing rate $\gamma$, with trapping at site~3 ($\Gamma_{\mathrm{trap}} = 1$\,ps$^{-1}$). Both natural entry points (site~1, site~6) show a clear ENAQT peak at $\gamma_{\mathrm{opt}} \approx 100$--$150$\,cm$^{-1}$. \textbf{(b)}~Minimum Bures principal angle $\theta_{\min}$ between the diagonal and off-diagonal tangent subspaces, computed from the dephasing-only model evolved for 5\,ps. Dotted vertical lines mark the efficiency-peak $\gamma$ from panel~(a). At the ENAQT optimum, all principal angles exceed $89^\circ$: optimal transport occurs in a regime that is geometrically close to classical.}
 \label{fig:fmo-collapse}
 \end{figure}
 
@@ -438,7 +442,7 @@ We have shown that decoherence is a dimensional collapse in the information-geom
 
 \subsection{Limitations}
 
-The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact; for $d \geq 3$, results are partial (spectator theorem + perturbative expansion + conjecture). The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. Our model also omits the reaction-centre sink that is essential for defining ENAQT transport efficiency. Extending the information-geometric analysis to structured baths and to models with explicit trapping is an open problem.
+The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact; for $d \geq 3$, results are partial (spectator theorem + perturbative expansion + conjecture). The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. The transport efficiency is computed with a phenomenological sink ($\Gamma_{\mathrm{trap}} = 1$\,ps$^{-1}$), while the principal angle analysis uses dephasing-only dynamics to avoid conflating geometric structure with population loss. Extending the information-geometric analysis to structured baths and non-Markovian dephasing is an open problem.
 
 \subsection{Outlook: from quantum to classical coherence}
 \label{sec:bridge}
@@ -477,7 +481,7 @@ The $d - 1$ principal angles between $T_\rho^{\mathrm{diag}}$ and $T_\rho^{\math
 $100$ L-BFGS-B optimizations per dimension maximize $\min_a \theta_a$ over full-rank parameterized states. No optimized state approaches $90^\circ$.
 
 \paragraph{FMO dephasing simulation.}
-The Lindblad master equation~\eqref{eq:lindblad} is integrated numerically using a fourth-order Runge--Kutta scheme with time step $\Delta t = 1.0$\,fs. The FMO Hamiltonian~\eqref{eq:fmo-hamiltonian} uses site energies and couplings from Adolphs and Renger \cite{adolphs2006proteins}. For each dephasing rate $\gamma$, the density matrix is evolved from the initial state $\rho(0) = |1\rangle\langle 1|$ (excitation at site~1) for $t = 5$\,ps, which is sufficient for coherences to reach a quasi-stationary balance between Hamiltonian-driven creation and dephasing-driven decay. (For dephasing rates $\gamma \geq 5$\,cm$^{-1}$, the coherence decay time $\gamma^{-1} \lesssim 1$\,ps is shorter than the evolution time.) The state is regularized to full rank ($\rho \mapsto \rho + 10^{-10}\,I/d$) before computing the six Bures principal angles between the diagonal and off-diagonal tangent subspaces.
+The Lindblad master equation~\eqref{eq:lindblad} is integrated numerically using a fourth-order Runge--Kutta scheme with time step $\Delta t = 1.0$\,fs. The FMO Hamiltonian~\eqref{eq:fmo-hamiltonian} uses site energies and couplings from Adolphs and Renger \cite{adolphs2006proteins}. Transport efficiencies are computed with the full model (dephasing + sink), while principal angles use the dephasing-only model ($\Gamma_{\mathrm{trap}} = 0$) to isolate geometric structure from population loss. Both initial conditions $\rho(0) = |1\rangle\langle 1|$ (site~1) and $\rho(0) = |6\rangle\langle 6|$ (site~6) are used to test robustness. For each dephasing rate $\gamma$, the density matrix is evolved for $t = 5$\,ps, which is sufficient for coherences to reach a quasi-stationary balance between Hamiltonian-driven creation and dephasing-driven decay. (For dephasing rates $\gamma \geq 5$\,cm$^{-1}$, the coherence decay time $\gamma^{-1} \lesssim 1$\,ps is shorter than the evolution time.) The state is regularized to full rank ($\rho \mapsto \rho + 10^{-10}\,I/d$) before computing the six Bures principal angles between the diagonal and off-diagonal tangent subspaces.
 
 \paragraph{Software.}
 All computations use NumPy and SciPy. Source code is available in the repository.

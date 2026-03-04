@@ -48,31 +48,14 @@ def fmo_coupling_graph(threshold=COUPLING_THRESHOLD):
     return adj
 
 
-def find_spectators(threshold=COUPLING_THRESHOLD):
-    """Find all spectator triples (edge, spectator) in the FMO coupling graph."""
-    adj = fmo_coupling_graph(threshold)
-    spectators = []
-    for s in range(D_FMO):
-        for t in range(s + 1, D_FMO):
-            if not adj[s, t]:
-                continue  # only consider edges in the coherence graph
-            for r in range(D_FMO):
-                if r == s or r == t:
-                    continue
-                # r is a spectator for (s,t) if coupled to one but not the other
-                coupled_s = adj[r, s]
-                coupled_t = adj[r, t]
-                if coupled_s != coupled_t:  # XOR: coupled to exactly one
-                    spectators.append({
-                        'edge': (s + 1, t + 1),  # 1-indexed
-                        'spectator': r + 1,
-                        'coupled_to': (s + 1 if coupled_s else t + 1),
-                        'not_coupled_to': (t + 1 if coupled_s else s + 1),
-                        'J_edge': H_FMO[s, t],
-                        'J_coupled': H_FMO[r, s] if coupled_s else H_FMO[r, t],
-                        'J_not_coupled': H_FMO[r, t] if coupled_s else H_FMO[r, s],
-                    })
-    return spectators
+def weak_coupling_pairs(threshold=COUPLING_THRESHOLD):
+    """Find site pairs with coupling below threshold in the Hamiltonian."""
+    pairs = []
+    for i in range(D_FMO):
+        for j in range(i + 1, D_FMO):
+            if abs(H_FMO[i, j]) < threshold:
+                pairs.append((i + 1, j + 1, H_FMO[i, j]))  # 1-indexed
+    return pairs
 
 
 def lindblad_dephasing_rhs(rho, H, gamma):
@@ -130,6 +113,87 @@ def evolve_lindblad(H, gamma, rho0, t_final, dt=0.1):
         rho /= np.trace(rho)
 
     return rho
+
+
+def lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site=2):
+    """Lindblad RHS with Haken-Strobl dephasing + trapping sink.
+
+    The sink at site `sink_site` (0-indexed, default 2 = site 3) is modeled as
+    population loss: L_sink[ρ] = -κ/2 (P_s ρ + ρ P_s), where P_s = |s><s|.
+    This makes the evolution non-trace-preserving; lost trace = trapped population.
+
+    Parameters:
+        rho: density matrix
+        H: Hamiltonian in rad/fs
+        gamma: dephasing rate in rad/fs
+        kappa: trapping rate in rad/fs
+        sink_site: 0-indexed site for the reaction-centre trap
+    """
+    # Start with dephasing dynamics
+    drho = lindblad_dephasing_rhs(rho, H, gamma)
+
+    # Add sink: -κ/2 (|s><s| ρ + ρ |s><s|)
+    d = H.shape[0]
+    proj_s = np.zeros((d, d), dtype=complex)
+    proj_s[sink_site, sink_site] = 1.0
+    drho -= 0.5 * kappa * (proj_s @ rho + rho @ proj_s)
+
+    return drho
+
+
+def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=20000.0,
+                                  dt_fs=1.0, initial_site=0, sink_site=2):
+    """Compute FMO transport efficiency with Haken-Strobl dephasing + sink.
+
+    Parameters:
+        gamma_cm: dephasing rate in cm^-1
+        kappa_trap_cm: trapping rate in cm^-1 (default 5.3 ≈ 1 ps^-1)
+        t_final_fs: evolution time in fs
+        dt_fs: time step in fs
+        initial_site: 0-indexed initial excitation site
+        sink_site: 0-indexed reaction-centre site
+
+    Returns:
+        efficiency: fraction of population trapped (0 to 1)
+    """
+    H = H_FMO * CM_TO_RADFS
+    gamma = gamma_cm * CM_TO_RADFS
+    kappa = kappa_trap_cm * CM_TO_RADFS
+    d = D_FMO
+
+    rho = np.zeros((d, d), dtype=complex)
+    rho[initial_site, initial_site] = 1.0
+
+    n_steps = int(t_final_fs / dt_fs)
+    trapped = 0.0  # accumulated trapped population
+
+    for _ in range(n_steps):
+        # Accumulate trapping: η = κ ∫ p_sink(t) dt
+        trapped += kappa * np.real(rho[sink_site, sink_site]) * dt_fs
+
+        k1 = dt_fs * lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site)
+        k2 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k1, H, gamma, kappa, sink_site)
+        k3 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k2, H, gamma, kappa, sink_site)
+        k4 = dt_fs * lindblad_dephasing_sink_rhs(rho + k3, H, gamma, kappa, sink_site)
+        rho = rho + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
+
+        # Enforce Hermiticity (don't normalize trace — it should decrease)
+        rho = 0.5 * (rho + rho.conj().T)
+
+    return min(trapped, 1.0)
+
+
+def scan_efficiency(gamma_values_cm, initial_site=0, **kwargs):
+    """Scan dephasing rates and compute transport efficiency.
+
+    Returns array of efficiencies, one per gamma value.
+    """
+    efficiencies = []
+    for gamma_cm in gamma_values_cm:
+        eta = compute_transport_efficiency(gamma_cm, initial_site=initial_site, **kwargs)
+        efficiencies.append(eta)
+        print(f"  gamma={gamma_cm:7.1f} cm^-1  eta={eta:.4f}  (site {initial_site+1})")
+    return np.array(efficiencies)
 
 
 def compute_qfim(rho):
@@ -326,62 +390,31 @@ def scan_dephasing_rates(gamma_values_cm, t_final_fs=10000.0, dt_fs=0.5):
     }
 
 
-def verify_spectators():
-    """Verify spectator theorem examples against the FMO coupling matrix."""
-    print("=" * 60)
-    print("Spectator Theorem Verification")
-    print("=" * 60)
-
-    adj = fmo_coupling_graph()
-    print(f"\nCoupling graph (threshold = {COUPLING_THRESHOLD} cm^-1):")
-    print("  Sites connected:")
-    for i in range(D_FMO):
-        for j in range(i + 1, D_FMO):
-            if adj[i, j]:
-                print(f"    ({i+1},{j+1}): J = {H_FMO[i,j]:.1f} cm^-1")
-
-    print("\n  Sites NOT connected (|J| < threshold):")
-    for i in range(D_FMO):
-        for j in range(i + 1, D_FMO):
-            if not adj[i, j]:
-                print(f"    ({i+1},{j+1}): J = {H_FMO[i,j]:.1f} cm^-1")
-
-    spectators = find_spectators()
-    print(f"\nSpectator triples found: {len(spectators)}")
-    for s in spectators:
-        print(f"  Edge {s['edge']}: spectator site {s['spectator']} "
-              f"(coupled to {s['coupled_to']} with J={s['J_coupled']:.1f}, "
-              f"not to {s['not_coupled_to']} with J={s['J_not_coupled']:.1f})")
-
-    return spectators
-
-
 if __name__ == "__main__":
     print("FMO Complex Analysis")
     print("=" * 60)
 
-    # 1. Verify spectator theorem
-    verify_spectators()
+    # 1. Coupling graph
+    adj = fmo_coupling_graph()
+    print(f"\nWeak coupling pairs (|J| < {COUPLING_THRESHOLD} cm^-1):")
+    for i, j, J in weak_coupling_pairs():
+        print(f"  ({i},{j}): J = {J:.1f} cm^-1")
 
-    # 2. Scan dephasing rates
+    # 2. Transport efficiency scan
     print("\n" + "=" * 60)
-    print("Dephasing Rate Scan")
+    print("Transport Efficiency (site 1 → site 3 sink)")
     print("=" * 60)
 
-    # Logarithmic scan from very weak to very strong dephasing
     gamma_values = np.concatenate([
         np.array([0.1, 0.5, 1.0, 2.0, 5.0]),
-        np.arange(10, 100, 10),
-        np.arange(100, 600, 50),
-        np.array([195.0]),  # ENAQT optimal
+        np.arange(10, 110, 10),
+        np.arange(150, 600, 50),
     ])
     gamma_values = np.sort(np.unique(gamma_values))
 
-    results = scan_dephasing_rates(gamma_values, t_final_fs=5000.0, dt_fs=1.0)
+    etas = scan_efficiency(gamma_values, initial_site=0)
 
-    print(f"\nENAQT optimal (gamma=195 cm^-1):")
-    idx_enaqt = np.argmin(np.abs(results['gamma_cm'] - 195.0))
-    print(f"  D_eff = {results['D_eff'][idx_enaqt]:.2f}")
-    print(f"  min angle = {results['min_angle_deg'][idx_enaqt]:.1f}°")
+    idx_max = np.argmax(etas)
+    print(f"\nPeak efficiency: eta={etas[idx_max]:.4f} at gamma={gamma_values[idx_max]:.1f} cm^-1")
 
     print("\nDone.")

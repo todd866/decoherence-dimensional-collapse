@@ -7,9 +7,8 @@ Produces:
   figures/fig1_bloch_collapse.{pdf,png}     — Bloch sphere collapse (reused)
   figures/fig2_fmo_graph.{pdf,png}          — NEW: FMO coherence graph
   figures/fig3_bures_angle.{pdf,png}        — Bures angle across Bloch disk (reused)
-  figures/fig4_fmo_collapse.{pdf,png}       — NEW: FMO dimensional collapse trajectory
-  figures/fig5_two_stage.{pdf,png}          — NEW: Two-stage collapse schematic
-  figures/fig6_qudit_angles.{pdf,png}       — Qudit principal angles (updated: d=7)
+  figures/fig4_fmo_collapse.{pdf,png}       — FMO transport + Bures angles (dual panel)
+  figures/fig5_qudit_angles.{pdf,png}       — Qudit principal angles (d=3,5,7)
 
 Usage:
   cd physics/70_decoherence_dimensional_collapse
@@ -34,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fmo_analysis import (
     H_FMO, D_FMO, CM_TO_RADFS, COUPLING_THRESHOLD,
     fmo_coupling_graph,
-    evolve_lindblad, principal_angles,
+    evolve_lindblad, principal_angles, scan_efficiency,
 )
 
 # ── Global style ─────────────────────────────────────────────────────────────
@@ -276,21 +275,17 @@ def fig3_bures_angle():
 # ══════════════════════════════════════════════════════════════════════════════
 
 def fig4_fmo_collapse():
-    """FMO Bures principal angles as a function of dephasing rate.
+    """FMO transport efficiency and Bures principal angles vs dephasing.
 
-    At each dephasing rate γ, evolve the FMO density matrix for 5 ps,
-    then compute the d−1 = 6 principal angles between the diagonal
-    (classical) and off-diagonal (quantum) tangent subspaces under the
-    Bures metric.  At weak dephasing, angles are small (strong quantum-
-    classical mixing); at strong dephasing, angles approach 90° (classical
-    orthogonality, i.e. the quantum-classical split is clean).
+    Two-panel figure:
+      (a) Transport efficiency η(γ) with ENAQT peak (sink at site 3)
+      (b) Minimum Bures principal angle θ_min(γ) showing geometry
+    Both panels show site-1 and site-6 initial excitations.
     """
-    print("Figure 4: FMO Bures principal angles vs dephasing ...")
+    print("Figure 4: FMO transport + geometry (dual panel) ...")
 
     H = H_FMO * CM_TO_RADFS
     d = D_FMO
-    rho0 = np.zeros((d, d), dtype=complex)
-    rho0[0, 0] = 1.0
 
     gamma_values_cm = np.concatenate([
         np.array([0.1, 0.2, 0.5, 1.0, 2.0, 5.0]),
@@ -299,126 +294,83 @@ def fig4_fmo_collapse():
     ])
     gamma_values_cm = np.sort(np.unique(gamma_values_cm))
 
-    all_angles = []   # list of arrays, each shape (6,)
+    # ── Panel (a): Transport efficiency ──
+    print("  Computing transport efficiency (site 1)...")
+    etas_s1 = scan_efficiency(gamma_values_cm, initial_site=0,
+                               t_final_fs=15000.0, dt_fs=2.0)
+    print("  Computing transport efficiency (site 6)...")
+    etas_s6 = scan_efficiency(gamma_values_cm, initial_site=5,
+                               t_final_fs=15000.0, dt_fs=2.0)
 
-    for gamma_cm in gamma_values_cm:
-        gamma = gamma_cm * CM_TO_RADFS
-        rho = evolve_lindblad(H, gamma, rho0, t_final=5000.0, dt=1.0)
-        rho_reg = rho + 1e-10 * np.eye(d) / d
-        rho_reg /= np.trace(rho_reg)
+    # ── Panel (b): Principal angles ──
+    def compute_angles_scan(initial_site):
+        rho0 = np.zeros((d, d), dtype=complex)
+        rho0[initial_site, initial_site] = 1.0
+        min_angles = []
+        for gamma_cm in gamma_values_cm:
+            gamma = gamma_cm * CM_TO_RADFS
+            rho = evolve_lindblad(H, gamma, rho0, t_final=5000.0, dt=1.0)
+            rho_reg = rho + 1e-10 * np.eye(d) / d
+            rho_reg /= np.trace(rho_reg)
+            angles_deg = np.sort(np.degrees(principal_angles(rho_reg)))
+            min_angles.append(angles_deg[0])
+            print(f"    gamma={gamma_cm:7.1f}  min_angle={angles_deg[0]:5.1f}°"
+                  f"  (site {initial_site+1})")
+        return np.array(min_angles)
 
-        angles_rad = principal_angles(rho_reg)
-        angles_deg = np.sort(np.degrees(angles_rad))
-        all_angles.append(angles_deg)
+    print("  Computing principal angles (site 1)...")
+    angles_s1 = compute_angles_scan(0)
+    print("  Computing principal angles (site 6)...")
+    angles_s6 = compute_angles_scan(5)
 
-        print(f"  gamma={gamma_cm:7.1f} cm^-1  "
-              f"min={angles_deg[0]:5.1f}°  max={angles_deg[-1]:5.1f}°")
+    # ── Plot ──
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10.0, 4.0))
 
-    all_angles = np.array(all_angles)   # shape (n_gamma, 6)
-    min_angles = all_angles[:, 0]
-    max_angles = all_angles[:, -1]
+    # Panel (a): Transport efficiency
+    ax_a.semilogx(gamma_values_cm, etas_s1, "o-", color=PAL[0], lw=1.5,
+                   ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                   label="Site 1")
+    ax_a.semilogx(gamma_values_cm, etas_s6, "s-", color=PAL[3], lw=1.5,
+                   ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                   label="Site 6")
 
-    fig, ax = plt.subplots(figsize=(6.0, 4.0))
+    # Mark peaks
+    idx1 = np.argmax(etas_s1)
+    idx6 = np.argmax(etas_s6)
+    ax_a.axvline(gamma_values_cm[idx1], color=PAL[0], ls=":", lw=0.8, alpha=0.5)
+    ax_a.axvline(gamma_values_cm[idx6], color=PAL[3], ls=":", lw=0.8, alpha=0.5)
 
-    # Shaded band: range of all 6 principal angles
-    ax.fill_between(gamma_values_cm, min_angles, max_angles,
-                     alpha=0.2, color=PAL[0])
+    ax_a.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
+    ax_a.set_ylabel(r"Transport efficiency $\eta$")
+    ax_a.set_xlim(0.08, 600)
+    ax_a.set_ylim(0, 1.0)
+    ax_a.legend(loc="lower right", fontsize=9, framealpha=0.9)
+    ax_a.set_title("(a)", loc="left", fontweight="bold", fontsize=11)
 
-    # Min and max principal angle curves
-    ax.semilogx(gamma_values_cm, min_angles, "o-", color=PAL[0], lw=1.5,
-                ms=3, markeredgecolor="white", markeredgewidth=0.4,
-                label=r"$\min_a\, \theta_a$")
-    ax.semilogx(gamma_values_cm, max_angles, "s-", color=PAL[2], lw=1.0,
-                ms=3, markeredgecolor="white", markeredgewidth=0.4,
-                label=r"$\max_a\, \theta_a$", alpha=0.7)
+    # Panel (b): Min principal angle
+    ax_b.semilogx(gamma_values_cm, angles_s1, "o-", color=PAL[0], lw=1.5,
+                   ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                   label="Site 1")
+    ax_b.semilogx(gamma_values_cm, angles_s6, "s-", color=PAL[3], lw=1.5,
+                   ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                   label="Site 6")
 
-    ax.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
-    ax.set_ylabel(r"Principal angle $\theta$ (degrees)")
-    ax.set_xlim(0.08, 600)
-    ax.set_ylim(0, 95)
+    ax_b.axhline(90, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
+    ax_b.text(0.12, 91, r"$90°$", fontsize=8, color=PAL[5], alpha=0.7)
 
-    # Classical orthogonality reference
-    ax.axhline(90, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
-    ax.text(0.12, 91, r"$90°$ (classical orthogonality)", fontsize=8,
-            color=PAL[5], alpha=0.7)
+    # Mark the efficiency-peak γ values on the angle plot
+    ax_b.axvline(gamma_values_cm[idx1], color=PAL[0], ls=":", lw=0.8, alpha=0.5)
+    ax_b.axvline(gamma_values_cm[idx6], color=PAL[3], ls=":", lw=0.8, alpha=0.5)
 
-    # Physiological dephasing range
-    ax.axvspan(50, 200, alpha=0.08, color=PAL[1])
-    ax.text(75, 10, "Physiological\ndephasing", fontsize=8,
-            color=PAL[1], style="italic")
-
-    ax.legend(loc="center right", fontsize=9, framealpha=0.9)
+    ax_b.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
+    ax_b.set_ylabel(r"Min principal angle $\theta_{\min}$ (degrees)")
+    ax_b.set_xlim(0.08, 600)
+    ax_b.set_ylim(0, 95)
+    ax_b.legend(loc="center right", fontsize=9, framealpha=0.9)
+    ax_b.set_title("(b)", loc="left", fontweight="bold", fontsize=11)
 
     fig.tight_layout()
     save(fig, "fig4_fmo_collapse")
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Figure 5 — Two-stage dimensional collapse schematic (NEW)
-# ══════════════════════════════════════════════════════════════════════════════
-
-def fig5_two_stage():
-    print("Figure 5: Two-stage collapse schematic ...")
-
-    fig, ax = plt.subplots(figsize=(7.0, 3.0))
-
-    # Stage 1: Quantum -> Classical simplex
-    # Stage 2: Classical simplex -> Effective biological dimensions
-
-    # Draw boxes
-    boxes = [
-        (0.5, 0.5, 1.8, 1.5, "Quantum\nstate space\n" + r"$d^2 - 1$ dim",
-         PAL[4], 0.15),
-        (3.5, 0.5, 1.8, 1.5, "Classical\nsimplex\n" + r"$d - 1$ dim",
-         PAL[0], 0.15),
-        (6.5, 0.5, 1.8, 1.5, "Effective\nbiological\n" + r"$D_{\mathrm{eff}}$ dim",
-         PAL[2], 0.15),
-    ]
-
-    for x, y, w, h, label, color, alpha in boxes:
-        rect = mpatches.FancyBboxPatch(
-            (x, y), w, h, boxstyle="round,pad=0.15",
-            facecolor=color, alpha=alpha, edgecolor=color, lw=2
-        )
-        ax.add_patch(rect)
-        ax.text(x + w / 2, y + h / 2, label,
-                ha="center", va="center", fontsize=10, color=color,
-                fontweight="bold")
-
-    # Arrows between stages
-    arrow_props = dict(arrowstyle="-|>", color="k", lw=2, mutation_scale=20)
-    ax.annotate("", xy=(3.4, 1.25), xytext=(2.4, 1.25),
-                arrowprops=arrow_props)
-    ax.annotate("", xy=(6.4, 1.25), xytext=(5.4, 1.25),
-                arrowprops=arrow_props)
-
-    # Stage labels
-    ax.text(2.9, 2.2, "Stage 1", fontsize=10, ha="center",
-            fontweight="bold", color=PAL[3])
-    ax.text(2.9, 1.85, "Decoherence\n(fs)", fontsize=8, ha="center",
-            color=PAL[3])
-
-    ax.text(5.9, 2.2, "Stage 2", fontsize=10, ha="center",
-            fontweight="bold", color=PAL[2])
-    ax.text(5.9, 1.85, "Dissipation\n(ms\u2013s)", fontsize=8, ha="center",
-            color=PAL[2])
-
-    # Dimension annotations
-    ax.text(1.4, 0.25, "e.g. FMO: 48 dim", fontsize=7, ha="center",
-            color=PAL[5], style="italic")
-    ax.text(4.4, 0.25, "e.g. FMO: 6 dim", fontsize=7, ha="center",
-            color=PAL[5], style="italic")
-
-    # Metric annotation
-    ax.text(4.4, -0.1, "Bures " + r"$\to$" + " Fisher\u2013Rao",
-            fontsize=8, ha="center", color=PAL[5])
-
-    ax.set_xlim(0, 9)
-    ax.set_ylim(-0.4, 2.7)
-    ax.axis("off")
-
-    fig.tight_layout()
-    save(fig, "fig5_two_stage")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -569,7 +521,7 @@ def _adversarial_search(d, n_starts, rng):
     return np.degrees(best_angle), best_rho
 
 
-def fig6_qudit_angles():
+def fig5_qudit_angles():
     print("Figure 6: Qudit principal angles (including d=7 for FMO) ...")
 
     rng = np.random.default_rng(42)
@@ -619,7 +571,7 @@ def fig6_qudit_angles():
 
     axes[0].set_ylabel("Density")
     fig.tight_layout(w_pad=1.0)
-    save(fig, "fig6_qudit_angles")
+    save(fig, "fig5_qudit_angles")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -632,6 +584,5 @@ if __name__ == "__main__":
     fig2_fmo_graph()
     fig3_bures_angle()
     fig4_fmo_collapse()
-    fig5_two_stage()
-    fig6_qudit_angles()
+    fig5_qudit_angles()
     print("\nAll figures generated.")

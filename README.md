@@ -1,21 +1,20 @@
-# Information Geometry of the Quantum-Classical Transition in Biological Systems
+# Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport
 
-**Information-geometric characterization of decoherence as dimensional collapse, applied to photosynthetic energy transfer in the FMO complex.**
+**Information-geometric characterization of decoherence as dimensional collapse, applied to the Fenna-Matthews-Olson photosynthetic complex.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 ## Overview
 
-Decoherence maps a d-dimensional quantum system from a (d²−1)-dimensional manifold with the Bures metric onto the (d−1)-dimensional classical simplex with the Fisher-Rao metric. We characterize this dimensional collapse exactly for qubits and partially for arbitrary dimension, then apply the framework to the 7-chromophore Fenna-Matthews-Olson (FMO) photosynthetic complex. At the ENAQT-optimal dephasing rate, the system occupies an intermediate position in the collapse from 48 quantum dimensions to 6 classical dimensions. The spectator theorem identifies specific chromophore pairs where the quantum-classical split is geometrically non-orthogonal during the transport window. After quantum decoherence completes (~fs), the surviving Fisher-Rao geometry governs classical biological coherence on ms-s timescales.
+Decoherence maps a d-dimensional quantum system from a (d^2-1)-dimensional manifold with the Bures metric onto the (d-1)-dimensional classical simplex with the Fisher-Rao metric. We characterize this dimensional collapse exactly for qubits (closed-form Bures separation angle) and partially for arbitrary dimension (spectator criterion + perturbative formula). Applied to the 7-chromophore FMO complex, the collapse is 48 -> 6 dimensions. Using a Haken-Strobl model with reaction-centre trapping, we reproduce the ENAQT efficiency peak and simultaneously compute the six Bures principal angles as a function of dephasing strength. At the ENAQT optimum, all angles exceed 89 degrees: biologically optimal transport occurs in a regime that is geometrically close to classical.
 
 ## Key Results
 
-- **Dimensional collapse theorem**: Dephasing reduces the QFIM rank from d²−1 to at most d−1
-- **Bures separation angle**: Exact closed-form for qubits; spectator criterion and perturbative formula for d ≥ 3
-- **FMO application**: 26 spectator triples in the 7-site complex; coherence magnitude quantifies the quantum-classical transition under progressive dephasing
-- **Two-stage collapse**: Quantum decoherence (fs) and classical dissipation (ms-s) connected through the same Fisher-Rao geometry
-- **Thermodynamic cost**: Coherences store free energy k_BT · C_r, destroyed irreversibly by decoherence
+- **Dimensional collapse theorem**: Dephasing reduces the QFIM rank from d^2-1 to at most d-1
+- **Bures separation angle**: Exact closed-form for qubits; spectator criterion and perturbative formula for d >= 3
+- **FMO transport + geometry**: Same-model ENAQT efficiency peak and Bures principal angle analysis, both site-1 and site-6 initial conditions
+- **Thermodynamic cost**: Coherences store free energy k_BT * C_r, destroyed irreversibly by decoherence
 
 ## Repository Structure
 
@@ -26,14 +25,13 @@ Decoherence maps a d-dimensional quantum system from a (d²−1)-dimensional man
 ├── cover_letter.tex                    # NJP cover letter
 ├── figures/                            # Generated publication figures
 │   ├── fig1_bloch_collapse.pdf         # Bloch ball dimensional collapse
-│   ├── fig2_fmo_graph.pdf              # FMO coherence graph with spectators
+│   ├── fig2_fmo_graph.pdf              # FMO coupling graph
 │   ├── fig3_bures_angle.pdf            # Bures angle across Bloch ball
-│   ├── fig4_fmo_collapse.pdf           # FMO coherence vs dephasing rate
-│   ├── fig5_two_stage.pdf              # Two-stage collapse schematic
-│   └── fig6_qudit_angles.pdf           # Qudit principal angles (d=3,5,7)
+│   ├── fig4_fmo_collapse.pdf           # Dual panel: transport efficiency + principal angles
+│   └── fig5_qudit_angles.pdf           # Qudit principal angles (d=3,5,7)
 ├── code/
 │   ├── generate_figures.py             # Figure generation script
-│   └── fmo_analysis.py                 # FMO-specific computations
+│   └── fmo_analysis.py                 # FMO Hamiltonian, Lindblad dynamics, transport efficiency
 ├── archive/fop_version/                # Original Foundations of Physics version
 ├── README.md
 └── LICENSE
@@ -60,7 +58,7 @@ pdflatex decoherence_biology.tex
 
 ## Paper
 
-**[Information Geometry of the Quantum-Classical Transition in Biological Systems](decoherence_biology.pdf)**
+**[Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport](decoherence_biology.pdf)**
 
 Todd, I. (2026). Target: *New Journal of Physics*.
 
@@ -69,7 +67,7 @@ Todd, I. (2026). Target: *New Journal of Physics*.
 ```bibtex
 @article{todd2026information,
   author  = {Todd, Ian},
-  title   = {Information Geometry of the Quantum-Classical Transition in Biological Systems},
+  title   = {Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport},
   journal = {New Journal of Physics},
   year    = {2026},
   note    = {In preparation}
