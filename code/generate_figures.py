@@ -9,6 +9,7 @@ Produces:
   figures/fig3_bures_angle.{pdf,png}        — Bures angle across Bloch disk
   figures/fig4_fmo_collapse.{pdf,png}       — FMO transport + Bures angles (dual panel)
   figures/fig5_qudit_angles.{pdf,png}       — Qudit principal angles (d=3,5,7)
+  figures/fig6_robustness.{pdf,png}         — Angle spectrum + sink-rate robustness
 
 Usage:
   cd physics/70_decoherence_dimensional_collapse
@@ -34,6 +35,7 @@ from fmo_analysis import (
     H_FMO, D_FMO, CM_TO_RADFS, COUPLING_THRESHOLD,
     fmo_coupling_graph,
     evolve_lindblad, evolve_lindblad_sink, principal_angles, scan_efficiency,
+    compute_transport_efficiency, l1_coherence, purity,
 )
 
 # ── Global style ─────────────────────────────────────────────────────────────
@@ -587,6 +589,161 @@ def fig5_qudit_angles():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Figure 6 — Angle spectrum + sink-rate robustness
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig6_robustness():
+    """Full principal angle spectrum and robustness to trapping rate.
+
+    Two-panel figure:
+      (a) All 6 principal angles vs γ (site-1, Γ_trap = 1 ps⁻¹)
+      (b) Min angle at ENAQT optimum vs Γ_trap (both sites)
+    """
+    print("Figure 6: Angle spectrum + sink-rate robustness ...")
+
+    H = H_FMO * CM_TO_RADFS
+    d = D_FMO
+
+    # ── Panel (a): Full 6-angle spectrum for site-1 ──
+    kappa_ref_cm = 5.3  # 1 ps⁻¹
+    kappa_ref = kappa_ref_cm * CM_TO_RADFS
+
+    gamma_values_cm = np.concatenate([
+        np.array([0.1, 0.2, 0.5, 1.0, 2.0, 5.0]),
+        np.arange(10, 110, 10),
+        np.arange(150, 600, 50),
+    ])
+    gamma_values_cm = np.sort(np.unique(gamma_values_cm))
+
+    rho0_s1 = np.zeros((d, d), dtype=complex)
+    rho0_s1[0, 0] = 1.0
+
+    all_angles = []  # (n_gamma, 6)
+    l1_vals = []
+    for gamma_cm in gamma_values_cm:
+        gamma = gamma_cm * CM_TO_RADFS
+        rho = evolve_lindblad_sink(H, gamma, kappa_ref, rho0_s1,
+                                    t_final=5000.0, dt=1.0, sink_site=2)
+        tr = np.real(np.trace(rho))
+        rho_n = rho / tr if tr > 1e-12 else np.eye(d, dtype=complex) / d
+        rho_reg = rho_n + 1e-10 * np.eye(d) / d
+        rho_reg /= np.trace(rho_reg)
+        angles_deg = np.sort(np.degrees(principal_angles(rho_reg)))
+        all_angles.append(angles_deg)
+        l1_vals.append(l1_coherence(rho_reg))
+        print(f"    gamma={gamma_cm:7.1f}  angles: {angles_deg[0]:.1f}..{angles_deg[-1]:.1f}")
+
+    all_angles = np.array(all_angles)  # (n_gamma, 6)
+    l1_vals = np.array(l1_vals)
+
+    # Print scalar comparison values for tex remark
+    for gc in [1.0, 10.0, 100.0, 150.0]:
+        idx = np.argmin(np.abs(gamma_values_cm - gc))
+        print(f"  ** gamma={gc}: l1={l1_vals[idx]:.4f}, "
+              f"angles={np.round(all_angles[idx], 1)}")
+
+    # ── Panel (b): Sink-rate robustness ──
+    trap_rates_per_ps = np.array([0.2, 0.5, 1.0, 2.0, 3.0, 5.0])
+
+    gamma_coarse = np.concatenate([
+        np.array([0.1, 1.0, 5.0]),
+        np.arange(10, 110, 10),
+        np.arange(150, 600, 50),
+    ])
+    gamma_coarse = np.sort(np.unique(gamma_coarse))
+
+    rho0_s6 = np.zeros((d, d), dtype=complex)
+    rho0_s6[5, 5] = 1.0
+
+    results_s1 = []
+    results_s6 = []
+
+    for Gamma_ps in trap_rates_per_ps:
+        kappa_cm = Gamma_ps * 5.3
+        kappa_val = kappa_cm * CM_TO_RADFS
+
+        # Find ENAQT optimum for site-1
+        etas_s1 = [compute_transport_efficiency(g, kappa_trap_cm=kappa_cm,
+                    t_final_fs=15000.0, dt_fs=2.0, initial_site=0)
+                   for g in gamma_coarse]
+        idx_opt_s1 = np.argmax(etas_s1)
+        g_opt_s1 = gamma_coarse[idx_opt_s1]
+
+        # Compute angle at optimum for site-1
+        rho = evolve_lindblad_sink(H, g_opt_s1 * CM_TO_RADFS, kappa_val, rho0_s1,
+                                    t_final=5000.0, dt=1.0, sink_site=2)
+        tr = np.real(np.trace(rho))
+        rho_n = rho / tr if tr > 1e-12 else np.eye(d, dtype=complex) / d
+        rho_reg = rho_n + 1e-10 * np.eye(d) / d
+        rho_reg /= np.trace(rho_reg)
+        min_ang_s1 = np.degrees(np.min(principal_angles(rho_reg)))
+        results_s1.append((Gamma_ps, g_opt_s1, min_ang_s1))
+
+        # Find ENAQT optimum for site-6
+        etas_s6 = [compute_transport_efficiency(g, kappa_trap_cm=kappa_cm,
+                    t_final_fs=15000.0, dt_fs=2.0, initial_site=5)
+                   for g in gamma_coarse]
+        idx_opt_s6 = np.argmax(etas_s6)
+        g_opt_s6 = gamma_coarse[idx_opt_s6]
+
+        # Compute angle at optimum for site-6
+        rho = evolve_lindblad_sink(H, g_opt_s6 * CM_TO_RADFS, kappa_val, rho0_s6,
+                                    t_final=5000.0, dt=1.0, sink_site=2)
+        tr = np.real(np.trace(rho))
+        rho_n = rho / tr if tr > 1e-12 else np.eye(d, dtype=complex) / d
+        rho_reg = rho_n + 1e-10 * np.eye(d) / d
+        rho_reg /= np.trace(rho_reg)
+        min_ang_s6 = np.degrees(np.min(principal_angles(rho_reg)))
+        results_s6.append((Gamma_ps, g_opt_s6, min_ang_s6))
+
+        print(f"    Gamma={Gamma_ps:.1f} ps^-1: "
+              f"s1 gamma_opt={g_opt_s1:.0f} angle={min_ang_s1:.1f}, "
+              f"s6 gamma_opt={g_opt_s6:.0f} angle={min_ang_s6:.1f}")
+
+    results_s1 = np.array(results_s1)
+    results_s6 = np.array(results_s6)
+
+    # ── Plot ──
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10.0, 4.0))
+
+    # Panel (a): Full angle spectrum
+    angle_colors = plt.cm.viridis(np.linspace(0.15, 0.85, 6))
+    for i in range(6):
+        label = rf"$\theta_{i+1}$" if i in [0, 5] else None
+        ax_a.semilogx(gamma_values_cm, all_angles[:, i], "-",
+                       color=angle_colors[i], lw=1.2, label=label)
+    # Shaded band between min and max
+    ax_a.fill_between(gamma_values_cm, all_angles[:, 0], all_angles[:, 5],
+                       alpha=0.12, color=PAL[0])
+    ax_a.axhline(90, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
+    ax_a.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
+    ax_a.set_ylabel(r"Principal angles (degrees)")
+    ax_a.set_xlim(0.08, 600)
+    ax_a.set_ylim(0, 95)
+    ax_a.legend(loc="lower right", fontsize=9, framealpha=0.9)
+    ax_a.set_title("(a)", loc="left", fontweight="bold", fontsize=11)
+
+    # Panel (b): Min angle vs trap rate
+    ax_b.plot(results_s1[:, 0], results_s1[:, 2], "o-", color=PAL[0], lw=1.5,
+              ms=6, markeredgecolor="white", markeredgewidth=0.8, label="Site 1")
+    ax_b.plot(results_s6[:, 0], results_s6[:, 2], "s-", color=PAL[3], lw=1.5,
+              ms=6, markeredgecolor="white", markeredgewidth=0.8, label="Site 6")
+    ax_b.axvline(1.0, color=PAL[5], ls=":", lw=0.8, alpha=0.5)
+    ax_b.text(1.05, 84.5, r"$\Gamma_{\rm trap} = 1\,{\rm ps}^{-1}$",
+              fontsize=8, color=PAL[5])
+    ax_b.axhline(85, color=PAL[1], ls="--", lw=0.6, alpha=0.4)
+    ax_b.set_xlabel(r"Trapping rate $\Gamma_{\rm trap}$ (ps$^{-1}$)")
+    ax_b.set_ylabel(r"Min angle at $\gamma_{\rm opt}$ (degrees)")
+    ax_b.set_xlim(0, 5.5)
+    ax_b.set_ylim(83, 91)
+    ax_b.legend(loc="lower right", fontsize=9, framealpha=0.9)
+    ax_b.set_title("(b)", loc="left", fontweight="bold", fontsize=11)
+
+    fig.tight_layout()
+    save(fig, "fig6_robustness")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Main
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -597,4 +754,5 @@ if __name__ == "__main__":
     fig3_bures_angle()
     fig4_fmo_collapse()
     fig5_qudit_angles()
+    fig6_robustness()
     print("\nAll figures generated.")

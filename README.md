@@ -28,7 +28,8 @@ Decoherence maps a d-dimensional quantum system from a (d^2-1)-dimensional manif
 │   ├── fig2_fmo_graph.pdf              # FMO coupling graph
 │   ├── fig3_bures_angle.pdf            # Bures angle across Bloch ball
 │   ├── fig4_fmo_collapse.pdf           # Dual panel: transport efficiency + principal angles
-│   └── fig5_qudit_angles.pdf           # Qudit principal angles (d=3,5,7)
+│   ├── fig5_qudit_angles.pdf           # Qudit principal angles (d=3,5,7)
+│   └── fig6_robustness.pdf            # Angle spectrum + sink-rate robustness
 ├── code/
 │   ├── generate_figures.py             # Figure generation script
 │   └── fmo_analysis.py                 # FMO Hamiltonian, Lindblad dynamics, transport efficiency

@@ -228,6 +228,17 @@ def evolve_lindblad_sink(H, gamma, kappa, rho0, t_final, dt=1.0, sink_site=2):
     return rho
 
 
+def l1_coherence(rho):
+    """L1-norm of coherence: sum of |rho_kl| for k != l."""
+    d = rho.shape[0]
+    return np.real(sum(abs(rho[k, l]) for k in range(d) for l in range(d) if k != l))
+
+
+def purity(rho):
+    """Purity Tr[rho^2]."""
+    return np.real(np.trace(rho @ rho))
+
+
 def compute_qfim(rho):
     """Compute the QFIM for a full-rank density matrix in the pointer basis.
 

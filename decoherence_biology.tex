@@ -239,19 +239,10 @@ The squared cosine follows; the sine formula uses $(1 - r_\perp^2)(1 - r_z^2) - 
 Parts (i)--(ii) are immediate from~\eqref{eq:bures-angle}. For~(iii): under dephasing, $r_\perp \mapsto (1{-}2\gamma)r_\perp$ while $r_z$ is preserved. The numerator of $\cos^2\theta_B$ decreases monotonically and the denominator increases, so $\theta_B$ increases.
 \end{proof}
 
-\begin{corollary}[Estimation-theoretic interpretation]
-\label{cor:estimation}
-For a full-rank qubit state, the quantum Fisher information for the population parameter $r_z$ is $[F_Q]_{zz} = (1 - r_\perp^2)/(1 - |\mathbf{r}|^2)$. When the coherence parameters are eliminated via the Schur complement \cite{zhang2025hybrid,albarelli2019restoring}, the effective Fisher information is
-\begin{equation}
-\label{eq:fzz-eff}
-[F_Q]_{zz}^{\mathrm{eff}} = [F_Q]_{zz}\,\sin^2\theta_B = \frac{1}{1 - r_z^2}.
-\end{equation}
-The Bures separation angle determines the fraction of SLD Fisher information for the population parameter that survives elimination of coherence nuisance parameters.
-\end{corollary}
-
-\begin{proof}
-The full QFIM is $F_Q = I + \mathbf{r}\mathbf{r}^T/(1 - |\mathbf{r}|^2)$. By Sherman--Morrison, $(F_Q^{-1})_{zz} = 1 - r_z^2$. The Schur complement gives $[F_Q]_{zz}^{\mathrm{eff}} = 1/(1 - r_z^2)$. The ratio $[F_Q]_{zz}^{\mathrm{eff}}/[F_Q]_{zz} = (1 - |\mathbf{r}|^2)/[(1 - r_\perp^2)(1 - r_z^2)] = \sin^2\theta_B$.
-\end{proof}
+\begin{remark}[Estimation-theoretic interpretation]
+\label{rem:estimation}
+For a full-rank qubit, eliminating coherence parameters via the Schur complement gives effective Fisher information $[F_Q]_{zz}^{\mathrm{eff}} = [F_Q]_{zz}\,\sin^2\theta_B = 1/(1 - r_z^2)$ \cite{zhang2025hybrid,albarelli2019restoring}: the Bures separation angle determines the fraction of population Fisher information surviving marginalization over coherence.
+\end{remark}
 
 \subsection{Generalization to qudits}
 \label{sec:qudit-angles}
@@ -421,6 +412,23 @@ This quantitative result reveals that ENAQT does not require a regime of strong 
 \includegraphics[width=\textwidth]{fig4_fmo_collapse.pdf}
 \caption{\textbf{Transport efficiency and Bures geometry in the FMO complex.} Both panels use the same sink-inclusive dynamics~\eqref{eq:lindblad} with $\Gamma_{\mathrm{trap}} = 1$\,ps$^{-1}$. \textbf{(a)}~Transport efficiency $\eta$ as a function of Haken--Strobl dephasing rate $\gamma$. Both natural entry points (site~1, site~6) show a clear ENAQT peak at $\gamma_{\mathrm{opt}} \approx 100$--$150$\,cm$^{-1}$. \textbf{(b)}~Minimum Bures principal angle $\theta_{\min}$ between the diagonal and off-diagonal tangent subspaces, computed from the renormalized conditional state $\hat{\rho} = \rho/\mathrm{Tr}[\rho]$ at $t = 5$\,ps. Dotted vertical lines mark the efficiency-peak $\gamma$ from panel~(a). At the ENAQT optimum, all principal angles exceed $87^\circ$: optimal transport occurs in a regime that is geometrically close to classical.}
 \label{fig:fmo-collapse}
+\end{figure}
+
+\subsection{Comparison to scalar coherence measures}
+\label{sec:scalar-comparison}
+
+Standard coherence monotones---the $\ell_1$-norm $\sum_{k \neq l}|\rho_{kl}|$ and relative entropy $C_r$---assign single scalars to the quantum-classical transition. They answer ``how much coherence?'' but not ``how is coherence oriented relative to the classical subspace?'' The $d - 1$ principal angles provide a spectral decomposition of this geometric relationship. Figure~\ref{fig:angle-spectrum}(a) shows the full six-angle spectrum for FMO: at intermediate dephasing ($\gamma \sim 5$--$20$\,cm$^{-1}$), the angles spread substantially, revealing that some subspace directions approach classical orthogonality faster than others. This heterogeneous structure---which directions decohere first and which persist longest---is invisible to any single scalar.
+
+\subsection{Robustness to trapping rate}
+\label{sec:fmo-robustness}
+
+The trapping rate $\Gamma_{\mathrm{trap}} = 1$\,ps$^{-1}$ used above follows \cite{rebentrost2009environment}, but the actual rate depends on the FMO-reaction-centre coupling and varies across species. Figure~\ref{fig:angle-spectrum}(b) shows the minimum principal angle at the ENAQT-optimal dephasing rate as a function of $\Gamma_{\mathrm{trap}}$ across the range $0.2$--$5.0$\,ps$^{-1}$. For physiologically relevant trapping rates ($\Gamma_{\mathrm{trap}} = 0.5$--$2.0$\,ps$^{-1}$), the minimum angle exceeds $86^\circ$ for both initial conditions. Even at the aggressive rate $\Gamma_{\mathrm{trap}} = 5$\,ps$^{-1}$, the angle remains above $81^\circ$---still well into the near-classical regime. The geometric conclusion is robust: faster trapping depletes population before dephasing fully completes, reducing the angle toward classical, but the qualitative picture holds.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig6_robustness.pdf}
+\caption{\textbf{Angle spectrum and model robustness.} \textbf{(a)}~All six Bures principal angles $\theta_1 \leq \cdots \leq \theta_6$ between the diagonal and off-diagonal tangent subspaces as a function of dephasing rate $\gamma$ (site-1 initial excitation, $\Gamma_{\mathrm{trap}} = 1$\,ps$^{-1}$). The spread of angles at intermediate $\gamma$ reveals heterogeneous geometric mixing across different subspace directions---structure invisible to scalar coherence measures. \textbf{(b)}~Minimum principal angle at the ENAQT-optimal dephasing rate as a function of trapping rate $\Gamma_{\mathrm{trap}}$. For physiologically relevant rates ($0.5$--$2.0$\,ps$^{-1}$), angles exceed $86^\circ$; even at $5.0$\,ps$^{-1}$ the system remains near-classical ($> 81^\circ$).}
+\label{fig:angle-spectrum}
 \end{figure}
 
 \subsection{FMO coupling graph}
