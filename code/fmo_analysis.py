@@ -141,7 +141,7 @@ def lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site=2):
     return drho
 
 
-def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=20000.0,
+def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=15000.0,
                                   dt_fs=1.0, initial_site=0, sink_site=2):
     """Compute FMO transport efficiency with Haken-Strobl dephasing + sink.
 
