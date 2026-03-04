@@ -33,8 +33,8 @@ import matplotlib.patches as mpatches
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fmo_analysis import (
     H_FMO, D_FMO, CM_TO_RADFS, COUPLING_THRESHOLD,
-    fmo_coupling_graph, find_spectators,
-    evolve_lindblad, compute_qfim, effective_dimensionality, principal_angles,
+    fmo_coupling_graph,
+    evolve_lindblad, principal_angles,
 )
 
 # ── Global style ─────────────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ def fig1_bloch_collapse():
 # ══════════════════════════════════════════════════════════════════════════════
 
 def fig2_fmo_graph():
-    print("Figure 2: FMO coherence graph ...")
+    print("Figure 2: FMO coupling graph ...")
 
     # Node positions (approximate spatial layout of FMO sites)
     positions = {
@@ -171,45 +171,28 @@ def fig2_fmo_graph():
     }
 
     adj = fmo_coupling_graph()
-    spectators = find_spectators()
-
-    # Identify edges where site 5 is a spectator (highlighted in paper)
-    spectator5_edges = set()
-    for s in spectators:
-        if s['spectator'] == 5:
-            spectator5_edges.add(s['edge'])
 
     fig, ax = plt.subplots(figsize=(5.5, 5.0))
 
-    # Draw edges
+    # Draw significant coupling edges (|J| > 5 cm^-1)
     for i in range(D_FMO):
         for j in range(i + 1, D_FMO):
+            x1, y1 = positions[i + 1]
+            x2, y2 = positions[j + 1]
+            coupling = abs(H_FMO[i, j])
+
             if adj[i, j]:
-                x1, y1 = positions[i + 1]
-                x2, y2 = positions[j + 1]
-                coupling = abs(H_FMO[i, j])
-                lw = 0.5 + 2.5 * (coupling / 90.0)  # scale by coupling strength
-
-                edge = (i + 1, j + 1)
-                if edge in spectator5_edges:
-                    ax.plot([x1, x2], [y1, y2], color=PAL[3], lw=lw,
-                            ls="--", alpha=0.8, zorder=1)
-                else:
-                    ax.plot([x1, x2], [y1, y2], color=PAL[0], lw=lw,
-                            alpha=0.6, zorder=1)
-
-    # Draw absent edges (spectator-relevant, very faint)
-    absent_pairs = [(2, 5), (2, 7), (3, 5), (5, 7)]
-    for i, j in absent_pairs:
-        x1, y1 = positions[i]
-        x2, y2 = positions[j]
-        ax.plot([x1, x2], [y1, y2], color=PAL[5], lw=0.5,
-                ls=":", alpha=0.3, zorder=0)
+                lw = 0.5 + 2.5 * (coupling / 90.0)
+                ax.plot([x1, x2], [y1, y2], color=PAL[0], lw=lw,
+                        alpha=0.6, zorder=1)
+            else:
+                # Weak coupling edges (dotted)
+                ax.plot([x1, x2], [y1, y2], color=PAL[5], lw=0.5,
+                        ls=":", alpha=0.3, zorder=0)
 
     # Draw nodes
     for site, (x, y) in positions.items():
-        color = PAL[3] if site == 5 else PAL[0]
-        circle = plt.Circle((x, y), 0.22, color=color, ec="white", lw=2,
+        circle = plt.Circle((x, y), 0.22, color=PAL[0], ec="white", lw=2,
                              zorder=3)
         ax.add_patch(circle)
         ax.text(x, y, str(site), ha="center", va="center", fontsize=11,
@@ -218,13 +201,10 @@ def fig2_fmo_graph():
     # Legend
     from matplotlib.lines import Line2D
     legend_elements = [
-        Line2D([0], [0], color=PAL[0], lw=2, label="Significant coupling"),
-        Line2D([0], [0], color=PAL[3], lw=2, ls="--",
-               label="Spectator-5 edges"),
+        Line2D([0], [0], color=PAL[0], lw=2,
+               label=r"$|J_{kl}| > 5\,\mathrm{cm}^{-1}$"),
         Line2D([0], [0], color=PAL[5], lw=1, ls=":",
-               label=r"$|J| < 5\,\mathrm{cm}^{-1}$"),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor=PAL[3],
-               markersize=10, label="Site 5 (spectator)"),
+               label=r"$|J_{kl}| < 5\,\mathrm{cm}^{-1}$"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", fontsize=9,
               framealpha=0.9)
@@ -296,16 +276,16 @@ def fig3_bures_angle():
 # ══════════════════════════════════════════════════════════════════════════════
 
 def fig4_fmo_collapse():
-    """FMO dimensional collapse: coherence fraction and classical Fisher info fraction.
+    """FMO Bures principal angles as a function of dephasing rate.
 
-    The QFIM of a near-diagonal state still has d^2-1 nonzero eigenvalues
-    (off-diagonal perturbations are always distinguishable at a full-rank state).
-    The dimensional collapse is about information lost by the dephasing channel.
-    We plot two meaningful quantities:
-      1. Coherence magnitude: Frobenius norm of off-diagonal elements (normalized)
-      2. Classical Fisher fraction: Tr[F_Q^diag] / Tr[F_Q]
+    At each dephasing rate γ, evolve the FMO density matrix for 5 ps,
+    then compute the d−1 = 6 principal angles between the diagonal
+    (classical) and off-diagonal (quantum) tangent subspaces under the
+    Bures metric.  At weak dephasing, angles are small (strong quantum-
+    classical mixing); at strong dephasing, angles approach 90° (classical
+    orthogonality, i.e. the quantum-classical split is clean).
     """
-    print("Figure 4: FMO dimensional collapse ...")
+    print("Figure 4: FMO Bures principal angles vs dephasing ...")
 
     H = H_FMO * CM_TO_RADFS
     d = D_FMO
@@ -313,14 +293,13 @@ def fig4_fmo_collapse():
     rho0[0, 0] = 1.0
 
     gamma_values_cm = np.concatenate([
-        np.array([0.1, 0.5, 1.0, 2.0, 5.0]),
+        np.array([0.1, 0.2, 0.5, 1.0, 2.0, 5.0]),
         np.arange(10, 110, 10),
         np.arange(150, 600, 50),
     ])
     gamma_values_cm = np.sort(np.unique(gamma_values_cm))
 
-    coherence_fracs = []
-    classical_fisher_fracs = []
+    all_angles = []   # list of arrays, each shape (6,)
 
     for gamma_cm in gamma_values_cm:
         gamma = gamma_cm * CM_TO_RADFS
@@ -328,61 +307,47 @@ def fig4_fmo_collapse():
         rho_reg = rho + 1e-10 * np.eye(d) / d
         rho_reg /= np.trace(rho_reg)
 
-        # Coherence magnitude (l2 norm of off-diag, normalized by max possible)
-        off_diag = 0.0
-        for k in range(d):
-            for l in range(k + 1, d):
-                off_diag += abs(rho_reg[k, l])**2
-        coherence = np.sqrt(2 * off_diag)  # factor 2 for both triangles
-        # Max coherence for d=7 pure state: sqrt(d-1)/sqrt(d) ~ 0.926
-        max_coh = np.sqrt((d - 1.0) / d)
-        coherence_fracs.append(coherence / max_coh)
-
-        # Classical Fisher fraction from QFIM
-        F_Q = compute_qfim(rho_reg)
-        # Diagonal block is first d-1 entries of the basis
-        n_diag = d - 1
-        F_diag_trace = np.trace(F_Q[:n_diag, :n_diag])
-        F_total_trace = np.trace(F_Q)
-        classical_fisher_fracs.append(F_diag_trace / F_total_trace if F_total_trace > 0 else 0)
+        angles_rad = principal_angles(rho_reg)
+        angles_deg = np.sort(np.degrees(angles_rad))
+        all_angles.append(angles_deg)
 
         print(f"  gamma={gamma_cm:7.1f} cm^-1  "
-              f"coh_frac={coherence_fracs[-1]:.4f}  "
-              f"fisher_class={classical_fisher_fracs[-1]:.4f}")
+              f"min={angles_deg[0]:5.1f}°  max={angles_deg[-1]:5.1f}°")
 
-    coherence_fracs = np.array(coherence_fracs)
-    classical_fisher_fracs = np.array(classical_fisher_fracs)
+    all_angles = np.array(all_angles)   # shape (n_gamma, 6)
+    min_angles = all_angles[:, 0]
+    max_angles = all_angles[:, -1]
 
     fig, ax = plt.subplots(figsize=(6.0, 4.0))
 
-    ax.semilogx(gamma_values_cm, coherence_fracs, "o-", color=PAL[0], lw=1.5,
-                ms=4, markeredgecolor="white", markeredgewidth=0.5)
+    # Shaded band: range of all 6 principal angles
+    ax.fill_between(gamma_values_cm, min_angles, max_angles,
+                     alpha=0.2, color=PAL[0])
+
+    # Min and max principal angle curves
+    ax.semilogx(gamma_values_cm, min_angles, "o-", color=PAL[0], lw=1.5,
+                ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                label=r"$\min_a\, \theta_a$")
+    ax.semilogx(gamma_values_cm, max_angles, "s-", color=PAL[2], lw=1.0,
+                ms=3, markeredgecolor="white", markeredgewidth=0.4,
+                label=r"$\max_a\, \theta_a$", alpha=0.7)
+
     ax.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
-    ax.set_ylabel("Normalized coherence magnitude")
+    ax.set_ylabel(r"Principal angle $\theta$ (degrees)")
     ax.set_xlim(0.08, 600)
-    ax.set_ylim(-0.05, 0.65)
+    ax.set_ylim(0, 95)
 
-    # ENAQT optimal
-    gamma_enaqt = 195.0
-    ax.axvline(gamma_enaqt, color=PAL[3], ls="--", lw=1.2, alpha=0.7)
-    ax.text(gamma_enaqt * 1.15, 0.55,
-            r"$\gamma_{\mathrm{opt}} \approx 195\,\mathrm{cm}^{-1}$",
-            fontsize=9, color=PAL[3])
+    # Classical orthogonality reference
+    ax.axhline(90, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
+    ax.text(0.12, 91, r"$90°$ (classical orthogonality)", fontsize=8,
+            color=PAL[5], alpha=0.7)
 
-    # Classical limit
-    ax.axhline(0, color=PAL[5], ls="--", lw=0.8, alpha=0.4)
+    # Physiological dephasing range
+    ax.axvspan(50, 200, alpha=0.08, color=PAL[1])
+    ax.text(75, 10, "Physiological\ndephasing", fontsize=8,
+            color=PAL[1], style="italic")
 
-    # Regime shading
-    ax.fill_betweenx([-0.1, 0.7], 0.08, 5, alpha=0.05, color=PAL[0])
-    ax.fill_betweenx([-0.1, 0.7], 50, 400, alpha=0.05, color=PAL[1])
-    ax.fill_betweenx([-0.1, 0.7], 400, 600, alpha=0.05, color=PAL[5])
-    ax.text(0.3, 0.58, "Quantum\nregime", fontsize=8, color=PAL[0], style="italic")
-    ax.text(100, 0.58, "ENAQT\nregime", fontsize=8, color=PAL[1], style="italic")
-    ax.text(430, 0.58, "Classical", fontsize=8, color=PAL[5], style="italic")
-
-    # Annotate dimensions
-    ax.text(0.15, 0.40, r"$48$ dim", fontsize=9, color=PAL[0], fontweight="bold")
-    ax.text(420, 0.04, r"$6$ dim", fontsize=9, color=PAL[5], fontweight="bold")
+    ax.legend(loc="center right", fontsize=9, framealpha=0.9)
 
     fig.tight_layout()
     save(fig, "fig4_fmo_collapse")

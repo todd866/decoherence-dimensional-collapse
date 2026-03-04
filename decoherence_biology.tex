@@ -52,7 +52,7 @@ Sydney, NSW, Australia\\
 \maketitle
 
 \begin{abstract}
-Decoherence drives the quantum-to-classical transition, but its information-geometric structure---the precise dimensional and metric changes it imposes on quantum state space---has not been quantified in the Bures/Fisher--Rao framework. We show that decoherence is a dimensional collapse: the dephasing channel maps a $(d^2{-}1)$-dimensional quantum manifold onto the $(d{-}1)$-dimensional classical probability simplex, annihilating the $d^2{-}d$ coherence directions while preserving the $d{-}1$ population dimensions. At diagonal states, the classical and quantum tangent subspaces are Bures-orthogonal. We compute the exact Bures principal angle $\theta_B$ between these subspaces at every full-rank qubit state, obtaining $\cos^2\theta_B = r_z^2 r_\perp^2/[(1{-}r_\perp^2)(1{-}r_z^2)]$, where $r_z$ is the population imbalance and $r_\perp$ the coherence magnitude. For $d \geq 3$, Bures-orthogonality fails whenever a nonzero coherence has a decoupled spectator index. We apply this framework to the Fenna--Matthews--Olson photosynthetic complex ($d = 7$), where decoherence collapses 48 quantum dimensions to 6 classical dimensions. The spectator theorem applies directly to the FMO coupling structure, and the Bures angle quantifies the intermediate quantum-classical regime exploited by environment-assisted quantum transport. After quantum decoherence completes (${\sim}\mathrm{fs}$), the surviving Fisher--Rao simplex becomes the arena for classical biological coherence on millisecond-to-second timescales---two stages of dimensional collapse connected by the same geometric framework.
+Decoherence drives the quantum-to-classical transition, but its information-geometric structure---the precise dimensional and metric changes it imposes on quantum state space---has not been quantified in the Bures/Fisher--Rao framework. We show that decoherence is a dimensional collapse: the dephasing channel maps a $(d^2{-}1)$-dimensional quantum manifold onto the $(d{-}1)$-dimensional classical probability simplex, annihilating the $d^2{-}d$ coherence directions while preserving the $d{-}1$ population dimensions. At diagonal states, the classical and quantum tangent subspaces are Bures-orthogonal. We compute the exact Bures principal angle $\theta_B$ between these subspaces at every full-rank qubit state, obtaining $\cos^2\theta_B = r_z^2 r_\perp^2/[(1{-}r_\perp^2)(1{-}r_z^2)]$, where $r_z$ is the population imbalance and $r_\perp$ the coherence magnitude. For $d \geq 3$, Bures-orthogonality fails whenever a nonzero coherence has a decoupled spectator index, and a perturbative formula quantifies the departure. We apply this framework to the Fenna--Matthews--Olson photosynthetic complex ($d = 7$), where decoherence collapses 48 quantum dimensions to 6 classical dimensions. Computing the six Bures principal angles as a function of dephasing strength, we find that the quantum-classical transition is rapid: at physiological dephasing rates ($\gamma \sim 50$--$200$\,cm$^{-1}$), all principal angles exceed $89^\circ$ and the system is geometrically nearly classical, with strong quantum-classical mixing confined to much weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
 \end{abstract}
 
 %% ============================================================
@@ -66,12 +66,11 @@ Information geometry provides the natural mathematical language for these questi
 In this paper, we show that decoherence is a \emph{dimensional collapse} in the information-geometric sense. A $d$-dimensional quantum system lives on a $(d^2{-}1)$-dimensional state manifold equipped with the Bures metric. Decoherence projects this manifold onto the $(d{-}1)$-dimensional classical probability simplex equipped with the Fisher--Rao metric. Specifically:
 \begin{enumerate}
 \item[\emph{(Collapse.)}] The decoherence channel reduces the QFIM rank from $d^2{-}1$ to at most $d{-}1$ (Theorem~\ref{thm:dim-collapse}), and the Bures metric restricts to the Fisher--Rao metric on $\Delta_{d-1}$ (Theorem~\ref{thm:metric-restriction}). At full-rank diagonal states, the differential of the dephasing map is the Bures-orthogonal projector onto the classical tangent subspace (Theorem~\ref{thm:orthogonal-decomposition}).
-\item[\emph{(Geometry of the split.)}] We compute the exact Bures principal angle $\theta_B$ between the classical and quantum tangent subspaces at every full-rank qubit state (Theorem~\ref{thm:bures-angle}). For $d \geq 3$, Bures-orthogonality fails whenever a nonzero coherence has a decoupled spectator index (Theorem~\ref{thm:spectator-orthogonality}).
-\item[\emph{(Application.)}] We apply the framework to the Fenna--Matthews--Olson (FMO) photosynthetic complex, where $d = 7$ sites yield a collapse from 48 to 6 information-geometric dimensions. The spectator theorem applies directly to the FMO coupling structure, and the Bures angle quantifies the intermediate regime exploited by ENAQT.
-\item[\emph{(Bridge.)}] After quantum decoherence completes on femtosecond timescales, biological systems maintain classical coherence on millisecond-to-second timescales \cite{todd2026coherence}. The Fisher--Rao geometry that emerges from quantum dimensional collapse is the same geometry that governs classical biological coherence---two stages of dimensional collapse connected by a single mathematical framework.
+\item[\emph{(Geometry of the split.)}] We compute the exact Bures principal angle $\theta_B$ between the classical and quantum tangent subspaces at every full-rank qubit state (Theorem~\ref{thm:bures-angle}). For $d \geq 3$, Bures-orthogonality fails whenever a nonzero coherence has a decoupled spectator index (Theorem~\ref{thm:spectator-orthogonality}), and a perturbative formula quantifies the departure (Theorem~\ref{thm:qudit-angles}).
+\item[\emph{(Application.)}] We apply the framework to the Fenna--Matthews--Olson (FMO) photosynthetic complex, where $d = 7$ sites yield a collapse from 48 to 6 information-geometric dimensions. Computing the six Bures principal angles as a function of dephasing strength, we find that at physiological dephasing rates the system is geometrically nearly classical, with the strong quantum-classical mixing regime lying at much weaker dephasing.
 \end{enumerate}
 
-The paper is organized as follows. Section~\ref{sec:geometry} establishes the information-geometric framework. Section~\ref{sec:decoherence} contains the core mathematical results. Section~\ref{sec:thermodynamics} derives the thermodynamic cost of dimensional collapse. Section~\ref{sec:fmo} applies the framework to the FMO complex. Section~\ref{sec:bridge} connects quantum decoherence to classical biological coherence. Section~\ref{sec:discussion} discusses implications and limitations.
+The paper is organized as follows. Section~\ref{sec:geometry} establishes the information-geometric framework. Section~\ref{sec:decoherence} contains the core mathematical results. Section~\ref{sec:thermodynamics} derives the thermodynamic cost of dimensional collapse. Section~\ref{sec:fmo} applies the framework to the FMO complex. Section~\ref{sec:discussion} discusses implications, limitations, and connections to classical biological coherence.
 
 %% ============================================================
 \section{Information-Geometric Framework}
@@ -392,79 +391,42 @@ Under progressive Haken--Strobl dephasing \cite{haken1973exactly} at rate $\gamm
 \label{eq:lindblad}
 \dot{\rho} = -\frac{i}{\hbar}[H_{\mathrm{FMO}}, \rho] + \gamma \sum_{k=1}^7 \left(|k\rangle\langle k| \rho |k\rangle\langle k| - \frac{1}{2}\{|k\rangle\langle k|, \rho\}\right),
 \end{equation}
-which drives coherences to zero at rate $\gamma$ while preserving populations. The effective quantum dimensionality $D_{\mathrm{eff}}^Q$ traces a trajectory from near 48 (at $\gamma = 0$) toward 6 (at large $\gamma$), with the exact path depending on the initial state and Hamiltonian structure.
+where the first term generates unitary evolution (which creates and rotates coherences, and redistributes populations) and the second term dephases coherences at rate $\gamma$. In the pure-dephasing limit ($H = 0$), this channel preserves populations and drives off-diagonal elements $\rho_{kl} \to e^{-\gamma t}\rho_{kl}$; the full dynamics~\eqref{eq:lindblad} is a competition between coherent Hamiltonian evolution and incoherent dephasing.
 
-\subsection{Spectator theorem applied to FMO}
-\label{sec:fmo-spectator}
+\subsection{Geometry of the quantum-classical split in FMO}
+\label{sec:fmo-geometry}
 
-The coupling structure of $H_{\mathrm{FMO}}$ determines which site pairs have negligible coupling ($|J_{kl}| < 5$\,cm$^{-1}$). Defining the coherence graph by significant couplings, several pairs have spectators:
+Theorems~\ref{thm:qudit-angles} and~\ref{thm:spectator-orthogonality} establish that for $d \geq 3$, the Bures-orthogonal decomposition $T_\rho^{\mathrm{diag}} \perp_{g_B} T_\rho^{\mathrm{off}}$ fails whenever $\rho$ carries nonzero off-diagonal entries. For the FMO complex ($d = 7$), the diagonal and off-diagonal tangent subspaces have dimensions $d - 1 = 6$ and $d^2 - d = 42$ respectively, and their relative orientation is described by $d - 1 = 6$ principal angles $\theta_1 \leq \cdots \leq \theta_6$.
 
-\begin{itemize}
-\item \textbf{Sites 1--2} ($J_{12} = -87.7$\,cm$^{-1}$): Site~5 is a spectator---coupled to site~1 ($J_{15} = 6.7$\,cm$^{-1}$) but not to site~2 ($J_{25} = 0.7$\,cm$^{-1}$). By Theorem~\ref{thm:spectator-orthogonality}, Bures-orthogonality fails for any state retaining $(1,2)$ coherence.
-\item \textbf{Sites 3--4} ($J_{34} = -53.5$\,cm$^{-1}$): Site~5 is a spectator---coupled to site~4 ($J_{45} = -70.7$\,cm$^{-1}$) but not to site~3 ($J_{35} = -2.2$\,cm$^{-1}$).
-\item \textbf{Sites 2--4} ($J_{24} = 8.2$\,cm$^{-1}$): Site~5 is a spectator---coupled to site~4 ($J_{45} = -70.7$\,cm$^{-1}$) but not to site~2 ($J_{25} = 0.7$\,cm$^{-1}$).
-\end{itemize}
+We compute these principal angles numerically at each dephasing rate $\gamma$ by evolving~\eqref{eq:lindblad} from an initial excitation at site~1 for 5\,ps, then computing the Bures-metric cross-Gram matrix between diagonal and off-diagonal basis directions and extracting singular values (see Appendix). Figure~\ref{fig:fmo-collapse} shows the results.
 
-The spectator theorem guarantees that during the transport window---when coherences between these site pairs are nonzero---the quantum-classical split is geometrically ``messy'': the classical population subspace and the quantum coherence subspace are not orthogonal. This is precisely the regime where ENAQT operates.
+At weak dephasing ($\gamma \lesssim 1$\,cm$^{-1}$), the minimum principal angle drops below $50^\circ$: the classical population subspace and the quantum coherence subspace are far from orthogonal, meaning that population parameters and coherence parameters are strongly mixed in the Fisher information sense. At moderate dephasing ($\gamma \sim 5$--$20$\,cm$^{-1}$), all angles are in the range $70^\circ$--$85^\circ$: the quantum-classical split is approaching but has not yet reached orthogonality. At strong dephasing ($\gamma > 50$\,cm$^{-1}$), all six angles are within a few degrees of $90^\circ$ and the decomposition is effectively classical.
 
-\subsection{The Bures angle during noise-assisted transport}
+\subsection{ENAQT and the classical limit}
 \label{sec:fmo-enaqt}
 
-ENAQT \cite{rebentrost2009environment,plenio2008dephasing} occurs because pure quantum evolution can trap excitations in interference patterns, while moderate dephasing breaks destructive interference and opens transport channels. At zero dephasing, the system explores the full 48-dimensional quantum state space but may be localized; at infinite dephasing, it is confined to the 6-dimensional classical simplex and transport proceeds by incoherent hopping. The optimum lies between these limits, at a dephasing rate of approximately $\gamma_{\mathrm{opt}} \sim 195$\,cm$^{-1}$ for the FMO complex \cite{rebentrost2009environment}.
+ENAQT \cite{rebentrost2009environment,plenio2008dephasing} occurs because pure quantum evolution can trap excitations in interference patterns, while moderate dephasing breaks destructive interference and opens transport channels. The ENAQT optimal dephasing rate for FMO models with a reaction-centre sink is $\gamma_{\mathrm{opt}} \sim 50$--$200$\,cm$^{-1}$ depending on model details \cite{rebentrost2009environment,cao2020quantum}.
 
-The Bures angle provides a geometric characterization of this intermediate regime. At each dephasing rate $\gamma$, the density matrix $\rho(t; \gamma)$ has a well-defined set of principal angles between the diagonal and off-diagonal tangent subspaces. At $\gamma = 0$, coherences are maximal and the principal angles can be small (strong mixing between classical and quantum sectors). At $\gamma \to \infty$, all coherences vanish and all angles reach $\pi/2$ (perfect orthogonality). The ENAQT optimal dephasing rate corresponds to an intermediate Bures angle regime: the system exploits partial dimensional collapse, maintaining enough coherence for quantum speedup while allowing enough dephasing to avoid localization.
-
-Figure~\ref{fig:fmo-collapse} shows the effective dimensionality of the FMO system as a function of dephasing strength, with the ENAQT optimal rate marked.
+Our principal angle analysis places this regime in geometric context. The physiological dephasing range ($\gamma \sim 50$--$200$\,cm$^{-1}$, corresponding to decoherence times ${\sim}\,50$--$200$\,fs at 300\,K) falls in the region where all principal angles exceed $89^\circ$ (Figure~\ref{fig:fmo-collapse}). That is, FMO at physiological conditions is geometrically close to classical: the quantum-classical split is nearly orthogonal. The biologically relevant quantum effects arise from the \emph{small residual departure} from classical orthogonality, not from a regime of strong quantum-classical mixing. The most geometrically interesting transition---where angles pass through $45^\circ$--$80^\circ$---occurs at dephasing rates ($\gamma \sim 1$--$20$\,cm$^{-1}$) well below the physiological range.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{fig4_fmo_collapse.pdf}
-\caption{\textbf{Dimensional collapse in the FMO complex.} Normalized coherence magnitude (Frobenius norm of off-diagonal elements) as a function of Haken--Strobl dephasing rate $\gamma$ for the FMO complex, with initial excitation at site~1 evolved for 5\,ps. At weak dephasing ($\gamma \lesssim 5$\,cm$^{-1}$), the state explores the 48-dimensional quantum state space with significant coherence. At the ENAQT optimal dephasing rate ($\gamma_{\mathrm{opt}} \approx 195$\,cm$^{-1}$, vertical dashed line), coherences are largely suppressed; at strong dephasing, the state is confined to the 6-dimensional classical simplex.}
+\caption{\textbf{Bures principal angles in the FMO complex.} The six principal angles $\theta_1, \ldots, \theta_6$ between the diagonal (classical) and off-diagonal (quantum) tangent subspaces of the Bures metric, plotted as a function of Haken--Strobl dephasing rate $\gamma$, for the FMO state after 5\,ps of evolution from site~1 excitation. The shaded band spans the minimum to maximum angle. At weak dephasing the subspaces are far from orthogonal (strong quantum-classical mixing); at physiological dephasing rates (shaded region, $\gamma \sim 50$--$200$\,cm$^{-1}$) all angles exceed $89^\circ$ and the system is geometrically nearly classical.}
 \label{fig:fmo-collapse}
 \end{figure}
 
-\subsection{FMO coherence graph}
+\subsection{FMO coupling graph}
 \label{sec:fmo-graph}
 
-The coupling structure of the FMO Hamiltonian can be represented as a graph where vertices are chromophore sites and edges connect pairs with significant electronic coupling ($|J_{kl}| > 5$\,cm$^{-1}$). Figure~\ref{fig:fmo-graph} shows this graph with spectator pairs highlighted.
+The coupling structure of the FMO Hamiltonian can be represented as a graph where vertices are chromophore sites and edges connect pairs with significant electronic coupling ($|J_{kl}| > 5$\,cm$^{-1}$). Figure~\ref{fig:fmo-graph} shows this graph. Four site pairs have couplings below the 5\,cm$^{-1}$ threshold: (2,5), (2,7), (3,5), and (5,7), all involving sites at opposite ends of the two main transport pathways $1 \to 2 \to 3$ and $6 \to 5/7 \to 4 \to 3$.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.6\textwidth]{fig2_fmo_graph.pdf}
-\caption{\textbf{FMO coherence graph and spectator structure.} Vertices represent the seven BChl sites; edges connect pairs with significant coupling ($|J_{kl}| > 5$\,cm$^{-1}$). Edge widths are proportional to coupling strength. Red dashed lines indicate edges where site~5 acts as a spectator (coupled to one endpoint but not the other), guaranteeing failure of Bures-orthogonality by Theorem~\ref{thm:spectator-orthogonality}.}
+\caption{\textbf{FMO coupling graph.} Vertices represent the seven BChl sites; edges connect pairs with significant coupling ($|J_{kl}| > 5$\,cm$^{-1}$). Edge widths are proportional to coupling strength. Dotted lines show weak couplings ($|J_{kl}| < 5$\,cm$^{-1}$). The four weak pairs all involve sites at opposite ends of the two main transport pathways.}
 \label{fig:fmo-graph}
 \end{figure}
-
-%% ============================================================
-\section{From Quantum to Classical Coherence}
-\label{sec:bridge}
-
-\subsection{Two stages of dimensional collapse}
-\label{sec:two-stages}
-
-The dimensional collapse framework reveals a two-stage hierarchy in biological systems:
-
-\textbf{Stage 1: Quantum decoherence} (${\sim}\mathrm{fs}$). The dephasing channel maps $\mathcal{M}_Q$ (dimension $d^2 - 1$) onto $\Delta_{d-1}$ (dimension $d - 1$), annihilating coherences. In the FMO complex, this destroys 42 of 48 information-geometric dimensions in ${\sim}\,50$\,fs. The Bures metric restricts to the Fisher--Rao metric on the surviving classical simplex (Theorem~\ref{thm:metric-restriction}).
-
-\textbf{Stage 2: Classical dissipation} ($\mathrm{ms}$--$\mathrm{s}$). Within the surviving Fisher--Rao simplex, dissipative dynamics further reduce the effective dimensionality of accessible states. Biological systems maintain coherent classical dynamics---coordinated oscillatory activity in neural populations, metabolic feedback loops, immune cascades---against entropic pressure on timescales of milliseconds to seconds.
-
-The geometry is continuous across these stages: the Fisher--Rao metric that governs classical biological dynamics \emph{is} the Bures metric restricted to the classical subspace. The same mathematical tools---participation ratio, effective dimensionality, coherence time---apply on both sides of the quantum-classical divide.
-
-\subsection{Classical coherence time as a rate limit}
-\label{sec:coherence-time}
-
-After quantum decoherence completes, biological computation occurs on the classical simplex. The rate at which a biological oscillator assembly can register distinct states is bounded by the coherence time $\tau_{\mathrm{coh}}$---the timescale over which coupled oscillators maintain phase relationships sufficient to define a reproducible state \cite{todd2026coherence}. This bound dominates all other timescale limits (quantum decoherence, thermodynamic, power dissipation) by orders of magnitude: quantum decoherence in biological systems completes in femtoseconds, while classical coherence times range from milliseconds (neural oscillations) to seconds (circadian rhythms).
-
-The $d - 1$ dimensions surviving quantum decoherence are the arena for this classical dynamics. In a system with $N$ coupled biological oscillators, the effective classical dimensionality can be large ($D_{\mathrm{eff}} \sim N$ for weakly coupled oscillators, lower for strongly synchronized assemblies), and the coherence time $\tau_{\mathrm{coh}}$ bounds the rate of state registration within this space.
-
-\subsection{Intelligence as high-dimensional coherence}
-\label{sec:intelligence}
-
-The observable dimensionality bound $D_{\mathrm{crit}} = C_{\mathrm{commit}} \cdot \tau_e / (\alpha \cdot h_\varepsilon)$ constrains the maximum effective dimensionality that a biological system can maintain against decoherence pressure \cite{todd2026intelligence}. This bound operates entirely within the classical regime---on the Fisher--Rao simplex that emerges after quantum dimensional collapse.
-
-The two-stage picture clarifies the relationship between quantum and classical coherence in biological systems. Quantum coherence contributes to biological function primarily through Stage~1 processes (ENAQT, radical pair mechanisms) that complete on ultrafast timescales. Classical coherence---the maintenance of high-dimensional coordinated dynamics against dissipation---is the dominant mode of biological information processing, operating on timescales $10^{12}$ times longer than quantum decoherence.
-
-``Measurement is dimensional collapse'' holds at both levels: quantum measurement collapses $d^2 - 1$ dimensions to $d - 1$ (this paper), while classical observation of a biological system collapses its effective dimensionality further through coarse-graining. The quantum-to-classical transition is the first---and fastest---stage of a hierarchy of dimensional collapses that biological systems navigate.
 
 %% ============================================================
 \section{Discussion}
@@ -472,13 +434,18 @@ The two-stage picture clarifies the relationship between quantum and classical c
 
 \subsection{Summary of results}
 
-We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every qubit state, and the spectator theorem extends to arbitrary dimension. Applied to the FMO complex, this framework reveals that ENAQT operates in the intermediate regime of partial dimensional collapse---the system exploits the geometric structure of the quantum-classical transition itself.
+We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the perturbative theorem and spectator criterion extend the analysis to arbitrary dimension. Applied to the FMO complex, principal angle analysis reveals that at physiological dephasing rates the system is geometrically close to classical (all principal angles within ${\sim}\,1^\circ$ of $90^\circ$), while the strong quantum-classical mixing regime lies at much weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
 
 \subsection{Limitations}
 
-The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact; for $d \geq 3$, results are partial (spectator theorem + perturbative expansion + conjecture). The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. Extending the information-geometric analysis to structured baths is an open problem.
+The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact; for $d \geq 3$, results are partial (spectator theorem + perturbative expansion + conjecture). The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. Our model also omits the reaction-centre sink that is essential for defining ENAQT transport efficiency. Extending the information-geometric analysis to structured baths and to models with explicit trapping is an open problem.
 
-The two-stage collapse picture (Section~\ref{sec:bridge}) is conceptual rather than formally derived: a rigorous connection would require showing how Fisher--Rao geometry on the quantum-classical simplex maps onto effective information geometry of classical biological dynamics. This is a program for future work.
+\subsection{Outlook: from quantum to classical coherence}
+\label{sec:bridge}
+
+A suggestive observation emerges from Theorem~\ref{thm:metric-restriction}: the Fisher--Rao metric that governs statistical inference on the surviving classical simplex \emph{is} the restriction of the Bures metric from the quantum state manifold. In biological systems, decoherence completes on femtosecond timescales, after which dynamics unfold on the classical simplex. The same information-geometric tools---participation ratio, effective dimensionality, coherence time---apply to both quantum and classical dynamics.
+
+This raises the question of whether biological coherence on longer timescales \cite{todd2026coherence,todd2026intelligence} can be understood as a second stage of dimensional evolution: dissipative dynamics within the Fisher--Rao simplex further shaping the effective dimensionality of accessible states. A rigorous connection would require showing how the information geometry of the quantum-classical transition maps onto effective descriptions of classical biological dynamics. We leave this as a program for future work, noting only that the geometric continuity established by Theorem~\ref{thm:metric-restriction} makes such a connection structurally natural.
 
 \subsection{Open questions}
 
@@ -510,7 +477,7 @@ The $d - 1$ principal angles between $T_\rho^{\mathrm{diag}}$ and $T_\rho^{\math
 $100$ L-BFGS-B optimizations per dimension maximize $\min_a \theta_a$ over full-rank parameterized states. No optimized state approaches $90^\circ$.
 
 \paragraph{FMO dephasing simulation.}
-The Lindblad master equation~\eqref{eq:lindblad} is integrated numerically using a fourth-order Runge--Kutta scheme with time step $\Delta t = 0.1$\,fs. The FMO Hamiltonian~\eqref{eq:fmo-hamiltonian} uses site energies and couplings from Adolphs and Renger \cite{adolphs2006proteins}. For each dephasing rate $\gamma$, the steady-state density matrix is obtained by evolving from the initial state $\rho(0) = |1\rangle\langle 1|$ (excitation at site~1) for $t = 10$\,ps. The QFIM is computed at the evolved state using the SLD procedure above.
+The Lindblad master equation~\eqref{eq:lindblad} is integrated numerically using a fourth-order Runge--Kutta scheme with time step $\Delta t = 1.0$\,fs. The FMO Hamiltonian~\eqref{eq:fmo-hamiltonian} uses site energies and couplings from Adolphs and Renger \cite{adolphs2006proteins}. For each dephasing rate $\gamma$, the density matrix is evolved from the initial state $\rho(0) = |1\rangle\langle 1|$ (excitation at site~1) for $t = 5$\,ps, which is sufficient for coherences to reach a quasi-stationary balance between Hamiltonian-driven creation and dephasing-driven decay. (For dephasing rates $\gamma \geq 5$\,cm$^{-1}$, the coherence decay time $\gamma^{-1} \lesssim 1$\,ps is shorter than the evolution time.) The state is regularized to full rank ($\rho \mapsto \rho + 10^{-10}\,I/d$) before computing the six Bures principal angles between the diagonal and off-diagonal tangent subspaces.
 
 \paragraph{Software.}
 All computations use NumPy and SciPy. Source code is available in the repository.
