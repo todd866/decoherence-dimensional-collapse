@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Generate all figures for:
-"Information Geometry of the Quantum-Classical Transition in Biological Systems"
+"Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport"
 
 Produces:
-  figures/fig1_bloch_collapse.{pdf,png}     — Bloch sphere collapse (reused)
-  figures/fig2_fmo_graph.{pdf,png}          — NEW: FMO coherence graph
-  figures/fig3_bures_angle.{pdf,png}        — Bures angle across Bloch disk (reused)
+  figures/fig1_bloch_collapse.{pdf,png}     — Bloch sphere collapse
+  figures/fig2_fmo_graph.{pdf,png}          — FMO coupling graph
+  figures/fig3_bures_angle.{pdf,png}        — Bures angle across Bloch disk
   figures/fig4_fmo_collapse.{pdf,png}       — FMO transport + Bures angles (dual panel)
   figures/fig5_qudit_angles.{pdf,png}       — Qudit principal angles (d=3,5,7)
 
@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fmo_analysis import (
     H_FMO, D_FMO, CM_TO_RADFS, COUPLING_THRESHOLD,
     fmo_coupling_graph,
-    evolve_lindblad, principal_angles, scan_efficiency,
+    evolve_lindblad, evolve_lindblad_sink, principal_angles, scan_efficiency,
 )
 
 # ── Global style ─────────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ def fig1_bloch_collapse():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Figure 2 — FMO coherence graph with spectator structure (NEW)
+# Figure 2 — FMO coupling graph
 # ══════════════════════════════════════════════════════════════════════════════
 
 def fig2_fmo_graph():
@@ -302,20 +302,32 @@ def fig4_fmo_collapse():
     etas_s6 = scan_efficiency(gamma_values_cm, initial_site=5,
                                t_final_fs=15000.0, dt_fs=2.0)
 
-    # ── Panel (b): Principal angles ──
+    # ── Panel (b): Principal angles (sink-inclusive, renormalized) ──
+    kappa_trap_cm = 5.3  # 1 ps^-1
+    kappa = kappa_trap_cm * CM_TO_RADFS
+
     def compute_angles_scan(initial_site):
         rho0 = np.zeros((d, d), dtype=complex)
         rho0[initial_site, initial_site] = 1.0
         min_angles = []
         for gamma_cm in gamma_values_cm:
             gamma = gamma_cm * CM_TO_RADFS
-            rho = evolve_lindblad(H, gamma, rho0, t_final=5000.0, dt=1.0)
-            rho_reg = rho + 1e-10 * np.eye(d) / d
+            # Evolve with same sink-inclusive dynamics as efficiency
+            rho = evolve_lindblad_sink(H, gamma, kappa, rho0,
+                                       t_final=5000.0, dt=1.0, sink_site=2)
+            # Renormalize surviving state (conditional on not being trapped)
+            tr = np.real(np.trace(rho))
+            if tr > 1e-12:
+                rho_renorm = rho / tr
+            else:
+                rho_renorm = np.eye(d, dtype=complex) / d
+            # Regularize to full rank for QFIM
+            rho_reg = rho_renorm + 1e-10 * np.eye(d) / d
             rho_reg /= np.trace(rho_reg)
             angles_deg = np.sort(np.degrees(principal_angles(rho_reg)))
             min_angles.append(angles_deg[0])
             print(f"    gamma={gamma_cm:7.1f}  min_angle={angles_deg[0]:5.1f}°"
-                  f"  (site {initial_site+1})")
+                  f"  tr={tr:.4f}  (site {initial_site+1})")
         return np.array(min_angles)
 
     print("  Computing principal angles (site 1)...")
@@ -374,7 +386,7 @@ def fig4_fmo_collapse():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Figure 6 — Qudit principal angles: numerical study (updated with d=7)
+# Figure 5 — Qudit principal angles: numerical study (including d=7 for FMO)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _random_density_matrix(d, rng):
@@ -522,7 +534,7 @@ def _adversarial_search(d, n_starts, rng):
 
 
 def fig5_qudit_angles():
-    print("Figure 6: Qudit principal angles (including d=7 for FMO) ...")
+    print("Figure 5: Qudit principal angles (including d=7 for FMO) ...")
 
     rng = np.random.default_rng(42)
     dims = [3, 5, 7]  # Include d=7 for FMO

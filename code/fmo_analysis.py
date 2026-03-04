@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 FMO complex analysis for:
-"Information Geometry of the Quantum-Classical Transition in Biological Systems"
+"Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport"
 
 Computes:
-  - Lindblad dephasing evolution of the FMO density matrix
+  - Lindblad dephasing + sink evolution of the FMO density matrix
+  - Transport efficiency (ENAQT) via reaction-centre trapping
   - QFIM and effective dimensionality vs dephasing rate
   - Principal angles between diagonal/off-diagonal tangent subspaces
-  - Spectator theorem verification against coupling matrix
 
 Usage:
   cd physics/70_decoherence_dimensional_collapse
@@ -194,6 +194,38 @@ def scan_efficiency(gamma_values_cm, initial_site=0, **kwargs):
         efficiencies.append(eta)
         print(f"  gamma={gamma_cm:7.1f} cm^-1  eta={eta:.4f}  (site {initial_site+1})")
     return np.array(efficiencies)
+
+
+def evolve_lindblad_sink(H, gamma, kappa, rho0, t_final, dt=1.0, sink_site=2):
+    """Evolve density matrix under Lindblad dephasing + sink using RK4.
+
+    Unlike evolve_lindblad, this does NOT renormalize trace during evolution,
+    since the sink makes the dynamics non-trace-preserving.
+
+    Parameters:
+        H: Hamiltonian in rad/fs
+        gamma: dephasing rate in rad/fs
+        kappa: trapping rate in rad/fs
+        rho0: initial density matrix
+        t_final: evolution time in fs
+        dt: time step in fs
+        sink_site: 0-indexed reaction-centre site
+
+    Returns:
+        rho: final (sub-normalized) density matrix
+    """
+    rho = rho0.copy().astype(complex)
+    n_steps = int(t_final / dt)
+
+    for _ in range(n_steps):
+        k1 = dt * lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site)
+        k2 = dt * lindblad_dephasing_sink_rhs(rho + 0.5 * k1, H, gamma, kappa, sink_site)
+        k3 = dt * lindblad_dephasing_sink_rhs(rho + 0.5 * k2, H, gamma, kappa, sink_site)
+        k4 = dt * lindblad_dephasing_sink_rhs(rho + k3, H, gamma, kappa, sink_site)
+        rho = rho + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
+        rho = 0.5 * (rho + rho.conj().T)  # Enforce Hermiticity only
+
+    return rho
 
 
 def compute_qfim(rho):
