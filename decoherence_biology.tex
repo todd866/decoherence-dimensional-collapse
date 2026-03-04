@@ -256,31 +256,7 @@ The full QFIM is $F_Q = I + \mathbf{r}\mathbf{r}^T/(1 - |\mathbf{r}|^2)$. By She
 \subsection{Generalization to qudits}
 \label{sec:qudit-angles}
 
-For $d$-dimensional systems, there are $d - 1$ principal angles between $T_\rho^{\mathrm{diag}}$ and $T_\rho^{\mathrm{off}}$.
-
-\begin{theorem}[Qudit principal angles]
-\label{thm:qudit-angles}
-Let $\rho = \mathrm{diag}(p) + C$ be a full-rank $d$-dimensional state with off-diagonal part $C$.
-\begin{enumerate}
-\item[\emph{(i)}] If $C = 0$, all $d - 1$ principal angles equal $\pi/2$ (Theorem~\ref{thm:orthogonal-decomposition}).
-\item[\emph{(ii)}] Near the simplex ($\|C\|$ small), the cross-Gram matrix has entries
-\begin{equation}
-\label{eq:cross-gram}
-g_B(D_a, R_{kl}) = -\frac{\mathrm{Re}[C_{kl}]}{2(p_k + p_l)}\!\left(\frac{x_a^k}{p_k} + \frac{x_a^l}{p_l}\right) + O(\|C\|^2),
-\end{equation}
-where $D_a = \mathrm{diag}(x_a^1, \ldots, x_a^d)$ is a traceless diagonal tangent vector and $R_{kl} = |k\rangle\langle l| + |l\rangle\langle k|$.
-\item[\emph{(iii)}] For $d \geq 3$: if $\|C\|$ is small and $C \neq 0$, at least one principal angle is strictly less than $\pi/2$.
-\item[\emph{(iv)}] Under partial dephasing $C_{kl} \mapsto (1{-}2\gamma) C_{kl}$, the cross-Gram entries scale as $(1{-}2\gamma)$ at leading order, and all principal angles converge to $\pi/2$ as $\gamma \to 1/2$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-\emph{Part~(ii):} Expand $L_a = L_a^{(0)} + L_a^{(1)} + O(\|C\|^2)$. At zeroth order, $(L_a^{(0)})_{kk} = x_a^k/p_k$ with zero off-diagonal entries. At first order, the Lyapunov equation gives $(L_a^{(1)})_{mn} = -C_{mn}(x_a^m/p_m + x_a^n/p_n)/(p_m + p_n)$ for $m \neq n$. For $R_{kl}$, the first-order diagonal corrections are $(L_R^{(1)})_{kk} = -2\mathrm{Re}[C_{kl}]/[p_k(p_k + p_l)]$. Summing the three first-order contributions to $g_B(D_a, R_{kl})$ yields~\eqref{eq:cross-gram}.
-
-\emph{Part~(iii):} For $d \geq 3$ with $C_{kl} \neq 0$, choose $D_a$ with $x_a^k = 1$, $x_a^m = -1$ for some $m \notin \{k, l\}$, zeros elsewhere. Then $x_a^k/p_k + x_a^l/p_l = 1/p_k \neq 0$, giving nonzero cross-Gram. For $d = 2$, the unique traceless direction $\mathrm{diag}(1,-1)$ satisfies $1/p_1 + (-1)/p_2 = 0$ at equal populations, allowing orthogonality; the exact criterion is Theorem~\ref{thm:bures-angle}.
-
-\emph{Part~(iv):} Under $C \mapsto (1{-}2\gamma)C$, equation~\eqref{eq:cross-gram} scales as $(1{-}2\gamma)$ and vanishes as $\gamma \to 1/2$.
-\end{proof}
+For $d$-dimensional systems, there are $d - 1$ principal angles between $T_\rho^{\mathrm{diag}}$ and $T_\rho^{\mathrm{off}}$. Theorem~\ref{thm:orthogonal-decomposition} shows these are all $\pi/2$ at diagonal states. For $d \geq 3$, the converse holds exactly:
 
 \begin{theorem}[Global orthogonality criterion for $d \geq 3$]
 \label{thm:global-orthogonality}
@@ -322,7 +298,29 @@ If $\rho_{kl} \neq 0$, at least one of these is nonzero, so $e_k + e_l \in \math
 For $d = 2$, the vector $e_1 + e_2 = (1,1)$ is proportional to $p = (p_1, p_2)$ if and only if $p_1 = p_2$, recovering the qubit result: equatorial states ($r_z = 0$) achieve Bures-orthogonality despite carrying coherence (Corollary~\ref{cor:angle-structure}(i)). The proof above shows that $d \geq 3$ eliminates this loophole.
 \end{remark}
 
-Theorem~\ref{thm:global-orthogonality} settles the qualitative question: for $d \geq 3$, any coherence breaks orthogonality. The perturbative result (Theorem~\ref{thm:qudit-angles}) complements this by quantifying \emph{how much} the subspaces mix as a function of coherence magnitude and dephasing rate. Figure~\ref{fig:qudit-angles} illustrates both results numerically.
+Theorem~\ref{thm:global-orthogonality} settles the qualitative question: for $d \geq 3$, any coherence breaks orthogonality. We now quantify \emph{how much} the subspaces mix.
+
+\begin{theorem}[Perturbative cross-Gram near the simplex]
+\label{thm:qudit-angles}
+Let $\rho = \mathrm{diag}(p) + C$ be a full-rank $d$-dimensional state with off-diagonal part $C$.
+\begin{enumerate}
+\item[\emph{(i)}] Near the simplex ($\|C\|$ small), the cross-Gram matrix has entries
+\begin{equation}
+\label{eq:cross-gram}
+g_B(D_a, R_{kl}) = -\frac{\mathrm{Re}[C_{kl}]}{2(p_k + p_l)}\!\left(\frac{x_a^k}{p_k} + \frac{x_a^l}{p_l}\right) + O(\|C\|^2),
+\end{equation}
+where $D_a = \mathrm{diag}(x_a^1, \ldots, x_a^d)$ is a traceless diagonal tangent vector and $R_{kl} = |k\rangle\langle l| + |l\rangle\langle k|$.
+\item[\emph{(ii)}] Under partial dephasing $C_{kl} \mapsto (1{-}2\gamma) C_{kl}$, the cross-Gram entries scale as $(1{-}2\gamma)$ at leading order, and all principal angles converge to $\pi/2$ as $\gamma \to 1/2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Part~(i):} Expand $L_a = L_a^{(0)} + L_a^{(1)} + O(\|C\|^2)$. At zeroth order, $(L_a^{(0)})_{kk} = x_a^k/p_k$ with zero off-diagonal entries. At first order, the Lyapunov equation gives $(L_a^{(1)})_{mn} = -C_{mn}(x_a^m/p_m + x_a^n/p_n)/(p_m + p_n)$ for $m \neq n$. For $R_{kl}$, the first-order diagonal corrections are $(L_R^{(1)})_{kk} = -2\mathrm{Re}[C_{kl}]/[p_k(p_k + p_l)]$. Summing the three first-order contributions to $g_B(D_a, R_{kl})$ yields~\eqref{eq:cross-gram}.
+
+\emph{Part~(ii):} Under $C \mapsto (1{-}2\gamma)C$, equation~\eqref{eq:cross-gram} scales as $(1{-}2\gamma)$ and vanishes as $\gamma \to 1/2$.
+\end{proof}
+
+Figure~\ref{fig:qudit-angles} illustrates both results: Theorem~\ref{thm:global-orthogonality} guarantees no non-diagonal state achieves orthogonality, while the distribution of minimum principal angles shows the typical scale of the departure.
 
 \begin{figure}[H]
 \centering
@@ -443,18 +441,16 @@ The coupling structure of the FMO Hamiltonian can be represented as a graph wher
 
 \subsection{Summary of results}
 
-We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the perturbative theorem and spectator criterion extend the analysis to arbitrary dimension. Applied to the FMO complex with sink-inclusive dynamics, principal angle analysis reveals that at the ENAQT-optimal dephasing rate the system is geometrically close to classical (all principal angles $> 87^\circ$), while the strong quantum-classical mixing regime lies at much weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
+We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) establishes that for $d \geq 3$ the diagonal and off-diagonal tangent subspaces are Bures-orthogonal at every non-diagonal state---resolving the higher-dimensional geometry exactly. Applied to the FMO complex with sink-inclusive dynamics, principal angle analysis reveals that at the ENAQT-optimal dephasing rate the system is geometrically close to classical (all principal angles $> 87^\circ$), while the strong quantum-classical mixing regime lies at much weaker dephasing ($\gamma \lesssim 10$\,cm$^{-1}$).
 
 \subsection{Limitations}
 
 The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) is sharp for all $d \geq 3$; the perturbative expansion (Theorem~\ref{thm:qudit-angles}) quantifies the departure from orthogonality but is limited to small coherence. The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. The principal angles are computed on the renormalized conditional state $\hat{\rho} = \rho/\mathrm{Tr}[\rho]$; this is the natural object for the surviving exciton's geometry, but it means the Bures analysis inherits any artifacts of the Haken--Strobl model's treatment of system-bath correlations. Extending the information-geometric analysis to structured baths and non-Markovian dephasing is an open problem.
 
-\subsection{Outlook: from quantum to classical coherence}
+\subsection{Outlook}
 \label{sec:bridge}
 
-A suggestive observation emerges from Theorem~\ref{thm:metric-restriction}: the Fisher--Rao metric that governs statistical inference on the surviving classical simplex \emph{is} the restriction of the Bures metric from the quantum state manifold. In biological systems, decoherence completes on femtosecond timescales, after which dynamics unfold on the classical simplex. The same information-geometric tools---participation ratio, effective dimensionality, coherence time---apply to both quantum and classical dynamics.
-
-This raises the question of whether biological coherence on longer timescales \cite{todd2026coherence,todd2026intelligence} can be understood as a second stage of dimensional evolution: dissipative dynamics within the Fisher--Rao simplex further shaping the effective dimensionality of accessible states. A rigorous connection would require showing how the information geometry of the quantum-classical transition maps onto effective descriptions of classical biological dynamics. We leave this as a program for future work, noting only that the geometric continuity established by Theorem~\ref{thm:metric-restriction} makes such a connection structurally natural.
+Theorem~\ref{thm:metric-restriction} establishes that the Fisher--Rao metric on the surviving classical simplex is the restriction of the Bures metric from the quantum state manifold. This geometric continuity suggests a natural question: whether classical coherence phenomena on longer timescales \cite{todd2026coherence,todd2026intelligence}---dissipative dynamics within the Fisher--Rao simplex---can be analyzed with the same information-geometric tools developed here. We leave this as a direction for future work.
 
 \subsection{Open questions}
 

@@ -432,11 +432,7 @@ if __name__ == "__main__":
     for i, j, J in weak_coupling_pairs():
         print(f"  ({i},{j}): J = {J:.1f} cm^-1")
 
-    # 2. Transport efficiency scan
-    print("\n" + "=" * 60)
-    print("Transport Efficiency (site 1 → site 3 sink)")
-    print("=" * 60)
-
+    # 2. Transport efficiency scan (both initial sites)
     gamma_values = np.concatenate([
         np.array([0.1, 0.5, 1.0, 2.0, 5.0]),
         np.arange(10, 110, 10),
@@ -444,9 +440,45 @@ if __name__ == "__main__":
     ])
     gamma_values = np.sort(np.unique(gamma_values))
 
-    etas = scan_efficiency(gamma_values, initial_site=0)
+    for site_label, site_idx in [("site 1", 0), ("site 6", 5)]:
+        print(f"\n{'=' * 60}")
+        print(f"Transport Efficiency ({site_label} initial excitation)")
+        print("=" * 60)
 
-    idx_max = np.argmax(etas)
-    print(f"\nPeak efficiency: eta={etas[idx_max]:.4f} at gamma={gamma_values[idx_max]:.1f} cm^-1")
+        etas = scan_efficiency(gamma_values, initial_site=site_idx)
+        idx_max = np.argmax(etas)
+        print(f"  Peak: eta={etas[idx_max]:.4f} at gamma={gamma_values[idx_max]:.1f} cm^-1")
+
+    # 3. Principal angles from sink-inclusive dynamics (both initial sites)
+    kappa_trap_cm = 5.3  # 1/ps in cm^-1
+    kappa = kappa_trap_cm * CM_TO_RADFS
+    H = H_FMO * CM_TO_RADFS
+    d = D_FMO
+    angle_gammas = np.array([0.1, 1.0, 10.0, 50.0, 100.0, 150.0, 200.0, 300.0, 500.0])
+
+    for site_label, site_idx in [("site 1", 0), ("site 6", 5)]:
+        print(f"\n{'=' * 60}")
+        print(f"Principal Angles — sink-inclusive, renormalized ({site_label})")
+        print("=" * 60)
+
+        rho0 = np.zeros((d, d), dtype=complex)
+        rho0[site_idx, site_idx] = 1.0
+
+        for gamma_cm in angle_gammas:
+            gamma = gamma_cm * CM_TO_RADFS
+            rho = evolve_lindblad_sink(H, gamma, kappa, rho0,
+                                       t_final=5000.0, dt=1.0, sink_site=2)
+            tr = np.real(np.trace(rho))
+            if tr > 1e-12:
+                rho_renorm = rho / tr
+            else:
+                rho_renorm = np.eye(d, dtype=complex) / d
+            rho_reg = rho_renorm + 1e-10 * np.eye(d) / d
+            rho_reg /= np.trace(rho_reg)
+
+            angles = principal_angles(rho_reg)
+            min_deg = np.degrees(np.min(angles))
+            print(f"  gamma={gamma_cm:7.1f} cm^-1  min_angle={min_deg:5.1f}deg  "
+                  f"Tr[rho]={tr:.4f}")
 
     print("\nDone.")
