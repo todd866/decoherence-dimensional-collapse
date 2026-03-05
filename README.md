@@ -5,6 +5,46 @@
 
 This project introduces a geometric way to quantify **how non-classical** a system is, then applies it across biological scales.
 
+## Executive summary
+
+Decoherence maps a $d$-level quantum system from a $(d^2-1)$-dimensional quantum manifold with the Bures metric onto the $(d-1)$-dimensional classical simplex with the Fisher-Rao metric:
+
+$$
+\Lambda_{\mathrm{dec}}(\rho) = \sum_{k=1}^{d} |k\rangle\langle k|\,\rho\,|k\rangle\langle k|,
+\qquad
+d^2-1 \longrightarrow d-1.
+$$
+
+We characterize this collapse:
+- exactly for qubits (closed-form Bures separation angle),
+- completely for $d\ge 3$ (global orthogonality theorem):
+$$
+T_\rho^{\mathrm{diag}} \perp_{g_B} T_\rho^{\mathrm{off}}
+\iff
+\rho \text{ is diagonal.}
+$$
+
+Applied to the 7-chromophore FMO complex:
+$$
+48 \to 6 \text{ dimensions.}
+$$
+Using a Haken-Strobl model with reaction-centre trapping, transport efficiency and geometric angles are computed from the same sink-inclusive dynamics (geometry extracted from the renormalized conditional state). At the ENAQT optimum, all six principal angles satisfy
+$$
+\theta_a > 87^\circ,\quad a=1,\dots,6,
+$$
+so biologically optimal transport occurs in a regime that is geometrically close to classical.
+
+## Key results
+
+- **Dimensional collapse theorem:** dephasing reduces QFIM rank from $d^2-1$ to at most $d-1$.
+- **Bures separation geometry:** exact closed form for qubits; global orthogonality theorem + perturbative cross-Gram for $d\ge 3$.
+- **FMO transport + geometry (same model):** ENAQT efficiency peak and Bures principal-angle analysis from the same sink-inclusive dynamics, for site-1 and site-6 initial conditions.
+- **Thermodynamic cost:** coherences store free energy
+$$
+\Delta F = k_B T\,C_r(\rho),
+$$
+which is destroyed irreversibly by dephasing (under the diagonal-$H$ condition used in the manuscript).
+
 ## What this repo is doing
 
 Standard coherence metrics usually compress dynamics to one scalar without resolving geometry.  
