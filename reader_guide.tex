@@ -183,7 +183,8 @@ To test where neural systems sit on the quantum-classical spectrum, the paper co
 \item \textbf{Collapse:} $99 \to 9$ dimensions.
 \item \textbf{Biological dephasing:} $\gamma_{\mathrm{bio}}/J_{\max} \approx 8 \times 10^{12}$.
 \item \textbf{Geometry at bio dephasing:} All 9 principal angles asymptotically $\to 90^\circ$ (already $>89.5^\circ$ at proxy $\gamma/J_{\max} = 50$).  Deep classical.
-\item \textbf{Detection threshold:} ${\sim}12$ orders of magnitude of microenvironment shielding would be needed for any quantum effect to become geometrically distinguishable.
+\item \textbf{Detection threshold:} ${\sim}14$ orders of magnitude of microenvironment shielding would be needed for any quantum effect to become geometrically distinguishable at oscillation-frequency scales.
+\item \textbf{But at molecular scales:} Ion channels ($d \sim 4$) operate at $\gamma_{\mathrm{bio}}/J_{\max} \sim O(1$--$30)$---the same regime as FMO/PE545.  The paper defines a non-classicality index $\chi$ and coordinated dimensionality $D_{\mathrm{coord}}$ to formalize this: deep classical oscillations ($\chi_{\mathrm{osc}} \approx 0$) reliably coordinate $N$ non-classical molecular sites ($\chi_m > 0$), so representational dimensionality scales with $N$, not oscillation frequency.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -196,11 +197,11 @@ An empirical validation using the Potjans--Diesmann cortical column model ($d = 
 
 \subsection*{The punchline}
 
-Three biological systems spanning $12$ orders of magnitude in dephasing all follow the same geometric framework: \textbf{photosynthetic complexes sit near the quantum-classical boundary; neural oscillator assemblies are geometrically indistinguishable from the classical simplex.}
+Three biological systems spanning $12$ orders of magnitude in dephasing all follow the same geometric framework: \textbf{photosynthetic complexes sit near the quantum-classical boundary; neural oscillator assemblies are deep classical at oscillation-frequency scales but coordinate molecular systems that sit near the boundary.}
 
-An illustrative molecular-oscillator model (chromatin, $d = 8$; Appendix~C) explores whether this near-boundary position extends beyond photosynthesis.  At reference parameters ($\gamma_{\mathrm{bio}}/J_{\max} = 8$), $\theta_{\min} \approx 87^\circ$---suggestively near the boundary.  However, a sensitivity sweep reveals that the position is sensitive to coupling strength, motivating future work with experimentally determined Hamiltonians.
+The paper formalizes this as a \textbf{multi-scale architecture}: a non-classicality index $\chi$ (Definition~3.11) measures departure from the classical simplex, and a coordinated dimensionality $D_{\mathrm{coord}}$ (Definition~6.1) shows that effective dimensionality scales with entrained site count $N$, not oscillation frequency.  Low-frequency oscillations, being deeper classical, are \emph{more} reliable as coordination channels---and they entrain more molecular sites.
 
-This does not rule out quantum effects in neural microenvironments (ion channels, protein interiors) at molecular energy scales.  It means the framework converts ``is it quantum?'' from a yes/no question into a quantitative geometric bound.
+An illustrative molecular-oscillator model (chromatin, $d = 8$; Appendix~C) explores whether this near-boundary position extends beyond photosynthesis.  At reference parameters ($\gamma_{\mathrm{bio}}/J_{\max} = 8$), $\theta_{\min} \approx 87^\circ$---suggestively near the boundary.  However, a sensitivity sweep reveals that the position is sensitive to coupling strength, motivating future work with experimentally determined Hamiltonians (especially ion channel selectivity filters).
 
 \section*{Thermodynamic cost}
 

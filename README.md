@@ -21,6 +21,7 @@ The framework is scale-invariant: principal angles depend on the dimensionless r
 - **Dimensional collapse**: QFIM rank drops from $d^2{-}1$ to $d{-}1$; collapse ratio $1/(d{+}1) \to 0$
 - **Exact Bures angle** (qubits): closed-form expression for the separation angle
 - **Global orthogonality theorem** ($d \geq 3$): diagonal and off-diagonal subspaces are Bures-orthogonal *if and only if* $\rho$ is diagonal --- any coherence breaks orthogonality
+- **Non-classicality index**: $\chi(\rho) = \frac{1}{d-1}\sum_a \cos^2\theta_a$ --- continuous scalar measure of departure from classical simplex
 - **Thermodynamic cost**: coherences store free energy $k_BT \cdot C_r(\rho)$; cost per collapsed dimension $\sim \ln d / d^2$
 
 ### Applications --- **Empirical**
@@ -33,6 +34,9 @@ The framework is scale-invariant: principal angles depend on the dimensionless r
 
 An illustrative molecular-oscillator case study (chromatin, $d = 8$) is presented in Appendix C. At reference parameters ($\gamma_{\rm bio}/J_{\max} = 8.0$), $\theta_{\min} \approx 87°$, but the position is sensitive to coupling strength (see sensitivity sweep in Appendix C).
 
+### Multi-scale architecture --- **Hypothesis**
+Neural oscillations are deep classical ($\chi_{\rm osc} \approx 0$), but the molecular machinery they coordinate --- ion channels ($d \sim 4$), synaptic receptors --- operates at energy scales where $\chi_m > 0$. Coordinated dimensionality $D_{\rm coord} = N[(d_m{-}1) + \chi_m(d_m^2{-}d_m)]$ scales with entrained site count $N$, not oscillation frequency. Low frequency = high dimensionality.
+
 ### Cost-benefit interpretation --- **Hypothesis**
 The ENAQT regime may represent a cost-benefit sweet spot where extra dimensional capacity from partial coherence comes at modest thermodynamic cost.
 
@@ -42,11 +46,12 @@ The ENAQT regime may represent a cost-benefit sweet spot where extra dimensional
 |---|---|
 | Understand the core idea | §1 Introduction + Figure 1 (Bloch sphere collapse) |
 | See the mathematical framework | §2 (state manifold, QFIM, Bures metric, effective dimensionality) |
-| Read the main theorems | §3: Thm 3.1 (collapse), Thm 3.4 (Bures angle), Thm 3.6 (global orthogonality) |
+| Read the main theorems | §3: Thm 3.1 (collapse), Thm 3.4 (Bures angle), Thm 3.6 (global orthogonality), Def 3.11 ($\chi$) |
 | See the thermodynamic cost | §4 (free energy of coherence, cost per collapsed dimension) |
 | See the FMO application | §5.1--5.5 + Figures 4, 6 |
 | See the PE545 second complex | §5.7 + Figure 7 |
 | See the neural application | §6 + Figure 8 |
+| See the multi-scale architecture | §6.4: Def 6.1 ($D_{\rm coord}$), Prop 6.2 (low-F = high-D) |
 | See cross-scale comparison | §6.4 + Table in Appendix D |
 | See the chromatin case study | Appendix C (illustrative model + sensitivity sweep) |
 | Understand robustness | §5.6 + Figure 6b (trapping-rate robustness) |
