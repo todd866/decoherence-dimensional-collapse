@@ -12,6 +12,7 @@ Produces:
   figures/fig6_robustness.{pdf,png}         — Angle spectrum + sink-rate robustness
   figures/fig7_pe545.{pdf,png}              — PE545 transport + principal angles
   figures/fig8_neural_comparison.{pdf,png}  — Cross-scale quantum-classical boundary
+  figures/fig9_effect_size.{pdf,png}        — Absolute/relative uplift + amplification
 
 Usage:
   cd physics/70_decoherence_dimensional_collapse
@@ -1088,6 +1089,89 @@ def fig8_neural_comparison():
     save(fig, "fig8_neural_comparison")
 
 
+def fig9_effect_size():
+    """Quantitative bridge from small χ_m to system-level effects.
+
+    Three-panel figure:
+      (a) Absolute uplift: ΔD_coord = N χ_m (d_m^2 - d_m)
+      (b) Relative uplift: R = D_coord / [N(d_m-1)] = 1 + χ_m d_m
+      (c) Required amplification gain for detectable relative effect ε_det:
+          G_req = ε_det / (χ_m d_m)
+    """
+    print("Figure 9: Effect-size scaling ...")
+
+    # Ion-channel anchor from manuscript (model-based empirical)
+    chi_anchor = 2.8e-4
+    d_m = 4
+    coh_dims = d_m**2 - d_m  # 12
+
+    # Panel (a): absolute uplift scales linearly with N
+    N_vals = np.logspace(0, 6, 240)  # 1 ... 1e6
+    chi_curves = [
+        (1.0e-4, "low χ_m"),
+        (2.8e-4, "ion-channel anchor"),
+        (1.0e-3, "high χ_m"),
+    ]
+
+    # Panel (b,c): χ_m sweep
+    chi_vals = np.logspace(-6, -1, 240)
+    rel_uplift = 1.0 + chi_vals * d_m
+    eps_targets = [1e-3, 1e-2, 5e-2]  # 0.1%, 1%, 5%
+
+    fig, axes = plt.subplots(1, 3, figsize=(13.0, 4.0))
+    ax_a, ax_b, ax_c = axes
+
+    # (a) Absolute uplift
+    for i, (chi, label) in enumerate(chi_curves):
+        delta = N_vals * chi * coh_dims
+        ax_a.loglog(N_vals, delta, lw=2.0, color=PAL[i], label=label)
+    # Anchor thresholds
+    for y in [1, 10, 100]:
+        ax_a.axhline(y, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
+    N1 = 1.0 / (chi_anchor * coh_dims)
+    ax_a.axvline(N1, color=PAL[3], ls=":", lw=1.0, alpha=0.8)
+    ax_a.text(N1 * 1.08, 0.35, r"$N_{\Delta D=1}\!\approx\!300$",
+              fontsize=8, color=PAL[3], rotation=90, va="bottom")
+    ax_a.set_xlabel(r"Entrained sites $N$")
+    ax_a.set_ylabel(r"Absolute uplift $\Delta D_{\mathrm{coord}}$")
+    ax_a.set_title("(a) Absolute Uplift", loc="left", fontweight="bold", fontsize=11)
+    ax_a.legend(loc="upper left", fontsize=8, framealpha=0.9)
+
+    # (b) Relative uplift
+    ax_b.semilogx(chi_vals, rel_uplift, color=PAL[0], lw=2.0)
+    anchor_rel = 1.0 + chi_anchor * d_m
+    ax_b.axvline(chi_anchor, color=PAL[3], ls=":", lw=1.0)
+    ax_b.axhline(anchor_rel, color=PAL[3], ls=":", lw=1.0)
+    ax_b.text(chi_anchor * 1.2, anchor_rel + 0.00015,
+              r"$1+\chi_m d_m\!\approx\!1.00112$",
+              fontsize=8, color=PAL[3])
+    ax_b.set_xlabel(r"Non-classicality index $\chi_m$")
+    ax_b.set_ylabel(r"Relative uplift $R = 1+\chi_m d_m$")
+    ax_b.set_ylim(1.0, 1.45)
+    ax_b.set_title("(b) Relative Uplift", loc="left", fontweight="bold", fontsize=11)
+
+    # (c) Required amplification gain
+    for i, eps in enumerate(eps_targets):
+        g_req = eps / (chi_vals * d_m)
+        ax_c.loglog(chi_vals, g_req, color=PAL[i], lw=2.0,
+                    label=fr"$\epsilon_{{\rm det}}={100*eps:.1f}\%$")
+    # Anchor point at χ=2.8e-4
+    for eps in eps_targets:
+        g_anchor = eps / (chi_anchor * d_m)
+        ax_c.plot([chi_anchor], [g_anchor], marker="o", color=PAL[3], ms=3)
+    ax_c.axvline(chi_anchor, color=PAL[3], ls=":", lw=1.0)
+    ax_c.text(chi_anchor * 1.2, 1.2e1,
+              r"anchor $\chi_m\!\approx\!2.8\times10^{-4}$",
+              fontsize=8, color=PAL[3])
+    ax_c.set_xlabel(r"Non-classicality index $\chi_m$")
+    ax_c.set_ylabel(r"Required gain $G_{\rm req}=\epsilon_{\rm det}/(\chi_m d_m)$")
+    ax_c.set_title("(c) Amplification Requirement", loc="left", fontweight="bold", fontsize=11)
+    ax_c.legend(loc="upper right", fontsize=8, framealpha=0.9)
+
+    fig.tight_layout()
+    save(fig, "fig9_effect_size")
+
+
 def neural_robustness_check():
     """Run cross-scale model checks and print comparison table.
 
@@ -1356,6 +1440,7 @@ if __name__ == "__main__":
     fig6_robustness()
     fig7_pe545()
     fig8_neural_comparison()
+    fig9_effect_size()
     pe545_robustness_check()
     neural_robustness_check()
     chromatin_sensitivity_sweep()

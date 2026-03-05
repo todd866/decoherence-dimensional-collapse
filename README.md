@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-This project introduces a geometric way to quantify **how non-classical** a system is, then applies it across biological scales.
+This project introduces a geometric method to quantify the **degree of non-classicality** of a system, then applies that method across biological scales.
 
 ## Executive summary
 
@@ -45,7 +45,7 @@ So biologically optimal transport occurs in a regime that is geometrically close
 - **Dimensional collapse theorem:** dephasing reduces QFIM rank from $d^2-1$ to at most $d-1$.
 - **Bures separation geometry:** exact closed form for qubits; global orthogonality theorem + perturbative cross-Gram for $d\ge 3$.
 - **FMO transport + geometry (same model):** ENAQT efficiency peak and Bures principal-angle analysis from the same sink-inclusive dynamics, for site-1 and site-6 initial conditions.
-- **Thermodynamic cost:** coherences store free energy \(\Delta F = k_B T\,C_r(\rho)\), destroyed irreversibly by dephasing (under the diagonal-\(H\) condition used in the manuscript).
+- **Thermodynamic cost:** coherences store free energy $\Delta F = k_B T\,C_r(\rho)$, destroyed irreversibly by dephasing (under the diagonal-$H$ condition used in the manuscript).
 
 ## What this repo is doing
 
@@ -116,6 +116,16 @@ $$
 
 This formalizes “low frequency can coordinate high-dimensional non-classical content” through site count $N$, not oscillation frequency itself.
 
+The key scaling split is:
+
+$$
+\Delta D_{\mathrm{coord}} = N\,\chi_m\,(d_m^2-d_m),
+\qquad
+R_{\mathrm{coord}} = 1+\chi_m d_m.
+$$
+
+So absolute uplift grows with entrained area ($N$), while relative uplift is set locally by $\chi_m$ and $d_m$.
+
 ## Reader map
 
 | Goal | Where to read |
@@ -126,7 +136,7 @@ This formalizes “low frequency can coordinate high-dimensional non-classical c
 | Thermodynamics | §4 |
 | Photosynthesis (FMO/PE545) | §5 + Figs. 4, 6, 7 |
 | Neural + cross-scale | §6 + Fig. 8 |
-| Low-F/high-D formalization | §6.4 (Def. 6.1, Prop. 6.2) |
+| Low-F/high-D formalization | §6.4 (Def. 6.1, Props. 6.2-6.3) + Fig. 9 |
 | Ion channel model anchor | Appendix C.1 |
 | Chromatin sensitivity | Appendix C |
 | Numerics/methods | Appendix A |

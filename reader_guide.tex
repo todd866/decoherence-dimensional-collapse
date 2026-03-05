@@ -185,6 +185,7 @@ To test where neural systems sit on the quantum-classical spectrum, the paper co
 \item \textbf{Geometry at bio dephasing:} All 9 principal angles asymptotically $\to 90^\circ$ (already $>89.5^\circ$ at proxy $\gamma/J_{\max} = 50$).  Deep classical.
 \item \textbf{Detection threshold:} ${\sim}14$ orders of magnitude of microenvironment shielding would be needed for any quantum effect to become geometrically distinguishable at oscillation-frequency scales.
 \item \textbf{But at molecular scales:} Ion channels ($d \sim 4$) operate at $\gamma_{\mathrm{bio}}/J_{\max} \sim O(1$--$30)$---the same regime as FMO/PE545.  The paper defines a non-classicality index $\chi$ and coordinated dimensionality $D_{\mathrm{coord}}$ to formalize this: deep classical oscillations ($\chi_{\mathrm{osc}} \approx 0$) reliably coordinate $N$ non-classical molecular sites ($\chi_m > 0$), so representational dimensionality scales with $N$, not oscillation frequency.
+\item \textbf{Effect-size split:} Absolute uplift scales as $\Delta D_{\mathrm{coord}} = N\chi_m(d_m^2-d_m)$, while relative uplift is fixed at $R_{\mathrm{coord}}=1+\chi_m d_m$ (Fig.~9). For the ion-channel anchor, this is small per site but accumulates with large $N$.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -199,7 +200,7 @@ An empirical validation using the Potjans--Diesmann cortical column model ($d = 
 
 Three validated systems spanning $12$ orders of magnitude in dephasing, plus two illustrative molecular models, all follow the same geometric framework: \textbf{photosynthetic and molecular-scale systems sit near the quantum-classical boundary; neural oscillator assemblies are deep classical at oscillation-frequency scales but coordinate molecular systems that remain non-classical ($\chi_m>0$).}
 
-The paper formalizes this as a \textbf{multi-scale architecture}: a non-classicality index $\chi$ (Definition~3.11) measures departure from the classical simplex, and a coordinated dimensionality $D_{\mathrm{coord}}$ (Definition~6.1) shows that effective dimensionality scales with entrained site count $N$, not oscillation frequency.  Low-frequency oscillations, being deeper classical, are \emph{more} reliable as coordination channels---and they entrain more molecular sites.
+The paper formalizes this as a \textbf{multi-scale architecture}: a non-classicality index $\chi$ (Definition~3.11) measures departure from the classical simplex, and a coordinated dimensionality $D_{\mathrm{coord}}$ (Definition~6.1) shows that effective dimensionality scales with entrained site count $N$, not oscillation frequency.  Proposition~6.3 then separates absolute and relative effect sizes: absolute uplift can accumulate with area, while relative uplift remains locally constrained by $\chi_m$ and $d_m$.
 
 An illustrative ion-channel model ($d = 4$; Appendix~C) gives $\theta_{\min}\approx 88.5^\circ$ and $\chi\approx2.8\times10^{-4}$ at biological dephasing, i.e.\ non-classical but near-classical geometry.  An additional chromatin model ($d = 8$; Appendix~C) sits near the boundary at reference parameters ($\theta_{\min}\approx87^\circ$) but is sensitivity-limited at weak coupling, motivating future work with experimentally determined Hamiltonians.
 

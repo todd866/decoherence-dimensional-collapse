@@ -557,7 +557,56 @@ When $\chi_m = 0$ (classical), $D_{\mathrm{coord}} = N(d_m - 1)$: only the simpl
 The representational dimensionality of the coordinated molecular manifold scales with entrained site count, not oscillation frequency.
 \end{proposition}
 
-Deep classicality is what makes this scaling possible: the oscillation layer is a geometrically reliable channel ($\chi_{\mathrm{osc}} \approx 0$) that faithfully transmits molecular-scale events with high fidelity precisely because it adds no quantum-classical mixing of its own. The principal angle framework converts ``is the nervous system quantum?'' from a binary question into a scale-dependent geometric answer: deep classical at oscillation frequencies ($\chi_{\mathrm{osc}} \approx 0$), non-classical at molecular scales ($\chi_m > 0$), with classical oscillations providing the reliable high-fidelity channel between the two. Computing $\chi_m$ for experimentally determined ion channel Hamiltonians is a natural next step (\S\ref{sec:bridge}).
+Deep classicality is what makes this scaling possible: the oscillation layer is a geometrically reliable channel ($\chi_{\mathrm{osc}} \approx 0$) that faithfully transmits molecular-scale events with high fidelity precisely because it adds no quantum-classical mixing of its own. The principal angle framework converts ``is the nervous system quantum?'' from a binary question into a scale-dependent geometric answer: deep classical at oscillation frequencies ($\chi_{\mathrm{osc}} \approx 0$), non-classical at molecular scales ($\chi_m > 0$), with classical oscillations providing the reliable high-fidelity channel between the two.
+
+\begin{proposition}[Absolute vs relative non-classical uplift]
+\label{prop:absolute-relative}
+For fixed molecular subsystem size $d_m$ and non-classicality $\chi_m$, Definition~\ref{def:dcoord} implies
+\begin{align}
+\Delta D_{\mathrm{coord}}
+&:= D_{\mathrm{coord}} - N(d_m-1)
+= N\,\chi_m\,(d_m^2-d_m), \label{eq:delta-dcoord}\\
+R_{\mathrm{coord}}
+&:= \frac{D_{\mathrm{coord}}}{N(d_m-1)}
+= 1 + \chi_m d_m. \label{eq:relative-dcoord}
+\end{align}
+Hence absolute uplift grows linearly with entrained site count $N$, while relative uplift is independent of $N$.
+\end{proposition}
+
+\begin{proof}
+Subtract and divide equation~\eqref{eq:dcoord} by $N(d_m-1)$.
+\end{proof}
+
+\paragraph{Effect-size accounting (ion-channel anchor).}
+Using the illustrative ion-channel value $\chi_m \approx 2.8\times10^{-4}$ at biological dephasing with $d_m=4$:
+\begin{equation}
+\Delta D_{\mathrm{coord}} \approx 3.36\times 10^{-3}\,N,
+\qquad
+R_{\mathrm{coord}} \approx 1.00112.
+\end{equation}
+So the local non-classical contribution is small ($0.112\%$ relative uplift), but absolute uplift accumulates with coordinated area:
+\begin{equation}
+N_{\Delta D=1} \approx \frac{1}{\chi_m(d_m^2-d_m)} \approx 3.0\times10^2,
+\qquad
+N_{\Delta D=10} \approx 3.0\times10^3.
+\end{equation}
+If downstream readout requires detectable relative uplift $\epsilon_{\mathrm{det}}$, the required amplification gain is
+\begin{equation}
+G_{\mathrm{req}} = \frac{\epsilon_{\mathrm{det}}}{\chi_m d_m}
+\quad
+\text{(\emph{hypothesis-level readout model}).}
+\label{eq:gain-required}
+\end{equation}
+For the ion-channel anchor, this gives $G_{\mathrm{req}}\approx 8.9$ for $\epsilon_{\mathrm{det}}=1\%$ and $G_{\mathrm{req}}\approx 44.6$ for $\epsilon_{\mathrm{det}}=5\%$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig9_effect_size.pdf}
+\caption{\textbf{Effect-size scaling for low-F/high-D bridge.} \textbf{(a)} Absolute uplift $\Delta D_{\mathrm{coord}} = N\chi_m(d_m^2-d_m)$ vs entrained site count $N$ for representative $\chi_m$ values, including the ion-channel anchor ($\chi_m=2.8\times10^{-4}$). \textbf{(b)} Relative uplift $R_{\mathrm{coord}}=1+\chi_m d_m$ vs $\chi_m$ for $d_m=4$; for the anchor, $R_{\mathrm{coord}}\approx1.00112$. \textbf{(c)} Required amplification gain $G_{\mathrm{req}}=\epsilon_{\mathrm{det}}/(\chi_m d_m)$ for detection thresholds $\epsilon_{\mathrm{det}}\in\{0.1\%,1\%,5\%\}$. The key distinction is explicit: absolute uplift scales with $N$, while relative uplift does not.}
+\label{fig:effect-size}
+\end{figure}
+
+Computing $\chi_m$ for experimentally determined ion channel Hamiltonians remains the decisive next step (\S\ref{sec:bridge}).
 
 As an empirical validation, we repeat the analysis with the Potjans--Diesmann canonical cortical microcircuit model ($d = 8$, empirical connectivity from \cite{potjans2014cell}; see Appendix~\ref{app:neural}). Both the synthetic ($d = 10$) and empirical ($d = 8$) neural models give the same qualitative result: all angles $\approx 90^\circ$ at biological dephasing, with the ENAQT-equivalent regime at $\gamma/J_{\max} \sim O(10^{-1}$--$1)$.
 
@@ -567,7 +616,7 @@ As an empirical validation, we repeat the analysis with the Potjans--Diesmann ca
 
 \subsection{Summary of results}
 
-We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) establishes that for $d \geq 3$ the diagonal and off-diagonal tangent subspaces are Bures-orthogonal \emph{only} at diagonal states---any coherence breaks orthogonality, resolving the higher-dimensional geometry exactly. Applied to three biological systems spanning $12$ orders of magnitude in dephasing---FMO ($d = 7$), PE545 ($d = 8$), and a cortical gamma assembly ($d = 10$)---the principal angle framework reveals a continuous geometric spectrum: photosynthetic complexes sit near the quantum-classical boundary (angles $87^\circ$--$89^\circ$), while neural oscillator assemblies are asymptotically indistinguishable from the classical simplex at oscillation-frequency scales (angles $\to 90^\circ$). For an illustrative ion-channel model ($d=4$), biological dephasing yields $\theta_{\min}\approx88.5^\circ$ with $\chi_m\approx2.8\times10^{-4}$: non-classical but near-classical geometry. This supports (without proving for real channels) the molecular-scale hypothesis that $\gamma_{\mathrm{bio}}/J_{\max}\sim O(1$--$30)$ can maintain $\chi_m>0$. The deep classicality of oscillations ($\chi_{\mathrm{osc}} \approx 0$) is then a feature: it provides a reliable channel through which $N$ non-classical molecular sites contribute coordinated dimensionality $D_{\mathrm{coord}} = N[(d_m{-}1) + \chi_m(d_m^2{-}d_m)]$ (Proposition~\ref{prop:low-f-high-d}), scaling with entrained site count rather than oscillation frequency.
+We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) establishes that for $d \geq 3$ the diagonal and off-diagonal tangent subspaces are Bures-orthogonal \emph{only} at diagonal states---any coherence breaks orthogonality, resolving the higher-dimensional geometry exactly. Applied to three biological systems spanning $12$ orders of magnitude in dephasing---FMO ($d = 7$), PE545 ($d = 8$), and a cortical gamma assembly ($d = 10$)---the principal angle framework reveals a continuous geometric spectrum: photosynthetic complexes sit near the quantum-classical boundary (angles $87^\circ$--$89^\circ$), while neural oscillator assemblies are asymptotically indistinguishable from the classical simplex at oscillation-frequency scales (angles $\to 90^\circ$). For an illustrative ion-channel model ($d=4$), biological dephasing yields $\theta_{\min}\approx88.5^\circ$ with $\chi_m\approx2.8\times10^{-4}$: non-classical but near-classical geometry. This supports (without proving for real channels) the molecular-scale hypothesis that $\gamma_{\mathrm{bio}}/J_{\max}\sim O(1$--$30)$ can maintain $\chi_m>0$. The low-F/high-D bridge is now quantitatively constrained: absolute uplift grows as $\Delta D_{\mathrm{coord}}=N\chi_m(d_m^2-d_m)$ while relative uplift is fixed at $1+\chi_m d_m$ (Proposition~\ref{prop:absolute-relative}, Figure~\ref{fig:effect-size}).
 
 \subsection{The dimensional cost-benefit interpretation}
 \label{sec:cost-benefit}
