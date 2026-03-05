@@ -203,6 +203,33 @@ ION_CHANNEL_BIO_GAMMA_CM = 200.0  # cm^-1, protein aqueous dephasing at 310K
 ION_CHANNEL_BIO_GAMMA_OVER_JMAX = ION_CHANNEL_BIO_GAMMA_CM / ION_CHANNEL_JMAX_CM  # ≈ 6.7
 
 
+# ── Protein mid-fold microdomain (d=6) ───────────────────────────────────────
+# Illustrative coarse-grained folding intermediate network.
+# Sites represent metastable conformational microstates along a local folding
+# trajectory (pre-nucleus -> partial pack -> near-native pocket).
+# Energies/couplings are in molecular vibrational range (cm^-1), not full-protein
+# thermodynamic free-energy units.
+_PROTEIN_MIDFOLD_H_CM = np.array([
+    [20.0, 25.0, 12.0,  0.0,  0.0,  0.0],
+    [25.0, 35.0, 18.0, 22.0,  0.0,  0.0],
+    [12.0, 18.0, 42.0, 20.0, 10.0,  0.0],
+    [ 0.0, 22.0, 20.0, 50.0, 24.0, 12.0],
+    [ 0.0,  0.0, 10.0, 24.0, 38.0, 26.0],
+    [ 0.0,  0.0,  0.0, 12.0, 26.0, 28.0],
+], dtype=np.float64)
+
+def _build_protein_midfold_hamiltonian():
+    """Build 6×6 illustrative protein mid-fold Hamiltonian (cm^-1)."""
+    return _PROTEIN_MIDFOLD_H_CM.copy()
+
+H_PROTEIN_MIDFOLD = _build_protein_midfold_hamiltonian()
+PROTEIN_MIDFOLD_JMAX_CM = np.max(
+    np.abs(H_PROTEIN_MIDFOLD - np.diag(np.diag(H_PROTEIN_MIDFOLD))))
+PROTEIN_MIDFOLD_BIO_GAMMA_CM = 200.0
+PROTEIN_MIDFOLD_BIO_GAMMA_OVER_JMAX = (
+    PROTEIN_MIDFOLD_BIO_GAMMA_CM / PROTEIN_MIDFOLD_JMAX_CM)
+
+
 # ── Complex registry ─────────────────────────────────────────────────────────
 
 COMPLEXES = {
@@ -247,6 +274,16 @@ COMPLEXES = {
         'kappa_ps': [0.5],
         'gamma_scan_cm': (1, 1000),
         'reference': 'Illustrative (KcsA-like selectivity filter)',
+    },
+    'ProteinMidFold': {
+        'name': 'ProteinMidFold',
+        'labels': ['U0', 'I1', 'I2', 'I3', 'I4', 'N*'],
+        'H_cm': H_PROTEIN_MIDFOLD,
+        'initial_sites': [0],
+        'target_sites': [5],
+        'kappa_ps': [0.5],
+        'gamma_scan_cm': (1, 1000),
+        'reference': 'Illustrative (protein mid-fold microdomain)',
     },
     'NeuralGamma': {
         'name': 'NeuralGamma',

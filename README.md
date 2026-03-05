@@ -101,6 +101,7 @@ The framework is scale-invariant: results are controlled by $\gamma/J_{\max}$.
 | FMO (validated) | 7 | $48 \to 6$ | $\sim 1.1$ | $\sim 87.7^\circ$ | Near transition |
 | PE545 (validated) | 8 | $63 \to 7$ | $\sim 7.9$ | $\sim 89.0^\circ$ | Near-classical transition zone |
 | Ion channel (illustrative) | 4 | $15 \to 3$ | $\sim 6.7$ | $\sim 88.5^\circ$ | Non-classical ($\chi \approx 2.8\times10^{-4}$), near-classical |
+| Protein mid-fold (illustrative) | 6 | $35 \to 5$ | $\sim 7.7$ | $\sim 88.2^\circ$ | Non-classical ($\chi \approx 3.7\times10^{-4}$), near-classical |
 | Neural gamma (model) | 10 | $99 \to 9$ | $\sim 8\times 10^{12}$ | $\to 90^\circ$ | Deep classical at oscillation scale |
 
 Chromatin ($d=8$) is included as an additional illustrative molecular model (sensitivity-limited at weak coupling).
@@ -125,6 +126,7 @@ R_{\mathrm{coord}} = 1+\chi_m d_m.
 $$
 
 So absolute uplift grows with entrained area ($N$), while relative uplift is set locally by $\chi_m$ and $d_m$.
+This is a computational-cost statement, not an impossibility claim: classical surrogates are always possible, but tracking non-classical payload structure adds an extra burden that scales with $N$.
 
 ## Reader map
 
@@ -137,7 +139,7 @@ So absolute uplift grows with entrained area ($N$), while relative uplift is set
 | Photosynthesis (FMO/PE545) | §5 + Figs. 4, 6, 7 |
 | Neural + cross-scale | §6 + Fig. 8 |
 | Low-F/high-D formalization | §6.4 (Def. 6.1, Props. 6.2-6.3) + Fig. 9 |
-| Ion channel model anchor | Appendix C.1 |
+| Ion channel + protein-fold anchors | Appendix C.1-C.2 |
 | Chromatin sensitivity | Appendix C |
 | Numerics/methods | Appendix A |
 

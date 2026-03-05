@@ -47,6 +47,7 @@ from fmo_analysis import (
     _CHROMATIN_SITE_ENERGIES_CM, _CHROMATIN_J_NN, _CHROMATIN_J_LR,
     H_ION_CHANNEL, ION_CHANNEL_JMAX_CM, ION_CHANNEL_BIO_GAMMA_CM,
     ION_CHANNEL_BIO_GAMMA_OVER_JMAX,
+    H_PROTEIN_MIDFOLD, PROTEIN_MIDFOLD_JMAX_CM, PROTEIN_MIDFOLD_BIO_GAMMA_CM,
 )
 
 # ── Global style ─────────────────────────────────────────────────────────────
@@ -726,7 +727,7 @@ def fig6_robustness():
     # Shaded band between min and max
     ax_a.fill_between(gamma_values_cm, all_angles[:, 0], all_angles[:, 5],
                        alpha=0.12, color=PAL[0])
-    ax_a.axhline(90, color=PAL[5], ls="--", lw=0.8, alpha=0.5)
+    ax_a.axhline(90, color="#8a8a8a", ls="--", lw=0.8, alpha=0.5)
     ax_a.set_xlabel(r"Dephasing rate $\gamma$ (cm$^{-1}$)")
     ax_a.set_ylabel(r"Principal angles (degrees)")
     ax_a.set_xlim(0.08, 600)
@@ -884,13 +885,14 @@ def fig8_neural_comparison():
 
     Two-panel figure:
       (a) θ_min vs dimensionless dephasing γ/J_max for FMO, PE545, ion channel,
-          chromatin, neural (d=10) on log scale, with biological dephasing marked
+          protein mid-fold, chromatin, neural (d=10) on log scale,
+          with biological dephasing marked
       (b) Detection threshold: θ_min vs hypothetical dephasing for neural system,
           with microenvironment shielding factor on secondary x-axis
     """
     print("Figure 8: Cross-scale quantum-classical boundary ...")
 
-    # ── Compute θ_min vs γ/J_max for all three systems ──
+    # ── Compute θ_min vs γ/J_max for all systems ──
 
     # FMO: J_max ≈ 87.7 cm^-1 (sites 1-2 coupling)
     fmo_jmax = np.max(np.abs(H_FMO - np.diag(np.diag(H_FMO))))
@@ -898,6 +900,8 @@ def fig8_neural_comparison():
     pe545_jmax = np.max(np.abs(H_PE545 - np.diag(np.diag(H_PE545))))
     # Chromatin: J_max = 25 cm^-1
     chromatin_jmax = CHROMATIN_JMAX_CM
+    # Protein mid-fold: J_max = 26 cm^-1
+    protein_midfold_jmax = PROTEIN_MIDFOLD_JMAX_CM
     # Neural: J_max = 250 cm^-1 (scaled)
     neural_jmax = NEURAL_GAMMA_JMAX_CM
 
@@ -975,6 +979,11 @@ def fig8_neural_comparison():
         H_ION_CHANNEL, 0, [3], [0.5], ion_jmax,
         gamma_over_j_values, "Ion channel d=4")
 
+    print("  Computing Protein mid-fold (d=6) angles...")
+    protein_midfold_angles = compute_theta_min_scan(
+        H_PROTEIN_MIDFOLD, 0, [5], [0.5], protein_midfold_jmax,
+        gamma_over_j_values, "Protein mid-fold d=6")
+
     # Biological dephasing ratios (dimensionless γ_bio/J_max)
     # FMO: γ_bio ≈ 100 cm^-1 at 300K → γ_bio/J_max ≈ 1.1
     fmo_bio_ratio = 100.0 / fmo_jmax
@@ -984,6 +993,8 @@ def fig8_neural_comparison():
     chromatin_bio_ratio = CHROMATIN_BIO_GAMMA_OVER_JMAX
     # Ion channel: γ_bio = 200 cm^-1 → γ_bio/J_max ≈ 6.7
     ion_bio_ratio = ION_CHANNEL_BIO_GAMMA_OVER_JMAX
+    # Protein mid-fold: γ_bio = 200 cm^-1 → γ_bio/J_max ≈ 7.7
+    protein_midfold_bio_ratio = PROTEIN_MIDFOLD_BIO_GAMMA_CM / protein_midfold_jmax
     # Neural: γ_bio/J_max ≈ 8.12e12
     neural_bio_ratio = NEURAL_BIO_GAMMA_OVER_JMAX
 
@@ -1025,6 +1036,9 @@ def fig8_neural_comparison():
     ax_a.semilogx(gamma_over_j_values, ion_angles, "v-", color=PAL[3], lw=1.5,
                    ms=3, markeredgecolor="white", markeredgewidth=0.4,
                    label=r"Ion channel ($d = 4$)")
+    ax_a.semilogx(gamma_over_j_values, protein_midfold_angles, "P-",
+                   color=PAL[5], lw=1.5, ms=3, markeredgecolor="white",
+                   markeredgewidth=0.4, label=r"Protein mid-fold ($d = 6$)")
     ax_a.semilogx(gamma_over_j_values, neural_angles, "^-", color=PAL[2], lw=1.5,
                    ms=3, markeredgecolor="white", markeredgewidth=0.4,
                    label=r"Neural ($d = 10$)")
@@ -1033,6 +1047,7 @@ def fig8_neural_comparison():
     ax_a.axvline(fmo_bio_ratio, color=PAL[0], ls="--", lw=0.8, alpha=0.6)
     ax_a.axvline(pe545_bio_ratio, color=PAL[1], ls="--", lw=0.8, alpha=0.6)
     ax_a.axvline(ion_bio_ratio, color=PAL[3], ls="--", lw=0.8, alpha=0.6)
+    ax_a.axvline(protein_midfold_bio_ratio, color=PAL[5], ls="--", lw=0.8, alpha=0.6)
     ax_a.axvline(chromatin_bio_ratio, color=PAL[4], ls="--", lw=0.8, alpha=0.6)
 
     # Neural bio dephasing is far off-scale; annotate with arrow
@@ -1198,6 +1213,9 @@ def neural_robustness_check():
         ("IonChannel (d=4)", H_ION_CHANNEL, 0, [3], [0.5],
          ION_CHANNEL_JMAX_CM,
          15.0, ION_CHANNEL_BIO_GAMMA_CM),  # Ion channel: illustrative bio γ
+        ("ProteinMidFold (d=6)", H_PROTEIN_MIDFOLD, 0, [5], [0.5],
+         PROTEIN_MIDFOLD_JMAX_CM,
+         15.0, PROTEIN_MIDFOLD_BIO_GAMMA_CM),  # Protein mid-fold: illustrative bio γ
         ("NeuralGamma (d=10)", H_NEURAL_GAMMA, 0, [8, 9], [0.5, 0.5],
          NEURAL_GAMMA_JMAX_CM,
          15.0, None),  # Neural: bio γ too large, use proxy
