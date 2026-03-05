@@ -174,6 +174,35 @@ CHROMATIN_JMAX_CM = 25.0   # J_max = max nearest-neighbor coupling
 CHROMATIN_BIO_GAMMA_CM = 200.0  # cm^-1, protein aqueous dephasing at 310K
 CHROMATIN_BIO_GAMMA_OVER_JMAX = CHROMATIN_BIO_GAMMA_CM / CHROMATIN_JMAX_CM  # = 8.0
 
+
+# ── Ion channel selectivity filter (d=4) ────────────────────────────────────
+# Illustrative KcsA-like potassium channel selectivity filter.
+# Four binding sites (S1-S4) in a linear chain.
+# Site energies: outer sites (S1,S4) slightly lower due to proximity to
+# bulk water; inner sites (S2,S3) deeper wells from carbonyl coordination.
+# Couplings: nearest-neighbor ion-ion Coulomb + backbone-mediated, 15-40 cm^-1.
+# Dephasing: protein-water, 100-300 cm^-1 (2D-IR literature).
+_ION_CHANNEL_SITE_ENERGIES_CM = np.array([30.0, 45.0, 45.0, 30.0])  # cm^-1
+_ION_CHANNEL_J_NN = 30.0  # cm^-1, nearest-neighbor coupling
+
+def _build_ion_channel_hamiltonian():
+    """Build 4×4 ion channel selectivity filter Hamiltonian (cm^-1).
+
+    Linear chain S1-S2-S3-S4 with nearest-neighbor coupling J_nn = 30 cm^-1.
+    """
+    d = 4
+    H = np.diag(_ION_CHANNEL_SITE_ENERGIES_CM)
+    for i in range(d - 1):
+        H[i, i + 1] = _ION_CHANNEL_J_NN
+        H[i + 1, i] = _ION_CHANNEL_J_NN
+    return H
+
+H_ION_CHANNEL = _build_ion_channel_hamiltonian()
+ION_CHANNEL_JMAX_CM = 30.0   # J_max = nearest-neighbor coupling
+ION_CHANNEL_BIO_GAMMA_CM = 200.0  # cm^-1, protein aqueous dephasing at 310K
+ION_CHANNEL_BIO_GAMMA_OVER_JMAX = ION_CHANNEL_BIO_GAMMA_CM / ION_CHANNEL_JMAX_CM  # ≈ 6.7
+
+
 # ── Complex registry ─────────────────────────────────────────────────────────
 
 COMPLEXES = {
@@ -208,6 +237,16 @@ COMPLEXES = {
         'kappa_ps': [0.5, 0.5],
         'gamma_scan_cm': (1, 1000),
         'reference': 'Illustrative (nucleosome-remodeler)',
+    },
+    'IonChannel': {
+        'name': 'IonChannel',
+        'labels': ['S1', 'S2', 'S3', 'S4'],
+        'H_cm': H_ION_CHANNEL,
+        'initial_sites': [0],
+        'target_sites': [3],
+        'kappa_ps': [0.5],
+        'gamma_scan_cm': (1, 1000),
+        'reference': 'Illustrative (KcsA-like selectivity filter)',
     },
     'NeuralGamma': {
         'name': 'NeuralGamma',
