@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-FMO complex analysis for:
-"Information Geometry of the Quantum-Classical Transition in Photosynthetic Exciton Transport"
+Photosynthetic complex analysis for:
+"Information Geometry of the Quantum-Classical Transition: From Photosynthetic Excitons to Neural Oscillations"
 
 Computes:
-  - Lindblad dephasing + sink evolution of the FMO density matrix
-  - Transport efficiency (ENAQT) via reaction-centre trapping
+  - Lindblad dephasing + sink evolution of density matrices
+  - Transport efficiency via target-manifold trapping
   - QFIM and effective dimensionality vs dephasing rate
   - Principal angles between diagonal/off-diagonal tangent subspaces
+
+Supports multiple complexes via COMPLEXES registry (FMO, PE545, Chromatin, NeuralGamma, NeuralPD).
 
 Usage:
   cd physics/70_decoherence_dimensional_collapse
@@ -16,6 +18,11 @@ Usage:
 
 import numpy as np
 from scipy.linalg import expm
+
+# ── Unit conversion ──────────────────────────────────────────────────────────
+# 1 cm^-1 = 2*pi*c = 2*pi*3e10 cm/s = 1.884e11 rad/s = 1.884e-4 rad/fs
+CM_TO_RADFS = 2.0 * np.pi * 2.998e-5  # cm^-1 to rad/fs
+PS_TO_FS = 1000.0  # 1 ps = 1000 fs
 
 # ── FMO Hamiltonian (Adolphs & Renger 2006, cm^-1 relative to 12210) ────────
 
@@ -29,12 +36,210 @@ H_FMO = np.array([
     [ -9.9,   4.3,   6.0, -63.3,  -1.3,  39.7,  230],
 ], dtype=np.float64)
 
+# ── PE545 Hamiltonian (Novoderezhkin et al. 2010, Model E, cm^-1) ────────────
+# Site ordering: 0=PEB50/61C, 1=DBV19A, 2=DBV19B, 3=PEB82C,
+#                4=PEB158C, 5=PEB50/61D, 6=PEB82D, 7=PEB158D
+
+H_PE545 = np.array([
+    [18532,    1,  -37,   37,   23,   92,  -16,   12],
+    [    1, 18008,   4,  -11,   33,  -39,  -46,    3],
+    [  -37,    4, 17973,  45,    3,    2,  -11,   34],
+    [   37,  -11,   45, 18040,  -7,  -17,   -3,    6],
+    [   23,   33,    3,   -7, 18711,  18,    7,    6],
+    [   92,  -39,    2,  -17,   18, 19574,  40,   26],
+    [  -16,  -46,  -11,   -3,    7,   40, 19050,   7],
+    [   12,    3,   34,    6,    6,   26,    7, 18960],
+], dtype=np.float64)
+
 D_FMO = 7  # Number of sites
 COUPLING_THRESHOLD = 5.0  # cm^-1, below which coupling is "negligible"
 
-# Convert Hamiltonian to angular frequency (rad/fs)
-# 1 cm^-1 = 2*pi*c = 2*pi*3e10 cm/s = 1.884e11 rad/s = 1.884e-4 rad/fs
-CM_TO_RADFS = 2.0 * np.pi * 2.998e-5  # cm^-1 to rad/fs
+# ── Neural Hamiltonian: Gamma-band cortical microcircuit (d=10) ──────────────
+# Synthetic model of a cortical column with 10 coupled oscillator populations
+# spanning the gamma band (30–70 Hz). Coupling: ring + 2 long-range shortcuts
+# (small-world topology). Site energies and couplings in Hz, then scaled to
+# cm^-1 range for numerical compatibility (Lindblad scale invariance: principal
+# angles depend on γ/J_max, not absolute energy).
+#
+# Scaling: alpha = 50 cm^-1 / Hz → entries O(10^3), matching FMO/PE545 range.
+# Physical dephasing: γ_bio = kT/ℏ ≈ 4e13 Hz at 310K → γ_bio/J_max ≈ 5e12.
+
+_NEURAL_GAMMA_FREQS_HZ = np.array([30, 33, 36, 40, 44, 48, 53, 58, 64, 70],
+                                    dtype=np.float64)
+_NEURAL_GAMMA_SCALE = 50.0  # cm^-1 per Hz
+
+def _build_neural_gamma_hamiltonian():
+    """Build 10×10 gamma-band cortical microcircuit Hamiltonian (cm^-1)."""
+    d = 10
+    H = np.diag(_NEURAL_GAMMA_FREQS_HZ * _NEURAL_GAMMA_SCALE)
+    # Ring coupling: nearest-neighbor, J = 5 Hz → 250 cm^-1
+    for i in range(d):
+        j = (i + 1) % d
+        H[i, j] = 5.0 * _NEURAL_GAMMA_SCALE
+        H[j, i] = 5.0 * _NEURAL_GAMMA_SCALE
+    # Long-range shortcuts (small-world): sites 1↔6, 3↔8, J = 2 Hz → 100 cm^-1
+    for i, j in [(1, 6), (3, 8)]:
+        H[i, j] = 2.0 * _NEURAL_GAMMA_SCALE
+        H[j, i] = 2.0 * _NEURAL_GAMMA_SCALE
+    return H
+
+H_NEURAL_GAMMA = _build_neural_gamma_hamiltonian()
+
+# Maximum coupling: J_max = 5 Hz (nearest-neighbor ring coupling).
+NEURAL_GAMMA_JMAX_HZ = 5.0  # Hz (nearest-neighbor coupling)
+NEURAL_GAMMA_JMAX_CM = NEURAL_GAMMA_JMAX_HZ * _NEURAL_GAMMA_SCALE  # cm^-1
+
+# Biological dephasing at 310K: γ_bio = kT/ℏ ≈ 4.06e13 Hz
+NEURAL_BIO_DEPHASING_HZ = 4.06e13  # Hz
+NEURAL_BIO_GAMMA_OVER_JMAX = NEURAL_BIO_DEPHASING_HZ / NEURAL_GAMMA_JMAX_HZ
+
+# ── Neural Hamiltonian: Potjans-Diesmann cortical column (d=8) ───────────────
+# Empirical connectivity from Potjans & Diesmann 2014 (Cerebral Cortex).
+# 4 layers × {E, I} = L2/3e, L2/3i, L4e, L4i, L5e, L5i, L6e, L6i.
+# Connection probabilities from their Table 5, converted to effective coupling.
+# Site energies: representative firing rates (Hz) scaled to cm^-1.
+
+_PD_FREQS_HZ = np.array([3.0, 6.0, 5.0, 8.0, 7.0, 9.0, 1.0, 4.0],
+                          dtype=np.float64)  # Approximate mean rates
+
+def _build_neural_pd_hamiltonian():
+    """Build 8×8 Potjans-Diesmann cortical column Hamiltonian (cm^-1).
+
+    Connection probabilities from Table 5 of Potjans & Diesmann 2014.
+    Converted to symmetric effective couplings: J_ij = sqrt(C_ij * C_ji) * w,
+    where w is a scale factor. Excitatory-to-excitatory couplings are positive,
+    involving inhibitory populations are negative (sign convention).
+    """
+    d = 8
+    # Connection probabilities (from → to), Table 5 of Potjans & Diesmann 2014
+    # Rows/cols: L2/3e, L2/3i, L4e, L4i, L5e, L5i, L6e, L6i
+    C = np.array([
+        [0.101, 0.169, 0.044, 0.082, 0.032, 0.0,   0.008, 0.0  ],
+        [0.135, 0.137, 0.032, 0.052, 0.075, 0.0,   0.004, 0.0  ],
+        [0.008, 0.006, 0.050, 0.135, 0.007, 0.0003,0.045, 0.0  ],
+        [0.069, 0.003, 0.079, 0.160, 0.003, 0.0,   0.106, 0.0  ],
+        [0.100, 0.062, 0.051, 0.006, 0.083, 0.373, 0.020, 0.0  ],
+        [0.055, 0.027, 0.026, 0.002, 0.060, 0.316, 0.009, 0.0  ],
+        [0.016, 0.007, 0.021, 0.017, 0.057, 0.020, 0.040, 0.225],
+        [0.036, 0.001, 0.003, 0.001, 0.028, 0.008, 0.066, 0.144],
+    ], dtype=np.float64)
+    # Symmetric effective coupling
+    J_raw = np.sqrt(C * C.T)
+    # Sign: inhibitory populations (indices 1,3,5,7) get negative coupling
+    signs = np.ones(d)
+    signs[[1, 3, 5, 7]] = -1.0
+    sign_matrix = np.outer(signs, signs)
+    J_eff = J_raw * sign_matrix
+    np.fill_diagonal(J_eff, 0.0)
+    # Scale to cm^-1 range (coupling_scale makes max |J| ~ 200 cm^-1)
+    coupling_scale = 200.0 / np.max(np.abs(J_eff))
+    H = np.diag(_PD_FREQS_HZ * _NEURAL_GAMMA_SCALE) + J_eff * coupling_scale
+    return H
+
+H_NEURAL_PD = _build_neural_pd_hamiltonian()
+
+NEURAL_PD_JMAX_CM = np.max(np.abs(H_NEURAL_PD - np.diag(np.diag(H_NEURAL_PD))))
+
+# ── Chromatin Hamiltonian: nucleosome-remodeler complex (d=8) ─────────────
+# Illustrative molecular-oscillator case study of a nucleosome-remodeler complex.
+# Sites: 0-1 = DNA entry/exit loci, 2-3 = histone tail contacts,
+#        4-5 = remodeler ATPase contacts, 6-7 = linker DNA modes.
+# Site energies in cm^-1 (THz protein mode range, 20-65 cm^-1).
+# Coupling: ring topology (J_nn = 25 cm^-1) + cross-link 0↔7 (J_lr = 10 cm^-1).
+# Biological dephasing: γ_bio = 200 cm^-1 (mid-range of 2D-IR measured
+# protein aqueous dephasing at 310K; Fleming/Hamm/Tokmakoff groups).
+
+_CHROMATIN_SITE_ENERGIES_CM = np.array([20, 35, 50, 65, 40, 55, 30, 45],
+                                        dtype=np.float64)
+_CHROMATIN_J_NN = 25.0   # cm^-1, nearest-neighbor ring coupling
+_CHROMATIN_J_LR = 10.0   # cm^-1, cross-link 0↔7
+
+def _build_chromatin_hamiltonian():
+    """Build 8×8 chromatin nucleosome-remodeler Hamiltonian (cm^-1).
+
+    Open chain (0-1-...-7) with nearest-neighbor coupling J_nn = 25 cm^-1,
+    plus a cross-link between sites 0 and 7 at J_lr = 10 cm^-1.
+    """
+    d = 8
+    H = np.diag(_CHROMATIN_SITE_ENERGIES_CM)
+    for i in range(d - 1):
+        H[i, i + 1] = _CHROMATIN_J_NN
+        H[i + 1, i] = _CHROMATIN_J_NN
+    H[0, 7] = _CHROMATIN_J_LR
+    H[7, 0] = _CHROMATIN_J_LR
+    return H
+
+H_CHROMATIN = _build_chromatin_hamiltonian()
+CHROMATIN_JMAX_CM = 25.0   # J_max = max nearest-neighbor coupling
+CHROMATIN_BIO_GAMMA_CM = 200.0  # cm^-1, protein aqueous dephasing at 310K
+CHROMATIN_BIO_GAMMA_OVER_JMAX = CHROMATIN_BIO_GAMMA_CM / CHROMATIN_JMAX_CM  # = 8.0
+
+# ── Complex registry ─────────────────────────────────────────────────────────
+
+COMPLEXES = {
+    'FMO': {
+        'name': 'FMO',
+        'labels': ['BChl1', 'BChl2', 'BChl3', 'BChl4', 'BChl5', 'BChl6', 'BChl7'],
+        'H_cm': H_FMO,
+        'initial_sites': [0, 5],
+        'target_sites': [2],
+        'kappa_ps': [1.0],              # ps^-1 per target site
+        'gamma_scan_cm': (1, 500),      # cm^-1
+        'reference': 'Adolphs & Renger 2006',
+    },
+    'PE545': {
+        'name': 'PE545',
+        'labels': ['PEB50/61C', 'DBV19A', 'DBV19B', 'PEB82C',
+                    'PEB158C', 'PEB50/61D', 'PEB82D', 'PEB158D'],
+        'H_cm': H_PE545,
+        'initial_sites': [0, 5],
+        'target_sites': [1, 2],
+        'kappa_ps': [0.5, 0.5],         # ps^-1 each → 1.0 total
+        'gamma_scan_cm': (1, 1500),     # cm^-1 (peak ~725 cm^-1)
+        'reference': 'Novoderezhkin et al. 2010',
+    },
+    'Chromatin': {
+        'name': 'Chromatin',
+        'labels': ['DNA-entry', 'DNA-exit', 'HistTail1', 'HistTail2',
+                    'ATPase1', 'ATPase2', 'LinkerDNA1', 'LinkerDNA2'],
+        'H_cm': H_CHROMATIN,
+        'initial_sites': [0],
+        'target_sites': [3, 4],
+        'kappa_ps': [0.5, 0.5],
+        'gamma_scan_cm': (1, 1000),
+        'reference': 'Illustrative (nucleosome-remodeler)',
+    },
+    'NeuralGamma': {
+        'name': 'NeuralGamma',
+        'labels': ['L4in', 'L4a', 'L4b', 'L2/3a', 'L2/3b',
+                    'L2/3c', 'L5a', 'L5b', 'L6a', 'L6b'],
+        'H_cm': H_NEURAL_GAMMA,
+        'initial_sites': [0],
+        'target_sites': [8, 9],
+        'kappa_ps': [0.5, 0.5],         # ps^-1 each → 1.0 total
+        'gamma_scan_cm': (1, 5000),     # cm^-1
+        'reference': 'Synthetic (gamma-band microcircuit)',
+    },
+    'NeuralPD': {
+        'name': 'NeuralPD',
+        'labels': ['L2/3e', 'L2/3i', 'L4e', 'L4i',
+                    'L5e', 'L5i', 'L6e', 'L6i'],
+        'H_cm': H_NEURAL_PD,
+        'initial_sites': [2],           # L4e (thalamic input)
+        'target_sites': [4, 6],         # L5e, L6e (output layers)
+        'kappa_ps': [0.5, 0.5],
+        'gamma_scan_cm': (1, 5000),
+        'reference': 'Potjans & Diesmann 2014',
+    },
+}
+
+
+def kappa_ps_to_cm(kappa_ps):
+    """Convert trapping rate from ps^-1 to cm^-1.
+
+    1 ps^-1 ≈ 5.3 cm^-1 (via 1/ps = 1e12/s, divided by 2*pi*c).
+    """
+    return kappa_ps * 5.3
 
 
 def fmo_coupling_graph(threshold=COUPLING_THRESHOLD):
@@ -115,28 +320,34 @@ def evolve_lindblad(H, gamma, rho0, t_final, dt=0.1):
     return rho
 
 
-def lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site=2):
-    """Lindblad RHS with Haken-Strobl dephasing + trapping sink.
+def lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site=2,
+                                target_sites=None, kappa_list=None):
+    """Lindblad RHS with Haken-Strobl dephasing + trapping sink(s).
 
-    The sink at site `sink_site` (0-indexed, default 2 = site 3) is modeled as
-    population loss: L_sink[ρ] = -κ/2 (P_s ρ + ρ P_s), where P_s = |s><s|.
-    This makes the evolution non-trace-preserving; lost trace = trapped population.
+    Supports both single-site (backward-compatible) and multisite target manifolds.
+    L_sink[ρ] = -½ Σ_j κ_j {|j⟩⟨j|, ρ} for each target site j.
 
     Parameters:
         rho: density matrix
         H: Hamiltonian in rad/fs
         gamma: dephasing rate in rad/fs
-        kappa: trapping rate in rad/fs
-        sink_site: 0-indexed site for the reaction-centre trap
+        kappa: trapping rate in rad/fs (used if target_sites is None)
+        sink_site: 0-indexed site for single-site trap (backward compat)
+        target_sites: list of 0-indexed target sites (overrides sink_site)
+        kappa_list: list of per-site trapping rates in rad/fs (same length as target_sites)
     """
-    # Start with dephasing dynamics
     drho = lindblad_dephasing_rhs(rho, H, gamma)
-
-    # Add sink: -κ/2 (|s><s| ρ + ρ |s><s|)
     d = H.shape[0]
-    proj_s = np.zeros((d, d), dtype=complex)
-    proj_s[sink_site, sink_site] = 1.0
-    drho -= 0.5 * kappa * (proj_s @ rho + rho @ proj_s)
+
+    if target_sites is not None:
+        for j, kj in zip(target_sites, kappa_list):
+            proj = np.zeros((d, d), dtype=complex)
+            proj[j, j] = 1.0
+            drho -= 0.5 * kj * (proj @ rho + rho @ proj)
+    else:
+        proj_s = np.zeros((d, d), dtype=complex)
+        proj_s[sink_site, sink_site] = 1.0
+        drho -= 0.5 * kappa * (proj_s @ rho + rho @ proj_s)
 
     return drho
 
@@ -145,16 +356,7 @@ def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=15000.0
                                   dt_fs=1.0, initial_site=0, sink_site=2):
     """Compute FMO transport efficiency with Haken-Strobl dephasing + sink.
 
-    Parameters:
-        gamma_cm: dephasing rate in cm^-1
-        kappa_trap_cm: trapping rate in cm^-1 (default 5.3 ≈ 1 ps^-1)
-        t_final_fs: evolution time in fs
-        dt_fs: time step in fs
-        initial_site: 0-indexed initial excitation site
-        sink_site: 0-indexed reaction-centre site
-
-    Returns:
-        efficiency: fraction of population trapped (0 to 1)
+    Legacy single-site wrapper. For multisite targets, use compute_transport_generic.
     """
     H = H_FMO * CM_TO_RADFS
     gamma = gamma_cm * CM_TO_RADFS
@@ -165,10 +367,9 @@ def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=15000.0
     rho[initial_site, initial_site] = 1.0
 
     n_steps = int(t_final_fs / dt_fs)
-    trapped = 0.0  # accumulated trapped population
+    trapped = 0.0
 
     for _ in range(n_steps):
-        # Accumulate trapping: η = κ ∫ p_sink(t) dt
         trapped += kappa * np.real(rho[sink_site, sink_site]) * dt_fs
 
         k1 = dt_fs * lindblad_dephasing_sink_rhs(rho, H, gamma, kappa, sink_site)
@@ -177,10 +378,85 @@ def compute_transport_efficiency(gamma_cm, kappa_trap_cm=5.3, t_final_fs=15000.0
         k4 = dt_fs * lindblad_dephasing_sink_rhs(rho + k3, H, gamma, kappa, sink_site)
         rho = rho + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
 
-        # Enforce Hermiticity (don't normalize trace — it should decrease)
         rho = 0.5 * (rho + rho.conj().T)
 
     return min(trapped, 1.0)
+
+
+def compute_transport_generic(H_cm, gamma_cm, target_sites, kappa_ps_list,
+                               initial_site, t_final_ps=15.0, dt_fs=1.0):
+    """Compute transport efficiency for any complex with multisite target manifold.
+
+    Parameters:
+        H_cm: Hamiltonian in cm^-1
+        gamma_cm: dephasing rate in cm^-1
+        target_sites: list of 0-indexed target sites
+        kappa_ps_list: list of per-site trapping rates in ps^-1
+        initial_site: 0-indexed initial excitation site
+        t_final_ps: evolution time in ps (default 15)
+        dt_fs: time step in fs (default 1.0)
+
+    Returns:
+        efficiency: fraction of population trapped (0 to 1)
+    """
+    H = H_cm * CM_TO_RADFS
+    gamma = gamma_cm * CM_TO_RADFS
+    kappa_radfs = [k * kappa_ps_to_cm(1.0) * CM_TO_RADFS for k in kappa_ps_list]
+    d = H_cm.shape[0]
+    t_final_fs = t_final_ps * PS_TO_FS
+
+    rho = np.zeros((d, d), dtype=complex)
+    rho[initial_site, initial_site] = 1.0
+
+    n_steps = int(t_final_fs / dt_fs)
+    trapped = 0.0
+
+    for _ in range(n_steps):
+        # Accumulate: η = Σ_j κ_j ∫ p_j(t) dt
+        for j, kj in zip(target_sites, kappa_radfs):
+            trapped += kj * np.real(rho[j, j]) * dt_fs
+
+        k1 = dt_fs * lindblad_dephasing_sink_rhs(rho, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k2 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k1, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k3 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k2, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k4 = dt_fs * lindblad_dephasing_sink_rhs(rho + k3, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        rho = rho + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
+        rho = 0.5 * (rho + rho.conj().T)
+
+    return min(trapped, 1.0)
+
+
+def evolve_lindblad_sink_generic(H_cm, gamma_cm, target_sites, kappa_ps_list,
+                                  rho0, t_final_ps=5.0, dt_fs=1.0):
+    """Evolve density matrix with multisite target trapping.
+
+    Returns the final (sub-normalized) density matrix.
+    """
+    H = H_cm * CM_TO_RADFS
+    gamma = gamma_cm * CM_TO_RADFS
+    kappa_radfs = [k * kappa_ps_to_cm(1.0) * CM_TO_RADFS for k in kappa_ps_list]
+    t_final_fs = t_final_ps * PS_TO_FS
+
+    rho = rho0.copy().astype(complex)
+    n_steps = int(t_final_fs / dt_fs)
+
+    for _ in range(n_steps):
+        k1 = dt_fs * lindblad_dephasing_sink_rhs(rho, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k2 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k1, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k3 = dt_fs * lindblad_dephasing_sink_rhs(rho + 0.5 * k2, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        k4 = dt_fs * lindblad_dephasing_sink_rhs(rho + k3, H, gamma, None, None,
+                                                   target_sites, kappa_radfs)
+        rho = rho + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
+        rho = 0.5 * (rho + rho.conj().T)
+
+    return rho
 
 
 def scan_efficiency(gamma_values_cm, initial_site=0, **kwargs):
@@ -384,112 +660,50 @@ def principal_angles(rho):
     return np.arccos(cosines)
 
 
-def scan_dephasing_rates(gamma_values_cm, t_final_fs=10000.0, dt_fs=0.5):
-    """Scan dephasing rates and compute D_eff and min principal angle.
-
-    Parameters:
-        gamma_values_cm: array of dephasing rates in cm^-1
-        t_final_fs: evolution time in fs
-        dt_fs: time step in fs
-
-    Returns:
-        dict with 'gamma_cm', 'D_eff', 'min_angle_deg'
-    """
-    H = H_FMO * CM_TO_RADFS
-    rho0 = np.zeros((D_FMO, D_FMO), dtype=complex)
-    rho0[0, 0] = 1.0  # Initial excitation at site 1
-
-    D_effs = []
-    min_angles = []
-
-    for gamma_cm in gamma_values_cm:
-        gamma = gamma_cm * CM_TO_RADFS
-        rho = evolve_lindblad(H, gamma, rho0, t_final_fs, dt_fs)
-
-        # Check that rho is sensible
-        eigvals = np.linalg.eigvalsh(rho)
-        if eigvals.min() < -1e-10:
-            print(f"  WARNING: negative eigenvalue {eigvals.min():.2e} at gamma={gamma_cm}")
-
-        # Make rho strictly full-rank for QFIM computation
-        rho_reg = rho + 1e-10 * np.eye(D_FMO) / D_FMO
-        rho_reg /= np.trace(rho_reg)
-
-        F_Q = compute_qfim(rho_reg)
-        D_eff = effective_dimensionality(F_Q)
-        D_effs.append(D_eff)
-
-        # Principal angles (expensive for d=7)
-        angles = principal_angles(rho_reg)
-        min_angles.append(np.degrees(np.min(angles)))
-
-        print(f"  gamma={gamma_cm:8.1f} cm^-1  D_eff={D_eff:6.2f}  "
-              f"min_angle={np.degrees(np.min(angles)):5.1f}°")
-
-    return {
-        'gamma_cm': np.array(gamma_values_cm),
-        'D_eff': np.array(D_effs),
-        'min_angle_deg': np.array(min_angles),
-    }
-
-
 if __name__ == "__main__":
-    print("FMO Complex Analysis")
+    print("Photosynthetic Complex Analysis")
     print("=" * 60)
 
-    # 1. Coupling graph
-    adj = fmo_coupling_graph()
-    print(f"\nWeak coupling pairs (|J| < {COUPLING_THRESHOLD} cm^-1):")
-    for i, j, J in weak_coupling_pairs():
-        print(f"  ({i},{j}): J = {J:.1f} cm^-1")
+    # Run both FMO and PE545 through the generic pipeline
+    for cname in ['FMO', 'PE545']:
+        cx = COMPLEXES[cname]
+        H_cm = cx['H_cm']
+        d = H_cm.shape[0]
+        targets = cx['target_sites']
+        kappas = cx['kappa_ps']
 
-    # 2. Transport efficiency scan (both initial sites)
-    gamma_values = np.concatenate([
-        np.array([0.1, 0.5, 1.0, 2.0, 5.0]),
-        np.arange(10, 110, 10),
-        np.arange(150, 600, 50),
-    ])
-    gamma_values = np.sort(np.unique(gamma_values))
-
-    for site_label, site_idx in [("site 1", 0), ("site 6", 5)]:
         print(f"\n{'=' * 60}")
-        print(f"Transport Efficiency ({site_label} initial excitation)")
+        print(f"{cname} ({cx['reference']})")
+        print(f"  d={d}, targets={targets}, kappa_ps={kappas}")
         print("=" * 60)
 
-        etas = scan_efficiency(gamma_values, initial_site=site_idx)
-        idx_max = np.argmax(etas)
-        print(f"  Peak: eta={etas[idx_max]:.4f} at gamma={gamma_values[idx_max]:.1f} cm^-1")
+        gamma_values = np.concatenate([
+            np.array([1.0, 5.0, 10.0, 50.0, 100.0]),
+            np.arange(200, 1600, 200),
+        ])
 
-    # 3. Principal angles from sink-inclusive dynamics (both initial sites)
-    kappa_trap_cm = 5.3  # 1/ps in cm^-1
-    kappa = kappa_trap_cm * CM_TO_RADFS
-    H = H_FMO * CM_TO_RADFS
-    d = D_FMO
-    angle_gammas = np.array([0.1, 1.0, 10.0, 50.0, 100.0, 150.0, 200.0, 300.0, 500.0])
+        for site_idx in cx['initial_sites']:
+            label = cx['labels'][site_idx]
+            print(f"\n  Initial: {label} (site {site_idx})")
+            etas = [compute_transport_generic(H_cm, g, targets, kappas, site_idx,
+                                              t_final_ps=30.0, dt_fs=2.0)
+                    for g in gamma_values]
+            etas = np.array(etas)
+            idx_max = np.argmax(etas)
+            print(f"  Peak: eta={etas[idx_max]:.4f} at gamma={gamma_values[idx_max]:.0f} cm^-1")
 
-    for site_label, site_idx in [("site 1", 0), ("site 6", 5)]:
-        print(f"\n{'=' * 60}")
-        print(f"Principal Angles — sink-inclusive, renormalized ({site_label})")
-        print("=" * 60)
-
-        rho0 = np.zeros((d, d), dtype=complex)
-        rho0[site_idx, site_idx] = 1.0
-
-        for gamma_cm in angle_gammas:
-            gamma = gamma_cm * CM_TO_RADFS
-            rho = evolve_lindblad_sink(H, gamma, kappa, rho0,
-                                       t_final=5000.0, dt=1.0, sink_site=2)
-            tr = np.real(np.trace(rho))
-            if tr > 1e-12:
-                rho_renorm = rho / tr
-            else:
-                rho_renorm = np.eye(d, dtype=complex) / d
-            rho_reg = rho_renorm + 1e-10 * np.eye(d) / d
-            rho_reg /= np.trace(rho_reg)
-
-            angles = principal_angles(rho_reg)
-            min_deg = np.degrees(np.min(angles))
-            print(f"  gamma={gamma_cm:7.1f} cm^-1  min_angle={min_deg:5.1f}deg  "
-                  f"Tr[rho]={tr:.4f}")
+            # Principal angles at a few gamma values
+            rho0 = np.zeros((d, d), dtype=complex)
+            rho0[site_idx, site_idx] = 1.0
+            for gamma_cm in [1.0, 100.0, gamma_values[idx_max]]:
+                rho = evolve_lindblad_sink_generic(H_cm, gamma_cm, targets, kappas,
+                                                    rho0, t_final_ps=5.0, dt_fs=1.0)
+                tr = np.real(np.trace(rho))
+                rho_n = rho / tr if tr > 1e-12 else np.eye(d, dtype=complex) / d
+                rho_reg = rho_n + 1e-10 * np.eye(d) / d
+                rho_reg /= np.trace(rho_reg)
+                angles = np.sort(np.degrees(principal_angles(rho_reg)))
+                print(f"    gamma={gamma_cm:7.0f} cm^-1  min_angle={angles[0]:5.1f}  "
+                      f"max_angle={angles[-1]:5.1f}  tr={tr:.4f}")
 
     print("\nDone.")
