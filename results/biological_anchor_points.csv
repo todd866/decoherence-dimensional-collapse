@@ -1,0 +1,4 @@
+system,role,status,dimension,collapse,gamma_bio_over_jmax,theta_min_bio_deg,theta_reference,provenance
+FMO,proof_of_principle,legacy-validated,7,48->6,1.1402508551881414,87.7,biological point,big-overhaul-checkpoint
+PE545,proof_of_principle,legacy-validated,8,63->7,7.880434782608695,89.0,biological point,big-overhaul-checkpoint
+Ion channel,primary-neural-payload,rebuilt-computation,4,15->3,6.666666666666667,88.54858845425703,biological point,rebuilt-repo

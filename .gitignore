@@ -10,9 +10,13 @@
 
 # Scratch files
 *.json
+!results/
+!results/ion_channel_summary.json
+!results/ion_channel_scan.csv
 
 # Python
 __pycache__/
+.mplconfig/
 
 # OS
 .DS_Store

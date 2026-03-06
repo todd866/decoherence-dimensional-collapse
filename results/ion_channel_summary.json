@@ -1,0 +1,30 @@
+{
+  "chi_bio": 0.00027617571151781524,
+  "dimension": 4,
+  "eta_bio": 0.47722094921442054,
+  "gamma_bio_cm": 200.0,
+  "gamma_bio_over_jmax": 6.666666666666667,
+  "geometry_readout_ps": 5.0,
+  "initial_site": 0,
+  "jmax_cm": 30.0,
+  "kappa_ps": [
+    0.5
+  ],
+  "model": "KcsA-like selectivity filter",
+  "scan_points": 25,
+  "target_sites": [
+    3
+  ],
+  "theta_min_bio_deg": 88.54858845425703,
+  "theta_spectrum_bio_deg": [
+    88.54858845425703,
+    89.22161298757165,
+    89.91111710679547
+  ],
+  "trace_after_bio_readout": 0.6991625278168943,
+  "transport_scan_peak_eta": 0.6637082815005201,
+  "transport_scan_peak_gamma_cm": 0.3,
+  "transport_scan_peak_gamma_over_jmax": 0.01,
+  "transport_scan_peak_interior": false,
+  "transport_window_ps": 8.0
+}

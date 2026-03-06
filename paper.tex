@@ -1,0 +1,419 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathtools}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{tabularx}
+
+\setstretch{1.1}
+\emergencystretch=2em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\dec}{\Lambda_{\mathrm{dec}}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\bures}{g_B}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\graphicspath{{figures/}}
+
+\title{Information Geometry of Classical Carriers and\\ Non-Classical Payloads in Biological Information Processing}
+\author{Ian Todd\\
+Sydney Medical School\\
+University of Sydney\\
+Sydney, Australia}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The central claim of this paper is that dimensionality in biological information processing need not live in carrier frequency. Decoherence maps a $d$-level quantum system from a $(d^2-1)$-dimensional Bures state manifold onto a $(d-1)$-dimensional Fisher--Rao simplex, annihilating the $d^2-d$ coherence directions. This dimensional collapse supplies a continuous non-classicality index $\chi$ from Bures principal angles, allowing one to quantify not only whether a system is classical or quantum, but how much non-classical structure remains geometrically accessible. We use that geometry to distinguish \emph{classical carriers} from \emph{non-classical payloads}. Photosynthetic exciton transport provides the proof of principle: validated FMO and PE545 models operate near the quantum-classical boundary, showing that biologically functional dynamics can live in a near-classical but non-classical regime. Neural oscillations, by contrast, are deep classical at carrier scale. A minimal KcsA-like ion-channel payload calculation then gives a concrete neural-side anchor: at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the biological point remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times 10^{-4}$. We then show that deep-classical carriers do not force low-dimensionality. For molecular modules $i$ with local non-classical load $L_i=\chi_i(d_i^2-d_i)$, the redundancy-adjusted payload $\mathcal{L}_{\mathrm{eff}}(E)=\varrho_E^{-1}\sum_{i\in E}L_i$ is extensive whenever a nonzero fraction of modules sit near the boundary and redundancy is bounded. Under a minimal threshold-entrainment coupling model with coordination length $\ell(f)\propto f^{-\alpha}$, coordinated dimensionality scales as $D_{\mathrm{coord}}(E(f))\propto f^{-\alpha s}$: a low-frequency carrier can therefore support larger coordinated dimensionality not because the carrier itself is quantum, but because it entrains a larger set of molecular payload modules while adding little geometric mixing of its own. This reframes the usual high-frequency/high-dimensional intuition: frequency is a coordination scale, not the locus of dimensionality. The resulting picture is a multi-scale architecture in which deep-classical macroscopic waves coordinate an extensive near-boundary molecular substrate.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+High-dimensional neural activity is often discussed as if it were primarily a property of fast dynamics. In the working-memory literature, gamma and beta bursts are closely associated with access, gating, and mixed selectivity \cite{lundqvist2016gamma,miller2018working,rigotti2013importance,fusi2016neurons}. Read one way, that literature supports a simple heuristic: high frequency goes with high dimensionality. This paper argues that the heuristic places dimensionality in the wrong object. Frequency is a temporal property of a carrier. Dimensionality is a property of a state space. Those are not the same thing.
+
+This paper develops a different answer. The claim is not that low-frequency oscillations are themselves quantum, nor that high dimensionality automatically implies non-classicality. The claim is narrower and stronger: biological systems are plausibly organized as \emph{carrier-payload architectures}. At macroscopic scale, oscillatory carriers can be deep classical. At molecular scale, the modules being coordinated can remain near the quantum-classical boundary. Dimensionality then scales with the coordinated payload, not with carrier frequency itself. The disagreement with the Miller-style picture is therefore not about whether fast bursts matter. It is about \emph{where the dimensionality resides}: in this paper, fast activity can index access or routing, while low-frequency carriers can dominate effective dimensionality by coordinating a larger payload.
+
+The mathematical basis for that claim comes from decoherence geometry. A $d$-level quantum system occupies a $(d^2-1)$-dimensional state manifold under the Bures metric \cite{braunstein1994statistical,petz1996monotone}. Complete dephasing collapses this manifold onto the $(d-1)$-dimensional classical probability simplex under the Fisher--Rao metric \cite{rao1945information,amari1985differential}. The collapse is therefore not just loss of ``quantumness'' in an informal sense; it is a geometric destruction of distinguishable directions in state space.
+
+That perspective is already useful in quantum biology. Photosynthetic complexes are known to operate in regimes where intermediate dephasing can improve transport efficiency \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. What has been missing is a language for saying how classical or non-classical those biologically relevant operating points actually are. The Bures principal-angle framework supplies that language.
+
+The broader motivation is cognitive. If one assumes that dimensionality is carried mainly by high-frequency activity, then low-frequency waves look low-dimensional by construction. If instead dimensionality is allowed to reside in the coordinated substrate, then the picture changes. A low-frequency wave can be \emph{more} useful precisely because it is more classical: it is a reliable large-scale channel that can entrain many payload modules without introducing much quantum-classical mixing of its own. The core inversion is simple: high frequency may correlate with flexible access, but low frequency may carry more system-level dimensionality because it reaches farther.
+
+The paper develops that thesis in four steps. Section~\ref{sec:geometry} states the core geometric facts of decoherence and defines the non-classicality index $\chi$. Section~\ref{sec:architecture} builds a carrier-payload formalism in which local module loads add into a redundancy-adjusted effective payload. Section~\ref{sec:anchors} uses photosynthesis as proof of principle and then prioritizes ion channels as the leading neural payload candidate, with protein microdomains as a secondary extension. Section~\ref{sec:intelligence} introduces a minimal threshold-entrainment bridge from carrier frequency to coordinated payload size and states the resulting low-frequency/high-dimensional consequence for biological computation. The central outcome is a change of locus: frequency is recast as a coordination parameter, while dimensionality lives in the coordinated payload.
+
+\section{Geometry of the Quantum-Classical Boundary}
+\label{sec:geometry}
+
+\subsection{Dimensional collapse under dephasing}
+
+Let $\mathcal{M}_Q$ denote the manifold of $d\times d$ density matrices. For a full-rank system, $\dim \mathcal{M}_Q = d^2-1$: there are $d-1$ independent populations and $d^2-d$ off-diagonal coherence directions. Fix a pointer basis $\{\lvert k\rangle\}_{k=1}^d$ and let
+\begin{equation}
+\label{eq:dephasing}
+\dec(\rho)=\sum_{k=1}^d \lvert k\rangle\langle k\rvert\,\rho\,\lvert k\rangle\langle k\rvert
+\end{equation}
+be the complete dephasing channel.
+
+\begin{theorem}[Dimensional collapse]
+\label{thm:collapse}
+Under complete dephasing, the $(d^2-1)$-dimensional quantum manifold collapses onto the $(d-1)$-dimensional classical probability simplex:
+\begin{equation}
+\label{eq:collapse}
+d^2-1 \longrightarrow d-1.
+\end{equation}
+Equivalently, the $d^2-d$ off-diagonal coherence directions are annihilated, and the Bures metric on the image of $\dec$ restricts to the Fisher--Rao metric.
+\end{theorem}
+
+\begin{proof}
+The image of $\dec$ is the set of diagonal density matrices, which is the classical simplex $\Delta_{d-1}$. Any derivative in an off-diagonal direction vanishes after applying $\dec$, so those directions drop out of the quantum Fisher information matrix. The surviving diagonal block is exactly the classical Fisher information of the populations. Hence only $d-1$ distinguishable directions remain.
+\end{proof}
+
+Theorem~\ref{thm:collapse} is the geometric core of the paper. It makes decoherence quantitative in the strongest possible sense: decoherence is a rank-reducing projection of state space, not merely a qualitative washing-out of phase information.
+
+\subsection{Principal angles and non-classicality}
+
+At a diagonal state, diagonal and off-diagonal tangent directions are orthogonal under the Bures metric. Away from the simplex they need not be orthogonal; the failure of orthogonality is exactly what it means for classical and quantum directions to remain mixed.
+
+\begin{definition}[Non-classicality index]
+\label{def:chi}
+Let $\theta_1,\ldots,\theta_{d-1}$ be the Bures principal angles between the diagonal and off-diagonal tangent subspaces at a full-rank state $\rho$. Define
+\begin{equation}
+\label{eq:chi}
+\chi(\rho)=\frac{1}{d-1}\sum_{a=1}^{d-1}\cos^2\theta_a.
+\end{equation}
+\end{definition}
+
+By construction, $\chi(\rho)\in[0,1]$. Diagonal states have $\theta_a=\pi/2$ for all $a$, hence $\chi=0$. Any state with geometric mixing between classical and coherence directions has $\chi>0$. The index is deliberately modest: it is not an entanglement measure, not a coherence monotone, and not a claim that a system is ``quantum'' in any maximal sense. It is a scalar summary of how much of the coherence sector remains geometrically accessible.
+
+\begin{remark}
+\label{rem:highd}
+Large dimensionality alone does not imply non-classicality. A very large classical system can still satisfy $\chi=0$. The claim developed below is therefore extensive rather than ontological: if a system contains many modules with small but nonzero local $\chi_i$, the total payload can scale with system size.
+\end{remark}
+
+\section{Carrier-Payload Architecture}
+\label{sec:architecture}
+
+\subsection{Local payload load}
+
+To move from single systems to biological assemblies, we distinguish the \emph{carrier} from the \emph{payload}. The carrier is the large-scale coordinating process. The payload is the set of local modules whose internal state spaces are being coordinated.
+
+\begin{definition}[Local non-classical load]
+\label{def:local-load}
+For module $i$ with local dimension $d_i$ and non-classicality $\chi_i$, define
+\begin{equation}
+\label{eq:local-load}
+L_i=\chi_i(d_i^2-d_i).
+\end{equation}
+\end{definition}
+
+The term $d_i^2-d_i$ is the size of the coherence sector that decoherence would destroy under full projection. Multiplying by $\chi_i$ gives a geometry-weighted effective load. When $\chi_i=0$, the module contributes no non-classical payload. When $\chi_i>0$, some fraction of that coherence sector remains geometrically relevant.
+
+\subsection{Redundancy-adjusted effective payload}
+
+Biological modules are not independent. If many modules are strongly redundant, naive linear addition overcounts the accessible payload. We therefore carry an explicit redundancy penalty.
+
+\begin{definition}[Effective payload]
+\label{def:payload}
+Let $E$ be a set of entrained modules and let $\varrho_E\ge 1$ be a redundancy factor. Define
+\begin{equation}
+\label{eq:payload}
+\mathcal{L}_{\mathrm{eff}}(E)=\frac{1}{\varrho_E}\sum_{i\in E}L_i
+\end{equation}
+and the coordinated dimensionality
+\begin{equation}
+\label{eq:dcoord}
+D_{\mathrm{coord}}(E)=\sum_{i\in E}(d_i-1)+\mathcal{L}_{\mathrm{eff}}(E).
+\end{equation}
+\end{definition}
+
+This separates classical capacity from non-classical uplift. The first term counts the surviving simplex dimensions. The second term counts the residual geometrically accessible coherence sector after redundancy compression.
+
+\subsection{Extensive payload under nonzero module density}
+
+\begin{proposition}[Extensive non-classical payload]
+\label{prop:extensive}
+Let $E_N$ be an entrained set of $N$ modules. Assume:
+\begin{enumerate}[label=\emph{(\roman*)}]
+\item there exist constants $L_\star>0$ and $p>0$ such that at least a fraction $p$ of modules in $E_N$ satisfy $L_i\ge L_\star$;
+\item the redundancy factor is uniformly bounded, $\varrho_{E_N}\le \varrho_\star$.
+\end{enumerate}
+Then
+\begin{equation}
+\label{eq:extensive-bound}
+\mathcal{L}_{\mathrm{eff}}(E_N)\ge \frac{pL_\star}{\varrho_\star}N,
+\end{equation}
+and hence the non-classical payload is extensive in $N$.
+\end{proposition}
+
+\begin{proof}
+At least $pN$ modules contribute load at least $L_\star$, so $\sum_{i\in E_N}L_i\ge pNL_\star$. Dividing by the bounded redundancy factor gives the stated bound.
+\end{proof}
+
+Proposition~\ref{prop:extensive} is the paper's main bridge from local molecular geometry to system-scale dimensionality. It does not say that large systems are automatically non-classical. It says that if a nonzero density of modules sits near the boundary, then the total accessible non-classical load grows with system size instead of saturating away.
+
+\subsection{Low-frequency advantage as a coordination statement}
+
+\begin{corollary}[Low-frequency carrier advantage]
+\label{cor:lowf}
+Let $f_1<f_2$ be two carrier frequencies with entrained sets $E(f_1)$ and $E(f_2)$. Suppose:
+\begin{enumerate}[label=\emph{(\roman*)}]
+\item $\lvert E(f_1)\rvert \ge \lvert E(f_2)\rvert$;
+\item the local payload statistics and redundancy bounds remain comparable across the two sets.
+\end{enumerate}
+Then
+\begin{equation}
+\label{eq:lowf}
+D_{\mathrm{coord}}(E(f_1))\ge D_{\mathrm{coord}}(E(f_2)).
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Apply Proposition~\ref{prop:extensive} with comparable module statistics and bounded redundancy. The coordinated dimensionality grows with the number of entrained payload modules, not with carrier frequency itself.
+\end{proof}
+
+Corollary~\ref{cor:lowf} is the formal version of the paper's headline thesis. Low frequency is not valuable because it is intrinsically high-dimensional. It is valuable because it can coordinate a larger ensemble while staying close to a classical carrier limit.
+
+\section{Biological Anchors}
+\label{sec:anchors}
+
+\subsection{Photosynthesis as proof of principle}
+
+Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In the previously validated FMO and PE545 calculations based on the Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
+
+The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, separate legacy validated anchors from the fresh rebuilt-repo computation.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{1.45cm}>{\raggedright\arraybackslash}p{1.35cm}>{\raggedright\arraybackslash}p{1.05cm}c c >{\raggedright\arraybackslash}X@{}}
+\toprule
+System & Role & Source & $\gamma_{\mathrm{bio}}/J_{\max}$ & $\theta_{\min}^{\mathrm{bio}}$ & Use in draft \\
+\midrule
+FMO & Proof point & Legacy & 1.14 & $87.7^\circ$ & Functional near-boundary photosynthesis anchor. \\
+PE545 & Proof point & Legacy & 7.88 & $89.0^\circ$ & Independent photosynthetic confirmation of the same band. \\
+Ion channel & Neural payload & Rebuilt & 6.67 & $88.55^\circ$ & Fresh molecular anchor, with $\chi\approx 2.76\times 10^{-4}$. \\
+Prot.\ microd. & Payload ext. & Planned & --- & --- & Extension only; not yet recomputed here. \\
+Neural oscillation & Carrier & Theory & $\gg 1$ & $\to 90^\circ$ & Deep-classical coordination scale. \\
+\bottomrule
+\end{tabularx}
+\caption{Anchor systems used in the present draft. The numerical values for FMO and PE545 are imported from the checkpointed validated analysis preserved at the git tag \texttt{big-overhaul-checkpoint}; the ion-channel point is freshly computed in the rebuilt repo.}
+\label{tab:anchors}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\linewidth]{biological_anchor_map.pdf}
+\caption{Biological operating points for the present molecular anchors. FMO and PE545 are legacy validated anchors imported from the checkpointed analysis; the ion-channel point is freshly computed in the rebuilt repo. All three lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel point shows that a neural payload candidate can inhabit the same geometric band.}
+\label{fig:anchor-map}
+\end{figure}
+
+\subsection{Ion channels as the primary payload example}
+
+If the paper is meant to say something concrete about cognition, ion channels come first. They sit at the molecular interface between microscopic state transitions and population-level excitability; they exist in enormous copy number; and they offer a direct route from local non-classicality to large entrained site counts. Structurally, selectivity filters and gating assemblies are small-dimensional molecular machines with repeated motifs, constrained geometries, and biologically relevant couplings \cite{doyle1998structure,hille2001ion}. In the present framework that makes them the cleanest neural payload candidate: small local $d$, plausible boundary-near energy scales, and a direct path to large $N$.
+
+To keep the rebuilt repo honest, we computed a minimal 4-site KcsA-like selectivity-filter anchor directly in the fresh codebase. Using site energies $(30,45,45,30)$\,cm$^{-1}$, nearest-neighbor coupling $J_{\max}=30$\,cm$^{-1}$, biological dephasing $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$, and trapping from $S_1$ to $S_4$, the biological operating point sits at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$ with
+\begin{equation}
+\theta_{\min}\approx 88.55^\circ,
+\qquad
+\chi\approx 2.76\times 10^{-4}.
+\end{equation}
+The full principal-angle spectrum at the biological point is $(88.55^\circ,\,89.22^\circ,\,89.91^\circ)$. This is exactly the regime the paper needs: not strongly quantum, not fully classical, but slightly non-classical in a geometrically explicit sense.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{ion_channel_anchor.pdf}
+\caption{Minimal ion-channel payload anchor from the rebuilt repo. Left: bounded trapping yield for the KcsA-like 4-site model as a function of $\gamma/J_{\max}$, with the biological point marked. Right: the three Bures principal angles at the biological point. The left panel is shown only to locate the modeled operating range; because the bounded yield is edge-peaked in this simple trap model, it is not used as an ENAQT claim. The geometric result is the point of the figure: at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the ion-channel payload remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times10^{-4}$.}
+\label{fig:ion-channel-anchor}
+\end{figure}
+
+The corresponding bounded transport scan in this simple trap model is edge-peaked rather than ENAQT-like, so transport optimization is \emph{not} the claim being made for ion channels here. The role of the model is narrower: it establishes a concrete boundary-near neural payload anchor in the rebuilt repo. That is exactly the regime needed by Proposition~\ref{prop:extensive}. If each channel carries only a very small local load, the aggregate payload can still be large whenever many channels are entrained and redundancy is not overwhelming. For the neural application, this is the most direct route from local geometry to system-level dimensionality.
+
+\subsection{Protein microdomains as secondary payloads}
+
+Protein-folding microdomains, ligand-binding pockets, and other conformational substructures are still important, but in this paper they are secondary. They matter because they show the payload idea is not specific to ion conduction. A partially folded or metastable protein substructure can also be a low-entropy molecular machine with structured couplings, making it another plausible site where $\chi_i$ is small but nonzero \cite{dill2012protein}. That broadens the biological scope of the argument. It does not carry the neural case as directly as ion channels do.
+
+\section{Low-Frequency Coordination and Intelligence}
+\label{sec:intelligence}
+
+\subsection{Classical carriers, non-classical payloads}
+
+Neural oscillations at behavioral timescales are expected to be deep classical carriers. At those scales, dephasing dominates so strongly that the carrier itself should have $\chi_{\mathrm{carrier}}\approx 0$. This is not a defect in the argument; it is the feature that makes the carrier useful. A deep-classical carrier can propagate, synchronize, and entrain without adding significant geometric mixing of its own. That is why low-frequency waves are candidates for large-scale control rather than obstacles to complexity.
+
+The disagreement with the Miller-style high-frequency/high-dimensional intuition can now be stated cleanly. High-frequency bursts may indeed track local access or flexible routing \cite{lundqvist2016gamma,miller2018working}. This paper does not deny that. It denies the stronger inference that frequency itself is where dimensionality lives. Dimensionality resides in the coordinated substrate. If lower-frequency waves entrain larger cortical territories and therefore larger ion-channel payload sets, then Corollary~\ref{cor:lowf} implies a higher coordinated dimensionality even when the carrier is more classical.
+
+\subsection{What ``low frequency = high dimensional'' means}
+
+The slogan needs to be read precisely. It does \emph{not} mean that a low-frequency oscillation is internally more complicated than a high-frequency oscillation. It means:
+\begin{equation}
+\label{eq:slogan}
+f\downarrow \quad \Longrightarrow \quad \lvert E(f)\rvert \uparrow \quad \Longrightarrow \quad D_{\mathrm{coord}}(E(f)) \uparrow,
+\end{equation}
+under the stated payload and redundancy assumptions.
+
+This reframes the intelligence question. If cognition depends on the coordinated manipulation of many mixed-selectivity degrees of freedom \cite{rigotti2013importance,fusi2016neurons}, then one should look for the geometry of the coordinated substrate, not just the spectral properties of the carrier. Low-frequency activity can be the right place to look for intelligence not because it is itself non-classical, but because it may be the most effective large-scale organizer of an ion-channel-rich payload that is not fully classical. Protein microdomains extend the same logic beyond excitability, but they are secondary to the ion-channel route for the present argument.
+
+\subsection{A minimal carrier-to-payload coupling model}
+
+The remaining question is how frequency enters the picture dynamically rather than rhetorically. A minimal bridge is a threshold-entrainment toy model. Let a carrier of frequency $f$ generate a coordination field with amplitude
+\begin{equation}
+\label{eq:carrier-field}
+A_f(r)=A_0\exp\!\left(-\frac{r}{\ell(f)}\right),
+\qquad
+\ell(f)=\ell_0\left(\frac{f_0}{f}\right)^\alpha,
+\qquad
+\alpha>0,
+\end{equation}
+where $r$ is distance from the source and $\ell(f)$ is an effective coordination length. The scaling $\ell(f)\propto f^{-\alpha}$ is not a fitted cortical law; it is the explicit model assumption encoding the qualitative idea that slower rhythms can organize larger territories \cite{buzsaki2012mechanisms}.
+
+Let module $i$ be entrained when $A_f(r_i)\ge A_{\mathrm{thr}}$. Then the entrained set is
+\begin{equation}
+\label{eq:entrained-set}
+E(f)=\{i:\; r_i\le R(f)\},
+\qquad
+R(f)=\ell(f)\log\!\left(\frac{A_0}{A_{\mathrm{thr}}}\right).
+\end{equation}
+If payload modules populate an effective spatial support of dimension $s$ with density $\rho_m$, then
+\begin{equation}
+\label{eq:entrained-count}
+N(f)=|E(f)|\approx \rho_m C_s R(f)^s
+=
+\rho_m C_s\!\left[\ell_0\log\!\left(\frac{A_0}{A_{\mathrm{thr}}}\right)\right]^s
+\left(\frac{f_0}{f}\right)^{\alpha s},
+\end{equation}
+where $C_s$ is the unit-ball volume factor in dimension $s$.
+
+\begin{proposition}[Threshold-entrainment scaling]
+\label{prop:threshold-scaling}
+Assume the toy model above, a common payload dimension $d_m$, and the nonzero-density/bounded-redundancy conditions of Proposition~\ref{prop:extensive}. Then
+\begin{equation}
+\label{eq:dcoord-scaling}
+D_{\mathrm{coord}}(E(f))
+\ge
+\rho_m C_s\!\left[\ell_0\log\!\left(\frac{A_0}{A_{\mathrm{thr}}}\right)\right]^s
+\left[(d_m-1)+\frac{pL_\star}{\varrho_\star}\right]
+\left(\frac{f_0}{f}\right)^{\alpha s}.
+\end{equation}
+In this toy model, coordinated dimensionality grows as frequency falls because lower-frequency carriers entrain larger payload sets, not because the carrier itself becomes less classical.
+\end{proposition}
+
+\begin{proof}
+Equation~\eqref{eq:entrained-count} gives the size of the entrained set under the field model. For modules of common dimension $d_m$, Definition~\ref{def:payload} gives
+\[
+D_{\mathrm{coord}}(E(f))
+=
+N(f)(d_m-1)+\mathcal{L}_{\mathrm{eff}}(E(f)).
+\]
+Applying Proposition~\ref{prop:extensive} to the entrained set yields
+\[
+\mathcal{L}_{\mathrm{eff}}(E(f))\ge \frac{pL_\star}{\varrho_\star}N(f),
+\]
+which gives the stated bound after substitution.
+\end{proof}
+
+Proposition~\ref{prop:threshold-scaling} is still only a toy bridge. It does not fit real cortical attenuation, conduction, or laminar structure. Its role is narrower and sufficient: it makes the paper's inversion explicit in one transparent model. Frequency enters through coordination length. Dimensionality enters through the payload geometry being coordinated.
+
+Using the rebuilt-repo ion-channel anchor makes the scale of the effect explicit. For the 4-site selectivity-filter model,
+\begin{equation}
+\label{eq:lion}
+L_{\mathrm{ion}}=\chi(d^2-d)\approx (2.76\times 10^{-4})\times 12 \approx 3.31\times 10^{-3}
+\end{equation}
+per channel at the biological point. If one takes an illustrative baseline of $N_0=10^4$ entrained channels at $f=f_0$, then the toy bridge gives
+\begin{equation}
+\label{eq:leff-illustrative}
+\mathcal{L}_{\mathrm{eff}}(f)\approx \frac{N_0L_{\mathrm{ion}}}{\varrho}\left(\frac{f_0}{f}\right)^\beta,
+\qquad
+\beta=\alpha s.
+\end{equation}
+Figure~\ref{fig:threshold-scaling} plots this for $\beta=1.5$ and redundancy factors $\varrho\in\{1,10,100\}$. The point is not the exact numerical choice of $N_0$ or $\beta$; it is that a very small local non-classical load can become system-relevant once multiplied by large entrained site counts.
+
+There is also a clean way to state the fractional size of the effect. For homogeneous payload modules,
+\begin{equation}
+\label{eq:uplift-fraction}
+\Phi
+\;:=\;
+\frac{\mathcal{L}_{\mathrm{eff}}}{N(d_m-1)}
+\;=\;
+\frac{\chi(d_m^2-d_m)}{\varrho(d_m-1)}
+\;=\;
+\frac{\chi d_m}{\varrho}.
+\end{equation}
+Thus the aggregate non-classical payload is extensive in $N$, but the fractional uplift above the classical baseline is independent of $N$ for fixed $(d_m,\chi,\varrho)$. For the ion-channel anchor ($d_m=4$, $\chi\approx2.76\times10^{-4}$),
+\begin{equation}
+\label{eq:ion-uplift}
+\Phi_{\mathrm{ion}}
+\approx
+\frac{1.10\times 10^{-3}}{\varrho},
+\end{equation}
+so the toy bridge says two things simultaneously: the per-channel effect is small, and the absolute payload load still scales linearly with the number of entrained channels.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{rcccc}
+\toprule
+$N$ & Classical $3N$ & $\mathcal{L}_{\mathrm{eff}}$ ($\varrho=1$) & $\mathcal{L}_{\mathrm{eff}}$ ($\varrho=10$) & $\mathcal{L}_{\mathrm{eff}}$ ($\varrho=100$) \\
+\midrule
+$10^3$ & $3.0\times 10^3$ & $3.31$ & $3.31\times 10^{-1}$ & $3.31\times 10^{-2}$ \\
+$10^4$ & $3.0\times 10^4$ & $3.31\times 10^1$ & $3.31$ & $3.31\times 10^{-1}$ \\
+$10^5$ & $3.0\times 10^5$ & $3.31\times 10^2$ & $3.31\times 10^1$ & $3.31$ \\
+\bottomrule
+\end{tabular}
+\caption{Ion-channel payload benchmarks at the biological point, using the rebuilt-repo anchor $L_{\mathrm{ion}}\approx 3.31\times 10^{-3}$ per channel. The corresponding fractional uplifts above the classical baseline are $\Phi_{\mathrm{ion}}\approx 1.10\times 10^{-3}$ for $\varrho=1$, $1.10\times 10^{-4}$ for $\varrho=10$, and $1.10\times 10^{-5}$ for $\varrho=100$. The message is not that the fraction is large; it is that the absolute non-classical payload remains extensive in $N$.}
+\label{tab:payload-benchmarks}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{threshold_entrainment_scaling.pdf}
+\caption{Threshold-entrainment bridge used in Section~\ref{sec:intelligence}. Left: lower-frequency carriers have longer coordination lengths in the toy model, so the threshold-crossing entrainment radius is larger. Right: using the actual ion-channel anchor from Figure~\ref{fig:ion-channel-anchor}, the effective non-classical payload load scales as $\mathcal{L}_{\mathrm{eff}}(f)\approx N_0L_{\mathrm{ion}}(f_0/f)^\beta/\varrho$ for illustrative $N_0=10^4$, $\beta=1.5$, and redundancy factors $\varrho\in\{1,10,100\}$. This is still a schematic consequence of the model, not a fitted cortical scaling law, but it shows how tiny local loads can accumulate across large coordinated populations.}
+\label{fig:threshold-scaling}
+\end{figure}
+
+\subsection{Predictions}
+
+The carrier-payload view yields direct predictions:
+\begin{enumerate}[label=\arabic*.]
+\item Measures of cognitive dimensionality should track entrained ion-channel payload diversity better than carrier frequency alone.
+\item Manipulations that preserve large-scale oscillatory coherence but reduce the diversity or number of available molecular payload sites should reduce effective dimensionality.
+\item If low-frequency rhythms have longer effective coordination lengths, then the coordinated dimensionality should scale with entrained territory size as in Proposition~\ref{prop:threshold-scaling}, not with frequency alone.
+\item The right computational bottleneck is not whether classical surrogates exist in principle, but how expensive it is to preserve the effective payload $\mathcal{L}_{\mathrm{eff}}$ rather than projecting it away, even when the fractional uplift $\Phi$ is modest.
+\end{enumerate}
+
+\section{Discussion}
+\label{sec:discussion}
+
+The main gain of the present reformulation is conceptual clarity. The old binary question---is biology quantum or classical?---is the wrong one. The geometric question is better: how much of the coherence sector remains accessible, where is it located, and how is it coordinated across scales?
+
+Three claims survive scrutiny in the current draft. First, decoherence is a dimensional projection of state space. Second, near-boundary biological dynamics are real, with photosynthesis as the proof of principle. Third, low-frequency carrier advantage is mathematically coherent once dimensionality is relocated to the coordinated payload and coupled to frequency through a transparent threshold-entrainment toy model.
+
+Several things remain open. The molecular payload classes beyond photosynthesis still need fresh computations in this rebuilt repo, with ion channels first and protein microdomains second. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a biophysically serious carrier-to-payload coupling model rather than only the threshold-entrainment toy bridge introduced in Section~\ref{sec:intelligence}. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
+
+It is also worth stating plainly what the rebuilt repo does and does not yet contain. It now computes one concrete neural-side payload anchor directly: the minimal ion-channel model summarized in Figure~\ref{fig:ion-channel-anchor}. The photosynthetic anchors enter as validated legacy results from the checkpointed analysis rather than as freshly rerun numerics in this stripped-down rebuild. That asymmetry is acceptable for the current thesis-first draft, but it also defines the next technical milestone: re-import the FMO and PE545 pipelines only insofar as they sharpen the carrier-payload argument.
+
+The paper therefore makes a narrower but more defensible claim than strong quantum-cognition proposals. It does not say that neural oscillations are quantum. It does not say that high dimensionality forces non-classicality. It says that biological systems built from many structured molecular machines can carry an extensive non-classical payload if a nonzero density of those machines sits near the quantum-classical boundary. Large-scale low-frequency waves may then be the right place to look for intelligence because they are the best classical carriers of that payload. In neural tissue, ion channels are the first place to test that claim. The numerical lesson of the rebuilt draft is correspondingly sober: the local fractional uplift is small [Eq.~\eqref{eq:ion-uplift}], but the absolute payload remains extensive in entrained site count.
+
+That is the full intended inversion of the usual intuition. Frequency is not dimensionality. Frequency is coordination. Dimensionality lives in the substrate being coordinated.
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
