@@ -64,7 +64,7 @@ Table 2 is the interpretation object: it shows that the ion-channel uplift fract
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: photosynthetic boundary examples from the checkpointed analysis, one fresh ion-channel payload anchor from the rebuilt repo, and a threshold-entrainment toy bridge linking carrier scale to payload scale
+- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a threshold-entrainment toy bridge linking carrier scale to payload scale
 - `hypothesis`: low-frequency/high-dimensional intelligence architecture
 
 ## What is deliberately not claimed

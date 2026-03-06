@@ -63,6 +63,8 @@ boundary-near and slightly non-classical in exactly the sense the paper needs.
 
 The generated summary files are:
 
+- [results/photosynthetic_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_points.csv)
+- [results/photosynthetic_anchor_runs.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_runs.csv)
 - [results/ion_channel_summary.json](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_summary.json)
 - [results/ion_channel_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_scan.csv)
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
@@ -79,13 +81,28 @@ The generated summary files are:
 
 | System | Role | Source | `γ_bio/J_max` | `θ_min^bio` | Current use |
 |---|---|---|---:|---:|---|
-| FMO | Proof of principle | Legacy validated | 1.14 | 87.7° | Functional near-boundary photosynthesis anchor |
-| PE545 | Proof of principle | Legacy validated | 7.88 | 89.0° | Independent photosynthetic confirmation of the same band |
+| FMO | Proof of principle | Rebuilt from validated Hamiltonian | 1.14 | 87.67° | Functional near-boundary photosynthesis anchor |
+| PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | Independent photosynthetic confirmation of the same band |
 | Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | Fresh rebuilt-repo molecular anchor |
 | Protein microdomain | Secondary payload | Planned | — | — | Payload extension, not yet recomputed here |
 | Neural oscillation | Carrier scale | Theory | `≫1` | `→90°` | Deep-classical coordination process |
 
 The new anchor map is the compact visual summary: FMO, PE545, and the rebuilt ion-channel point all sit in the same near-boundary band. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the ion-channel point then shows that a neural payload candidate can inhabit it too.
+
+The reduced rebuilt-repo photosynthesis path now also computes the optimum-point geometry:
+
+- FMO: `γ_opt/J_max ≈ 1.53`, `θ_min^opt ≈ 87.96°`, `η_opt ≈ 0.824`
+- PE545: `γ_opt/J_max ≈ 7.87`, `θ_min^opt ≈ 89.02°`, `η_opt ≈ 0.941`
+
+That is enough to support the proof-of-principle claim without restoring the entire old figure stack.
+
+In local-load units `L = \chi(d^2-d)`, the rebuilt biological points give:
+
+- FMO: `L_bio ≈ 2.28×10^-2`
+- PE545: `L_bio ≈ 4.93×10^-3`
+- Ion channel: `L_bio ≈ 3.31×10^-3`
+
+That matters because it shows the ion-channel payload anchor is not being forced into a qualitatively different regime; it is already the same order as PE545.
 
 ## Main scaling objects
 
@@ -180,6 +197,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 - [references.bib](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/references.bib): bibliography
 - [reader_guide.md](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/reader_guide.md): section-by-section reading guide
 - [build.sh](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/build.sh): local LaTeX build script
+- [code/photosynthetic_anchors.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/photosynthetic_anchors.py): reduced FMO/PE545 proof-of-principle computations
 - [code/ion_channel_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/ion_channel_payload.py): minimal ion-channel payload analysis
 
 ## Build
@@ -188,11 +206,19 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 ./build.sh
 ```
 
-`build.sh` regenerates the ion-channel anchor before compiling the manuscript.
+`build.sh` uses cached reduced-anchor outputs by default and only recomputes them if they are missing.
+
+To force a full numerical refresh:
+
+```bash
+REBUILD_ANCHORS=1 ./build.sh
+```
 
 This produces:
 
 - `paper.pdf`
+- `results/photosynthetic_anchor_points.csv`
+- `results/photosynthetic_anchor_runs.csv`
 - `results/ion_channel_summary.json`
 - `results/ion_channel_scan.csv`
 - `results/ion_payload_benchmarks.csv`
@@ -208,6 +234,6 @@ This repo is intentionally narrow at the moment:
 
 - manuscript-first rebuild
 - theory and positioning first
-- numerics/code to be reintroduced selectively from the tagged checkpoint, starting with ion-channel payload models
+- only the anchor computations the draft currently uses: reduced photosynthesis proof of principle plus ion-channel payload geometry
 
 The old overhaul is preserved at git tag `big-overhaul-checkpoint`.

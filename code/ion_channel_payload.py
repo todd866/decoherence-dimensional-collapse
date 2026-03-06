@@ -58,11 +58,8 @@ THRESHOLD_N0 = 1.0e4
 THRESHOLD_REDUNDANCIES = [1.0, 10.0, 100.0]
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
 
-# Legacy photosynthesis anchors imported from the checkpointed analysis
-# preserved at git tag `big-overhaul-checkpoint`.
-# These are kept explicit here so the rebuilt repo can display the
-# validated proof-of-principle points without restoring the full old
-# analysis stack.
+# Fallback legacy anchors, used only if the rebuilt photosynthetic summary
+# has not yet been generated.
 LEGACY_ANCHORS = [
     {
         "system": "FMO",
@@ -598,9 +595,36 @@ def write_payload_benchmarks(summary: dict) -> None:
                     )
 
 
+def load_photosynthetic_anchors(root: Path) -> list[dict[str, str | float | int]]:
+    """Load rebuilt photosynthetic anchor points if available."""
+    csv_path = root / "results" / "photosynthetic_anchor_points.csv"
+    if not csv_path.exists():
+        return [dict(row) for row in LEGACY_ANCHORS]
+
+    rows: list[dict[str, str | float | int]] = []
+    with csv_path.open("r", encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            rows.append(
+                {
+                    "system": row["system"],
+                    "role": "proof_of_principle",
+                    "status": row["source"],
+                    "dimension": int(row["dimension"]),
+                    "collapse": row["collapse"],
+                    "gamma_bio_over_jmax": float(row["gamma_bio_over_jmax"]),
+                    "theta_min_bio_deg": float(row["theta_min_bio_mean_deg"]),
+                    "theta_reference": "biological point (site-averaged)",
+                    "provenance": "rebuilt-repo",
+                }
+            )
+    return rows
+
+
 def anchor_rows(summary: dict) -> list[dict[str, str | float | int]]:
     """Build the cross-system anchor list used by the manuscript."""
-    rows: list[dict[str, str | float | int]] = [dict(row) for row in LEGACY_ANCHORS]
+    root = Path(__file__).resolve().parents[1]
+    rows: list[dict[str, str | float | int]] = load_photosynthetic_anchors(root)
     rows.append(
         {
             "system": "Ion channel",
@@ -688,7 +712,7 @@ def write_biological_anchor_outputs(summary: dict) -> None:
     ax.text(
         0.03,
         0.06,
-        "FMO, PE545: legacy validated anchors\nIon channel: rebuilt computation",
+        "FMO, PE545: rebuilt proof-of-principle\nIon channel: rebuilt computation",
         transform=ax.transAxes,
         fontsize=8,
         bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "#cccccc"},

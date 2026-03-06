@@ -197,9 +197,9 @@ Corollary~\ref{cor:lowf} is the formal version of the paper's headline thesis. L
 
 \subsection{Photosynthesis as proof of principle}
 
-Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In the previously validated FMO and PE545 calculations based on the Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
+Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In the reduced rebuilt-repo calculations based on the validated Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. Averaging over the two standard initial-site choices, FMO gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 1.53$ with $\theta_{\min}^{\mathrm{opt}}\approx 87.96^\circ$, while PE545 gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 7.87$ with $\theta_{\min}^{\mathrm{opt}}\approx 89.02^\circ$. At the biological operating point, the rebuilt scans give $\theta_{\min}^{\mathrm{bio}}\approx 87.67^\circ$ (FMO) and $89.02^\circ$ (PE545). In local-load units $L=\chi(d^2-d)$, those same biological points correspond to $L_{\mathrm{FMO}}^{\mathrm{bio}}\approx 2.28\times10^{-2}$ and $L_{\mathrm{PE545}}^{\mathrm{bio}}\approx 4.93\times10^{-3}$. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
 
-The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, separate legacy validated anchors from the fresh rebuilt-repo computation.
+The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, show that the rebuilt ion-channel point lands in the same geometric band as the rebuilt photosynthetic proof-of-principle calculations. The comparison is not only angular: the ion-channel local load $L_{\mathrm{ion}}\approx 3.31\times10^{-3}$ is of the same order as PE545 at the biological point, so the neural payload anchor is not being placed in a wholly alien regime.
 
 \begin{table}[t]
 \centering
@@ -208,21 +208,21 @@ The role of photosynthesis in this paper is strategic. It shows that the near-bo
 \toprule
 System & Role & Source & $\gamma_{\mathrm{bio}}/J_{\max}$ & $\theta_{\min}^{\mathrm{bio}}$ & Use in draft \\
 \midrule
-FMO & Proof point & Legacy & 1.14 & $87.7^\circ$ & Functional near-boundary photosynthesis anchor. \\
-PE545 & Proof point & Legacy & 7.88 & $89.0^\circ$ & Independent photosynthetic confirmation of the same band. \\
-Ion channel & Neural payload & Rebuilt & 6.67 & $88.55^\circ$ & Fresh molecular anchor, with $\chi\approx 2.76\times 10^{-4}$. \\
-Prot.\ microd. & Payload ext. & Planned & --- & --- & Extension only; not yet recomputed here. \\
-Neural oscillation & Carrier & Theory & $\gg 1$ & $\to 90^\circ$ & Deep-classical coordination scale. \\
+FMO & Proof point & Fresh & 1.14 & $87.67^\circ$ & Functional near-boundary photosynthesis anchor. \\
+PE545 & Proof point & Fresh & 7.88 & $89.02^\circ$ & Independent photosynthetic confirmation of the same band. \\
+Ion channel & Neural payload & Fresh & 6.67 & $88.55^\circ$ & Fresh molecular anchor, with $\chi\approx 2.76\times 10^{-4}$. \\
+Prot.\ microd. & Payload ext. & Plan & --- & --- & Extension only; not yet recomputed here. \\
+Neural oscillation & Carrier & Th. & $\gg 1$ & $\to 90^\circ$ & Deep-classical coordination scale. \\
 \bottomrule
 \end{tabularx}
-\caption{Anchor systems used in the present draft. The numerical values for FMO and PE545 are imported from the checkpointed validated analysis preserved at the git tag \texttt{big-overhaul-checkpoint}; the ion-channel point is freshly computed in the rebuilt repo.}
+\caption{Anchor systems used in the present draft. FMO, PE545, and the ion-channel point are all computed in the rebuilt repo, with the photosynthetic models reduced to the quantities this draft actually needs: biological-point and transport-optimum geometry from validated Hamiltonians.}
 \label{tab:anchors}
 \end{table}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\linewidth]{biological_anchor_map.pdf}
-\caption{Biological operating points for the present molecular anchors. FMO and PE545 are legacy validated anchors imported from the checkpointed analysis; the ion-channel point is freshly computed in the rebuilt repo. All three lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel point shows that a neural payload candidate can inhabit the same geometric band.}
+\caption{Biological operating points for the present molecular anchors, all computed in the rebuilt repo. FMO, PE545, and the ion-channel point all lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel point shows that a neural payload candidate can inhabit the same geometric band.}
 \label{fig:anchor-map}
 \end{figure}
 
@@ -407,7 +407,7 @@ Three claims survive scrutiny in the current draft. First, decoherence is a dime
 
 Several things remain open. The molecular payload classes beyond photosynthesis still need fresh computations in this rebuilt repo, with ion channels first and protein microdomains second. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a biophysically serious carrier-to-payload coupling model rather than only the threshold-entrainment toy bridge introduced in Section~\ref{sec:intelligence}. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
 
-It is also worth stating plainly what the rebuilt repo does and does not yet contain. It now computes one concrete neural-side payload anchor directly: the minimal ion-channel model summarized in Figure~\ref{fig:ion-channel-anchor}. The photosynthetic anchors enter as validated legacy results from the checkpointed analysis rather than as freshly rerun numerics in this stripped-down rebuild. That asymmetry is acceptable for the current thesis-first draft, but it also defines the next technical milestone: re-import the FMO and PE545 pipelines only insofar as they sharpen the carrier-payload argument.
+It is also worth stating plainly what the rebuilt repo does and does not yet contain. It now computes the reduced photosynthetic proof-of-principle anchors and one concrete neural-side payload anchor directly: the minimal ion-channel model summarized in Figure~\ref{fig:ion-channel-anchor}. What it does \emph{not} yet contain is the full old figure stack or the broader family of molecular payload models beyond ion channels. That is the right asymmetry for the present thesis-first draft: only the computations that sharpen the carrier-payload argument have been brought forward.
 
 The paper therefore makes a narrower but more defensible claim than strong quantum-cognition proposals. It does not say that neural oscillations are quantum. It does not say that high dimensionality forces non-classicality. It says that biological systems built from many structured molecular machines can carry an extensive non-classical payload if a nonzero density of those machines sits near the quantum-classical boundary. Large-scale low-frequency waves may then be the right place to look for intelligence because they are the best classical carriers of that payload. In neural tissue, ion channels are the first place to test that claim. The numerical lesson of the rebuilt draft is correspondingly sober: the local fractional uplift is small [Eq.~\eqref{eq:ion-uplift}], but the absolute payload remains extensive in entrained site count.
 
