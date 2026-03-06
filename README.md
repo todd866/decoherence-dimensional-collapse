@@ -126,7 +126,11 @@ R_{\mathrm{coord}} = 1+\chi_m d_m.
 $$
 
 So absolute uplift grows with entrained area ($N$), while relative uplift is set locally by $\chi_m$ and $d_m$.
-This is a computational-cost statement, not an impossibility claim: classical surrogates are always possible, but tracking non-classical payload structure adds an extra burden that scales with $N$.
+For heterogeneous payloads, define the module load $L_i=\chi_i(d_i^2-d_i)$ and effective payload
+$$
+\mathcal{L}_{\mathrm{eff}}(E)=\frac{1}{\varrho_E}\sum_{i\in E}L_i,
+$$
+where $\varrho_E\ge 1$ is a redundancy factor. Under a nonzero density of near-boundary modules and bounded redundancy, $\mathcal{L}_{\mathrm{eff}}(E)=O(N)$, so low-frequency carriers can support larger effective dimensionality by entraining larger sets. This is a computational-cost statement, not an impossibility claim: classical surrogates are always possible, but tracking non-classical payload structure adds an extra burden that scales with coordinated site count.
 
 ## Reader map
 
@@ -138,7 +142,7 @@ This is a computational-cost statement, not an impossibility claim: classical su
 | Thermodynamics | §4 |
 | Photosynthesis (FMO/PE545) | §5 + Figs. 4, 6, 7 |
 | Neural + cross-scale | §6 + Fig. 8 |
-| Low-F/high-D formalization | §6.4 (Def. 6.1, Props. 6.2-6.3) + Fig. 9 |
+| Low-F/high-D formalization | §6.4 (Defs. 6.1, 6.3, 6.4; Props. 6.2-6.5) + Fig. 9 |
 | Ion channel + protein-fold anchors | Appendix C.1-C.2 |
 | Chromatin sensitivity | Appendix C |
 | Numerics/methods | Appendix A |

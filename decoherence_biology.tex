@@ -560,6 +560,31 @@ The representational dimensionality of the coordinated molecular manifold scales
 
 Deep classicality is what makes this scaling possible: the oscillation layer is a geometrically reliable channel ($\chi_{\mathrm{osc}} \approx 0$) that faithfully transmits molecular-scale events with high fidelity precisely because it adds no quantum-classical mixing of its own. The principal angle framework converts ``is the nervous system quantum?'' from a binary question into a scale-dependent geometric answer: deep classical at oscillation frequencies ($\chi_{\mathrm{osc}} \approx 0$), non-classical at molecular scales ($\chi_m > 0$), with classical oscillations providing the reliable high-fidelity channel between the two.
 
+\begin{definition}[Module non-classical load]
+\label{def:module-load}
+For a molecular module $i$ of dimension $d_i$ with non-classicality index $\chi_i$, define its \emph{non-classical load}
+\begin{equation}
+\label{eq:module-load}
+L_i \;:=\; \chi_i\,(d_i^2-d_i).
+\end{equation}
+The load vanishes for a geometrically classical module ($\chi_i = 0$) and is positive whenever coherence directions remain geometrically accessible.
+\end{definition}
+
+\begin{definition}[Effective coordinated payload with redundancy]
+\label{def:effective-payload}
+Let $E$ be a set of entrained molecular modules and let $\varrho_E \geq 1$ be a redundancy factor accounting for correlated or overlapping contributions within the coordinated population. Define the \emph{effective non-classical payload}
+\begin{equation}
+\label{eq:effective-payload}
+\mathcal{L}_{\mathrm{eff}}(E) \;:=\; \frac{1}{\varrho_E}\sum_{i \in E} L_i,
+\end{equation}
+and the corresponding \emph{effective coordinated dimensionality}
+\begin{equation}
+\label{eq:effective-dcoord}
+D_{\mathrm{eff}}(E) \;:=\; \frac{1}{\varrho_E}\sum_{i \in E}\bigl[(d_i - 1) + L_i\bigr].
+\end{equation}
+When all modules are identical ($d_i = d_m$, $\chi_i = \chi_m$) and $\varrho_E = 1$, this reduces to Definition~\ref{def:dcoord}.
+\end{definition}
+
 \begin{proposition}[Absolute vs relative non-classical uplift]
 \label{prop:absolute-relative}
 For fixed molecular subsystem size $d_m$ and non-classicality $\chi_m$, Definition~\ref{def:dcoord} implies
@@ -577,6 +602,46 @@ Hence absolute uplift grows linearly with entrained site count $N$, while relati
 \begin{proof}
 Subtract and divide equation~\eqref{eq:dcoord} by $N(d_m-1)$.
 \end{proof}
+
+\begin{proposition}[Extensive non-classical payload under nonzero module density]
+\label{prop:extensive-payload}
+\emph{(Hypothesis-derived.)} Let $E_N$ be an entrained population of $N$ molecular modules. Suppose there exist constants $p \in (0,1]$, $L_\star > 0$, and $\varrho_{\max} \geq 1$ such that
+\begin{enumerate}
+\item[\emph{(i)}] at least $pN$ modules in $E_N$ satisfy $L_i \geq L_\star$;
+\item[\emph{(ii)}] the redundancy factor is bounded: $\varrho_{E_N} \leq \varrho_{\max}$.
+\end{enumerate}
+Then
+\begin{equation}
+\label{eq:extensive-payload}
+\mathcal{L}_{\mathrm{eff}}(E_N) \;\geq\; \frac{pL_\star}{\varrho_{\max}}\,N,
+\end{equation}
+and therefore the aggregate non-classical payload is extensive in system size.
+\end{proposition}
+
+\begin{proof}
+Condition~\emph{(i)} gives $\sum_{i \in E_N} L_i \geq pN L_\star$. Dividing by $\varrho_{E_N}$ and using condition~\emph{(ii)} yields
+\[
+\mathcal{L}_{\mathrm{eff}}(E_N) = \frac{1}{\varrho_{E_N}}\sum_{i \in E_N} L_i
+\geq \frac{pN L_\star}{\varrho_{E_N}}
+\geq \frac{pN L_\star}{\varrho_{\max}}.
+\]
+\end{proof}
+
+\begin{corollary}[Low-frequency carrier advantage under monotone entrainment]
+\label{cor:low-f-advantage}
+\emph{(Hypothesis-derived.)} Let $E(f)$ be the set of molecular modules entrained by a carrier of frequency $f$. If lower carrier frequencies entrain at least as many modules as higher ones,
+\[
+f_1 < f_2 \quad \Longrightarrow \quad |E(f_1)| \geq |E(f_2)|,
+\]
+and the assumptions of Proposition~\ref{prop:extensive-payload} hold uniformly on $E(f)$ with the same constants $p$, $L_\star$, and $\varrho_{\max}$, then
+\begin{equation}
+\label{eq:low-f-advantage}
+\mathcal{L}_{\mathrm{eff}}(E(f)) \;\geq\; \frac{pL_\star}{\varrho_{\max}}\,|E(f)|.
+\end{equation}
+Hence lower-frequency carriers support a larger lower bound on effective non-classical payload whenever they coordinate larger molecular populations.
+\end{corollary}
+
+High dimensionality does \emph{not} itself imply non-classicality: a very large classical system can still have $\chi_i = 0$ at every module. The argument here is extensive rather than ontological. If a nonzero density of molecular modules sits near the quantum-classical boundary, then their aggregate non-classical payload grows as $O(N)$ under bounded redundancy. Frequency enters only through carrier reliability and entrained set size, not as a direct generator of dimensionality. This is the precise sense in which low frequency can support high dimensionality without the macroscopic carrier becoming non-classical.
 
 \paragraph{Effect-size accounting (ion-channel anchor).}
 Using the illustrative ion-channel value $\chi_m \approx 2.8\times10^{-4}$ at biological dephasing with $d_m=4$:
@@ -625,7 +690,7 @@ As an empirical validation, we repeat the analysis with the Potjans--Diesmann ca
 
 \subsection{Summary of results}
 
-We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) establishes that for $d \geq 3$ the diagonal and off-diagonal tangent subspaces are Bures-orthogonal \emph{only} at diagonal states---any coherence breaks orthogonality, resolving the higher-dimensional geometry exactly. Applied to three biological systems spanning $12$ orders of magnitude in dephasing---FMO ($d = 7$), PE545 ($d = 8$), and a cortical gamma assembly ($d = 10$)---the principal angle framework reveals a continuous geometric spectrum: photosynthetic complexes sit near the quantum-classical boundary (angles $87^\circ$--$89^\circ$), while neural oscillator assemblies are asymptotically indistinguishable from the classical simplex at oscillation-frequency scales (angles $\to 90^\circ$). For illustrative molecular payload models, biological dephasing yields near-classical but non-classical geometry (ion channel $d=4$: $\theta_{\min}\approx88.5^\circ$, $\chi_m\approx2.8\times10^{-4}$; protein mid-fold $d=6$: $\theta_{\min}\approx88.2^\circ$, $\chi_m\approx3.7\times10^{-4}$). This supports (without proving for real systems) the molecular-scale hypothesis that $\gamma_{\mathrm{bio}}/J_{\max}\sim O(1$--$30)$ can maintain $\chi_m>0$. The low-F/high-D bridge is now quantitatively constrained: absolute uplift grows as $\Delta D_{\mathrm{coord}}=N\chi_m(d_m^2-d_m)$ while relative uplift is fixed at $1+\chi_m d_m$ (Proposition~\ref{prop:absolute-relative}, Figure~\ref{fig:effect-size}).
+We have shown that decoherence is a dimensional collapse in the information-geometric sense: $d^2 - 1 \to d - 1$ dimensions, with the Bures metric restricting to Fisher--Rao on the surviving simplex. The exact Bures separation angle quantifies the geometry of the classical-quantum split at every full-rank qubit state, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) establishes that for $d \geq 3$ the diagonal and off-diagonal tangent subspaces are Bures-orthogonal \emph{only} at diagonal states---any coherence breaks orthogonality, resolving the higher-dimensional geometry exactly. Applied to three biological systems spanning $12$ orders of magnitude in dephasing---FMO ($d = 7$), PE545 ($d = 8$), and a cortical gamma assembly ($d = 10$)---the principal angle framework reveals a continuous geometric spectrum: photosynthetic complexes sit near the quantum-classical boundary (angles $87^\circ$--$89^\circ$), while neural oscillator assemblies are asymptotically indistinguishable from the classical simplex at oscillation-frequency scales (angles $\to 90^\circ$). For illustrative molecular payload models, biological dephasing yields near-classical but non-classical geometry (ion channel $d=4$: $\theta_{\min}\approx88.5^\circ$, $\chi_m\approx2.8\times10^{-4}$; protein mid-fold $d=6$: $\theta_{\min}\approx88.2^\circ$, $\chi_m\approx3.7\times10^{-4}$). This supports (without proving for real systems) the molecular-scale hypothesis that $\gamma_{\mathrm{bio}}/J_{\max}\sim O(1$--$30)$ can maintain $\chi_m>0$. The low-F/high-D bridge is now quantitatively constrained in two steps: homogeneous uplift obeys $\Delta D_{\mathrm{coord}}=N\chi_m(d_m^2-d_m)$ and $1+\chi_m d_m$ (Proposition~\ref{prop:absolute-relative}, Figure~\ref{fig:effect-size}), while heterogeneous biological payloads become extensive only under nonzero module density and bounded redundancy (Proposition~\ref{prop:extensive-payload}, Corollary~\ref{cor:low-f-advantage}).
 
 \subsection{The dimensional cost-benefit interpretation}
 \label{sec:cost-benefit}
@@ -642,7 +707,7 @@ This cost-benefit interpretation does not require defining or optimizing an expl
 
 \subsection{Limitations}
 
-The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) is sharp for all $d \geq 3$; the perturbative expansion (Theorem~\ref{thm:qudit-angles}) quantifies the departure from orthogonality but is limited to small coherence. The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. The principal angles are computed on the renormalized conditional state $\hat{\rho} = \rho/\mathrm{Tr}[\rho]$; this is the natural object for the surviving exciton's geometry, but it means the Bures analysis inherits any artifacts of the Haken--Strobl model's treatment of system-bath correlations. Extending the information-geometric analysis to structured baths and non-Markovian dephasing is an open problem.
+The qubit separation angle (Theorem~\ref{thm:bures-angle}) is exact, and the global orthogonality theorem (Theorem~\ref{thm:global-orthogonality}) is sharp for all $d \geq 3$; the perturbative expansion (Theorem~\ref{thm:qudit-angles}) quantifies the departure from orthogonality but is limited to small coherence. The Haken--Strobl dephasing model used for FMO is simplified: the real protein-solvent bath has structured spectral density, non-Markovian dynamics, and spatially correlated fluctuations \cite{cao2020quantum}. The principal angles are computed on the renormalized conditional state $\hat{\rho} = \rho/\mathrm{Tr}[\rho]$; this is the natural object for the surviving exciton's geometry, but it means the Bures analysis inherits any artifacts of the Haken--Strobl model's treatment of system-bath correlations. Extending the information-geometric analysis to structured baths and non-Markovian dephasing is an open problem. Likewise, the extensive-payload argument of Section~\ref{sec:cross-scale} is conditional on two biological assumptions not established here: a nonzero density of near-boundary molecular modules and a bounded redundancy factor $\varrho_E$ for the coordinated population.
 
 \subsection{Outlook}
 \label{sec:bridge}
@@ -651,7 +716,7 @@ Theorem~\ref{thm:metric-restriction} establishes that the Fisher--Rao metric on 
 
 A natural next step is applying the framework to experimentally determined molecular Hamiltonians from 2D-IR spectroscopy, where both the coupling topology and dephasing rates are directly measured. The energy-scale argument (Appendix~\ref{app:chromatin}) predicts that molecular systems with $kT \sim J_{\max}$ will sit near the quantum-classical boundary, but the sensitivity of this position to coupling strength means that system-specific characterization is needed. The principal angle framework provides a testable geometric tool for this purpose.
 
-The most immediate extension is computing $\chi_m$ (Definition~\ref{def:chi}) for experimentally constrained ion-channel and protein-folding microdomain Hamiltonians, where the energy-scale argument is sharpest. A potassium channel selectivity filter has $d = 4$ binding sites with ion-ion Coulomb and backbone couplings of $10$--$50$\,cm$^{-1}$ and protein-water dephasing of $100$--$300$\,cm$^{-1}$ \cite{hamm2011concepts}, giving $\gamma_{\mathrm{bio}}/J_{\max} \sim O(2$--$30)$ and a dimensional collapse from $15$ to $3$. Folding microdomains show similar coupling/dephasing scales \cite{onuchic1997theory,dill2008protein}. If $\chi_m > 0$ in this regime---as the energy-scale argument predicts---then Proposition~\ref{prop:low-f-high-d} gives a concrete $D_{\mathrm{coord}}$ for any entrained population of $N$ molecular sites, and the multi-scale picture becomes quantitative: partial non-classicality at the molecular scale, faithfully propagated by deep classical oscillations ($\chi_{\mathrm{osc}} \approx 0$), influencing neural computation through the phase-coordination machinery described in \cite{todd2026coherence}.
+The most immediate extension is computing $\chi_m$ (Definition~\ref{def:chi}) for experimentally constrained ion-channel and protein-folding microdomain Hamiltonians, where the energy-scale argument is sharpest. A potassium channel selectivity filter has $d = 4$ binding sites with ion-ion Coulomb and backbone couplings of $10$--$50$\,cm$^{-1}$ and protein-water dephasing of $100$--$300$\,cm$^{-1}$ \cite{hamm2011concepts}, giving $\gamma_{\mathrm{bio}}/J_{\max} \sim O(2$--$30)$ and a dimensional collapse from $15$ to $3$. Folding microdomains show similar coupling/dephasing scales \cite{onuchic1997theory,dill2008protein}. If $\chi_m > 0$ in this regime---as the energy-scale argument predicts---then Proposition~\ref{prop:extensive-payload} and Corollary~\ref{cor:low-f-advantage} give a concrete route from local non-classicality to large-scale coordinated dimensionality, provided module density and redundancy can be estimated in real tissue.
 
 \subsection{Open questions}
 
@@ -659,7 +724,7 @@ The most immediate extension is computing $\chi_m$ (Definition~\ref{def:chi}) fo
 \item \emph{Non-Markovian geometry}: characterizing the dimensional collapse under structured (non-Markovian) dephasing, where coherence revivals temporarily restore collapsed dimensions.
 \item \emph{Multi-chromophore entanglement}: extending beyond single-exciton states to multi-exciton manifolds, where inter-chromophore entanglement adds structure beyond site-basis coherence.
 \item \emph{Quantum Darwinism}: the pointer states selected by einselection \cite{zurek2003decoherence,zurek2025decoherence} determine \emph{which} $(d{-}1)$-dimensional submanifold the collapse targets; the collapse magnitude is basis-independent.
-\item \emph{Multi-scale neural architecture}: computing $\chi_m$ for ion-channel and protein-folding microdomain Hamiltonians using experimentally constrained parameters, evaluating $D_{\mathrm{coord}}$ (Definition~\ref{def:dcoord}) for realistic entrained populations, and connecting molecular-scale non-classicality to oscillation-level dynamics through the phase-coordination framework of \cite{todd2026coherence}.
+\item \emph{Multi-scale neural architecture}: computing $\chi_m$ for ion-channel and protein-folding microdomain Hamiltonians using experimentally constrained parameters, estimating the density $p$ of near-boundary modules and redundancy factor $\varrho_E$ for realistic entrained populations, and connecting this extensive payload to oscillation-level dynamics through the phase-coordination framework of \cite{todd2026coherence}.
 \end{enumerate}
 
 \bibliographystyle{unsrt}
