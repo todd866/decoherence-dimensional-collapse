@@ -84,6 +84,8 @@ Table 2 is the interpretation object: it shows that the ion-channel uplift fract
 
 Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` already at `γ/J_max = 50`, so the carrier/payload split is no longer just verbal.
 
+Read Table 1 with that in mind: the payload anchors sit at `χ ~ 10^-4`, while the carrier proxy is already down at `χ ~ 10^-6`. That quantitative gap is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload.”
+
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions

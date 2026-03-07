@@ -120,6 +120,16 @@ $$
 
 That matters because it shows the payload story is not specific to ion conduction. A second low-entropy molecular machine lands in the same near-boundary band.
 
+The carrier/payload split is also already quantitative in the rebuilt outputs:
+
+- FMO payload: `χ ≈ 5.42×10^-4`
+- PE545 payload: `χ ≈ 8.80×10^-5`
+- Ion-channel payload: `χ ≈ 2.76×10^-4`
+- Protein mid-fold payload: `χ ≈ 3.66×10^-4`
+- Gamma-carrier proxy at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
+
+So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while the carrier proxy is already orders of magnitude closer to the classical limit.
+
 The reduced rebuilt-repo photosynthesis path now also computes the optimum-point geometry:
 
 - FMO: `γ_opt/J_max ≈ 1.53`, `θ_min^opt ≈ 87.96°`, `η_opt ≈ 0.824`
