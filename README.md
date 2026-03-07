@@ -280,6 +280,21 @@ In practical terms, the theory-side objects map to experimental proxies like thi
 
 That is the real falsifiability route for the current draft.
 
+The manuscript now states the corresponding minimal statistical test explicitly:
+
+$$
+D_{\mathrm{obs}}
+=
+\beta_0
++\beta_1 \log \widetilde N
++\beta_2 H_{\mathrm{payload}}
++\beta_3 C_{\mathrm{carrier}}
++\beta_4 \log f
++\varepsilon.
+$$
+
+Carrier-payload says `β1, β2 > 0` and `β4` should shrink toward zero once coordinated territory, payload diversity, and carrier coherence are controlled. Frequency-as-dimensionality says `β4` should remain dominant.
+
 For homogeneous payload modules, the fractional uplift above the classical baseline is
 
 $$

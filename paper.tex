@@ -479,6 +479,20 @@ Observed coordinated dimensionality & Participation ratio, cross-validated manif
 \label{tab:measurement-program}
 \end{table}
 
+A minimal empirical test can be written directly at the level of recorded neural data:
+\begin{equation}
+\label{eq:empirical-test}
+D_{\mathrm{obs}}
+=
+\beta_0
++\beta_1 \log \widetilde N
++\beta_2 H_{\mathrm{payload}}
++\beta_3 C_{\mathrm{carrier}}
++\beta_4 \log f
++\varepsilon,
+\end{equation}
+where $D_{\mathrm{obs}}$ is an observed neural dimensionality measure, $\widetilde N$ is the coordinated territory or weighted payload size, $H_{\mathrm{payload}}$ is a payload-diversity proxy, and $C_{\mathrm{carrier}}$ is a carrier-coherence proxy. The carrier-payload picture predicts $\beta_1,\beta_2>0$ and, crucially, that $\beta_4$ should shrink toward zero once $\widetilde N$, $H_{\mathrm{payload}}$, and $C_{\mathrm{carrier}}$ are included. The frequency-as-dimensionality view predicts the opposite: frequency should remain a dominant positive predictor even after those controls are applied. That regression-level disagreement is the shortest empirical route to deciding between the two pictures.
+
 \section{Discussion}
 \label{sec:discussion}
 

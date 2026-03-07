@@ -97,6 +97,12 @@ Table 3 is the falsifiability object: it states exactly how the present carrier-
 
 Table 4 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
 
+Right after that, the paper now gives the minimal regression form of the wager:
+$$
+D_{\mathrm{obs}}=\beta_0+\beta_1\log \widetilde N+\beta_2 H_{\mathrm{payload}}+\beta_3 C_{\mathrm{carrier}}+\beta_4\log f+\varepsilon.
+$$
+That matters because it reduces the disagreement to one coefficient test. If `β4` stays dominant after the payload and carrier controls, this paper loses.
+
 Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` already at `γ/J_max = 50`, so the carrier/payload split is no longer just verbal.
 
 Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxy is already down at `χ ~ 10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload.”
