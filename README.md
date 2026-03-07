@@ -46,7 +46,7 @@ The new manuscript uses that geometry to argue:
 ## Claim tiers
 
 - `theorem-level`: dimensional collapse, non-classicality index, extensive payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxy, phase-window bridge
+- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxy, soft phase-coupling bridge
 - `hypothesis-level`: low-frequency / high-dimensional biological intelligence architecture
 
 The paper’s claim is deliberately narrower than “brains are quantum.” It is that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and falsifiable.
@@ -220,23 +220,23 @@ $$
 
 provided the payload statistics remain comparable and redundancy stays bounded.
 
-The manuscript now also includes a minimal phase-window carrier bridge:
+The manuscript now also includes a minimal soft phase-coupling carrier bridge:
 
 $$
-R_{\mathrm{eff}}(f)=\min\!\left(R_{\mathrm{amp}},R_{\phi}(f)\right),
-\qquad
 R_{\phi}(f)=\frac{v\,\Delta\phi_{\max}}{2\pi f},
+\qquad
+R_{\mathrm{eff}}^{(\eta)}(f)=\left(R_{\mathrm{amp}}^{-\eta}+R_{\phi}(f)^{-\eta}\right)^{-1/\eta},
 $$
 
-so that, in the phase-limited regime of the phase-window toy model,
+so that, in the phase-limited regime of the soft bridge,
 
 $$
-D_{\mathrm{coord}}(E(f)) \propto f^{-s}.
+D_{\mathrm{coord}}(E(f)) \propto \left(R_{\mathrm{eff}}^{(\eta)}(f)\right)^s \propto f^{-s}.
 $$
 
 This is not a fitted cortical law. It is the first explicit model in the rebuilt draft showing how lower-frequency carriers can yield higher coordinated dimensionality while remaining classical, while also saturating once the amplitude ceiling is reached.
 
-The bridge figure now also includes a heterogeneous payload-field check: distributed amplitude ceilings and phase tolerances are simulated over a 2D payload field and normalized to the same baseline at `f = f0`. The low-`f` advantage survives that heterogeneity rather than depending on a single hard cutoff.
+The bridge figure now also includes a heterogeneous soft-field check: distributed amplitude scales and phase tolerances are simulated over a 2D payload field and normalized to the same baseline at `f = f0`. The low-`f` advantage survives that heterogeneity rather than depending on a single hard cutoff.
 
 Using the actual ion-channel anchor, the local payload load is
 
@@ -244,7 +244,7 @@ $$
 L_{\mathrm{ion}}=\chi(d^2-d)\approx 3.31\times 10^{-3}
 $$
 
-per channel at the biological point. The new phase-window scaling figure then plots
+per channel at the biological point. The new soft phase-coupling figure then plots
 
 $$
 \mathcal{L}_{\mathrm{eff}}(f)\approx \frac{N_0L_{\mathrm{ion}}}{\varrho}

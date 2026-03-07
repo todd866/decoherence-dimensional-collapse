@@ -17,7 +17,7 @@ Read:
 1. [paper.tex](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/paper.tex), Abstract
 2. Section 1: Introduction
 3. Section 3: Carrier-Payload Architecture
-4. Section 5.3: minimal phase-window carrier model
+4. Section 5.3: minimal soft phase-coupling carrier model
 5. Section 5.4: rival predictions table
 6. Section 5: Low-Frequency Coordination and Intelligence
 7. Section 6: Discussion
@@ -43,7 +43,7 @@ Read:
 5. Figure 1: biological anchor map
 6. Figure 2: ion-channel payload anchor
 7. Figure 3: carrier/payload schematic
-8. Figure 4: phase-window scaling schematic
+8. Figure 4: soft phase-coupling scaling schematic
 9. Table 2: payload benchmark table
 10. Section 5.1: Neural oscillations as carriers
 11. Table 3: rival predictions
@@ -83,9 +83,9 @@ Figure 2 is the cleanest fresh rebuilt-repo object: it shows the bounded trap sc
 
 Figure 3 is the intuition object: it shows the disagreement with the frequency-as-dimensionality view in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
 
-Figure 4 is the bridge object: it makes the low-frequency claim explicit in one toy model instead of leaving it as pure verbal intuition.
+Figure 4 is the bridge object: it makes the low-frequency claim explicit in one soft coupling model instead of leaving it as pure verbal intuition.
 
-It now does one extra job that matters: the solid curves are a heterogeneous payload-field simulation, while the dashed curves are the analytic phase-window envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
+It now does one extra job that matters: the solid curves are a heterogeneous soft-field simulation, while the dashed curves are the analytic soft envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
 
 Table 2 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
 
@@ -98,7 +98,7 @@ Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload 
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a phase-window toy bridge linking carrier scale to payload scale
+- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a soft phase-coupling bridge linking carrier scale to payload scale
 - `hypothesis`: low-frequency/high-dimensional intelligence architecture
 
 ## What is deliberately not claimed

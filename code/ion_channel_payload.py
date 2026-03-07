@@ -60,6 +60,7 @@ PHASE_WINDOW_S = 2.0
 PHASE_WINDOW_N0 = 1.0e4
 PHASE_WINDOW_REDUNDANCIES = [1.0, 10.0, 100.0]
 PHASE_WINDOW_RAMP_OVER_R0 = 4.0
+PHASE_WINDOW_SOFT_ETA = 2.0
 PHASE_WINDOW_HETERO_SEED = 7
 PHASE_WINDOW_HETERO_MODULES = 12000
 PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 = 6.0
@@ -523,7 +524,7 @@ def write_figure(summary: dict, scan_rows: list[dict[str, float]]) -> None:
 
 
 def write_phase_window_scaling_outputs(summary: dict) -> None:
-    """Write a phase-window bridge figure and CSV using the ion-channel anchor."""
+    """Write a soft phase-coupling bridge figure and CSV using the ion-channel anchor."""
     root = Path(__file__).resolve().parents[1]
     results_dir = root / "results"
     figures_dir = root / "figures"
@@ -532,16 +533,21 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
 
     freq_ratio = np.logspace(np.log10(0.25), np.log10(4.0), 300)
     local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
+    eta = PHASE_WINDOW_SOFT_ETA
     r_phase_over_r0 = freq_ratio ** (-1.0)
     r_amp_over_r0 = np.full_like(freq_ratio, PHASE_WINDOW_RAMP_OVER_R0)
-    r_eff_over_r0 = np.minimum(r_phase_over_r0, r_amp_over_r0)
-    n_payload = PHASE_WINDOW_N0 * r_eff_over_r0 ** PHASE_WINDOW_S
+    inv_reff_eta = r_amp_over_r0 ** (-eta) + r_phase_over_r0 ** (-eta)
+    r_eff_over_r0 = inv_reff_eta ** (-1.0 / eta)
+    r_eff_ref = (PHASE_WINDOW_RAMP_OVER_R0 ** (-eta) + 1.0) ** (-1.0 / eta)
+    n_payload = PHASE_WINDOW_N0 * (r_eff_over_r0 / r_eff_ref) ** PHASE_WINDOW_S
     crossover_ratio = 1.0 / PHASE_WINDOW_RAMP_OVER_R0
 
     # Heterogeneous payload field: modules occupy a 2D disc and vary in both
-    # amplitude ceiling and phase tolerance at f0. The scale factor is chosen
-    # so the heterogeneous field matches N0 at f=f0, making the comparison
-    # about shape rather than arbitrary normalization.
+    # amplitude decay length and phase-tolerance radius at f0. Coupling is
+    # weighted continuously rather than thresholded:
+    #   w_i(f) = exp[-(r/R_amp,i)^eta - (r/R_phi,i(f))^eta]
+    # The scale factor is chosen so the heterogeneous field matches N0 at
+    # f=f0, making the comparison about shape rather than arbitrary normalization.
     rng = np.random.default_rng(PHASE_WINDOW_HETERO_SEED)
     radii = PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 * np.sqrt(rng.random(PHASE_WINDOW_HETERO_MODULES))
     ramp_i = np.exp(
@@ -558,12 +564,12 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
             size=PHASE_WINDOW_HETERO_MODULES,
         )
     )
-    raw_fraction_at_f0 = np.mean((radii <= ramp_i) & (radii <= rphi0_i))
-    hetero_scale = PHASE_WINDOW_N0 / max(raw_fraction_at_f0, 1e-12)
+    weights_f0 = np.exp(-((radii / ramp_i) ** eta) - ((radii / rphi0_i) ** eta))
+    hetero_scale = PHASE_WINDOW_N0 / max(float(np.mean(weights_f0)), 1e-12)
     n_payload_hetero = np.zeros_like(freq_ratio)
     for idx, f_ratio in enumerate(freq_ratio):
-        entrained = (radii <= ramp_i) & (radii <= (rphi0_i / f_ratio))
-        n_payload_hetero[idx] = hetero_scale * float(np.mean(entrained))
+        weights = np.exp(-((radii / ramp_i) ** eta) - ((f_ratio * radii / rphi0_i) ** eta))
+        n_payload_hetero[idx] = hetero_scale * float(np.mean(weights))
 
     csv_path = results_dir / "threshold_scaling_scan.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as fh:
@@ -574,8 +580,8 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
                 "r_phase_over_r0",
                 "r_amp_over_r0",
                 "r_eff_over_r0",
-                "n_payload_analytic",
-                "n_payload_heterogeneous",
+                "n_payload_soft_analytic",
+                "n_payload_soft_heterogeneous",
                 "classical_baseline",
                 "leff_varrho_1",
                 "leff_varrho_10",
@@ -618,17 +624,17 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
     ax_field.loglog(freq_ratio, r_amp_over_r0, color="#b03a2e", lw=2.0, ls="--",
                     label=r"$R_{\rm amp}/R_0$")
     ax_field.loglog(freq_ratio, r_eff_over_r0, color="#4c956c", lw=2.2,
-                    label=r"$R_{\rm eff}(f)/R_0$")
+                    label=rf"$R_{{\rm eff}}^{{(\eta)}}(f)/R_0,\ \eta={eta:.0f}$")
     ax_field.axvline(crossover_ratio, color="black", ls=":", lw=1.0)
     ax_field.set_xlabel(r"carrier frequency $f/f_0$")
     ax_field.set_ylabel(r"normalized coordination radius")
-    ax_field.set_title("Phase-window coordination")
+    ax_field.set_title("Soft phase-coupling radius")
     ax_field.invert_xaxis()
     ax_field.legend(frameon=False, fontsize=8, loc="lower left")
     ax_field.text(
         0.05,
         0.08,
-        r"$R_{\rm eff}=\min(R_{\rm amp},R_{\phi})$" "\n"
+        r"$R_{\rm eff}^{(\eta)}=(R_{\rm amp}^{-\eta}+R_{\phi}^{-\eta})^{-1/\eta}$" "\n"
         r"$R_{\phi}=v\Delta\phi_{\max}/(2\pi f)$",
         transform=ax_field.transAxes,
         fontsize=8,
@@ -655,14 +661,14 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
         )
     ax_scale.set_xlabel(r"carrier frequency $f/f_0$")
     ax_scale.set_ylabel(r"effective payload load $\mathcal{L}_{\rm eff}$")
-    ax_scale.set_title(r"Payload scaling: heterogeneous vs. analytic")
+    ax_scale.set_title(r"Soft payload scaling: heterogeneous vs. analytic")
     ax_scale.invert_xaxis()
     ax_scale.text(
         0.05,
         0.08,
         rf"$L_{{\rm ion}}\approx {local_load:.2e}$" "\n"
-        rf"$N_0={int(PHASE_WINDOW_N0):d},\ s={PHASE_WINDOW_S:.0f},\ R_{{\rm amp}}/R_0={PHASE_WINDOW_RAMP_OVER_R0:.0f}$" "\n"
-        r"solid: hetero field, dashed: analytic envelope",
+        rf"$N_0={int(PHASE_WINDOW_N0):d},\ s={PHASE_WINDOW_S:.0f},\ R_{{\rm amp}}/R_0={PHASE_WINDOW_RAMP_OVER_R0:.0f},\ \eta={eta:.0f}$" "\n"
+        r"solid: hetero soft field, dashed: soft analytic envelope",
         transform=ax_scale.transAxes,
         fontsize=8,
     )
