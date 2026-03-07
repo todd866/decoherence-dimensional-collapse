@@ -159,21 +159,21 @@ $$
 
 provided the payload statistics remain comparable and redundancy stays bounded.
 
-The manuscript now also includes a minimal carrier-to-payload coupling bridge:
+The manuscript now also includes a minimal phase-window carrier bridge:
 
 $$
-A_f(r)=A_0 e^{-r/\ell(f)},
+R_{\mathrm{eff}}(f)=\min\!\left(R_{\mathrm{amp}},R_{\phi}(f)\right),
 \qquad
-\ell(f)=\ell_0\left(\frac{f_0}{f}\right)^\alpha,
+R_{\phi}(f)=\frac{v\,\Delta\phi_{\max}}{2\pi f},
 $$
 
-so that, in the threshold-entrainment toy model,
+so that, in the phase-limited regime of the phase-window toy model,
 
 $$
-D_{\mathrm{coord}}(E(f)) \propto \left(\frac{f_0}{f}\right)^{\alpha s}.
+D_{\mathrm{coord}}(E(f)) \propto f^{-s}.
 $$
 
-This is not a fitted cortical law. It is the first explicit model in the rebuilt draft showing how lower-frequency carriers can yield higher coordinated dimensionality while remaining classical.
+This is not a fitted cortical law. It is the first explicit model in the rebuilt draft showing how lower-frequency carriers can yield higher coordinated dimensionality while remaining classical, while also saturating once the amplitude ceiling is reached.
 
 Using the actual ion-channel anchor, the local payload load is
 
@@ -181,11 +181,11 @@ $$
 L_{\mathrm{ion}}=\chi(d^2-d)\approx 3.31\times 10^{-3}
 $$
 
-per channel at the biological point. The new threshold-scaling figure then plots
+per channel at the biological point. The new phase-window scaling figure then plots
 
 $$
 \mathcal{L}_{\mathrm{eff}}(f)\approx \frac{N_0L_{\mathrm{ion}}}{\varrho}
-\left(\frac{f_0}{f}\right)^\beta
+\min\!\left(\frac{R_{\mathrm{amp}}}{R_0},\frac{f_0}{f}\right)^s
 $$
 
 for illustrative redundancy assumptions, so the bridge figure now carries actual rebuilt-repo numbers rather than only a normalized schematic.
@@ -208,7 +208,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 
-![Threshold-entrainment scaling](figures/threshold_entrainment_scaling.png)
+![Phase-window scaling](figures/threshold_entrainment_scaling.png)
 
 ## Files
 

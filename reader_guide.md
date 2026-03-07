@@ -17,7 +17,7 @@ Read:
 1. [paper.tex](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/paper.tex), Abstract
 2. Section 1: Introduction
 3. Section 3: Carrier-Payload Architecture
-4. Section 5.3: minimal carrier-to-payload coupling model
+4. Section 5.3: minimal phase-window carrier model
 5. Section 5: Low-Frequency Coordination and Intelligence
 6. Section 6: Discussion
 
@@ -41,7 +41,7 @@ Read:
 4. Table 1: anchor comparison
 5. Figure 1: biological anchor map
 6. Figure 2: ion-channel payload anchor
-7. Figure 3: threshold-entrainment scaling schematic
+7. Figure 3: phase-window scaling schematic
 8. Table 2: payload benchmark table
 9. Section 5.1: Neural oscillations as carriers
 
@@ -66,7 +66,7 @@ Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma mic
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a threshold-entrainment toy bridge linking carrier scale to payload scale
+- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a phase-window toy bridge linking carrier scale to payload scale
 - `hypothesis`: low-frequency/high-dimensional intelligence architecture
 
 ## What is deliberately not claimed

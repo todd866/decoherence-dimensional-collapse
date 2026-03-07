@@ -53,9 +53,10 @@ GEOMETRY_READOUT_PS = 5.0
 TRANSPORT_WINDOW_PS = 8.0
 SCAN_POINTS = 25
 DT_FS = 5.0
-THRESHOLD_BETA = 1.5
-THRESHOLD_N0 = 1.0e4
-THRESHOLD_REDUNDANCIES = [1.0, 10.0, 100.0]
+PHASE_WINDOW_S = 2.0
+PHASE_WINDOW_N0 = 1.0e4
+PHASE_WINDOW_REDUNDANCIES = [1.0, 10.0, 100.0]
+PHASE_WINDOW_RAMP_OVER_R0 = 4.0
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
 
 # Fallback legacy anchors, used only if the rebuilt photosynthetic summary
@@ -460,8 +461,8 @@ def write_figure(summary: dict, scan_rows: list[dict[str, float]]) -> None:
     plt.close(fig)
 
 
-def write_threshold_scaling_outputs(summary: dict) -> None:
-    """Write a schematic bridge figure and CSV using the ion-channel anchor."""
+def write_phase_window_scaling_outputs(summary: dict) -> None:
+    """Write a phase-window bridge figure and CSV using the ion-channel anchor."""
     root = Path(__file__).resolve().parents[1]
     results_dir = root / "results"
     figures_dir = root / "figures"
@@ -470,18 +471,11 @@ def write_threshold_scaling_outputs(summary: dict) -> None:
 
     freq_ratio = np.logspace(np.log10(0.25), np.log10(4.0), 300)
     local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
-    n_payload = THRESHOLD_N0 * freq_ratio ** (-THRESHOLD_BETA)
-
-    r = np.linspace(0.0, 4.0, 300)
-    a_thr = 0.2
-    f_low = 0.5
-    f_high = 2.0
-    ell_low = f_low ** (-1.0)
-    ell_high = f_high ** (-1.0)
-    a_low = np.exp(-r / ell_low)
-    a_high = np.exp(-r / ell_high)
-    r_low = ell_low * np.log(1.0 / a_thr)
-    r_high = ell_high * np.log(1.0 / a_thr)
+    r_phase_over_r0 = freq_ratio ** (-1.0)
+    r_amp_over_r0 = np.full_like(freq_ratio, PHASE_WINDOW_RAMP_OVER_R0)
+    r_eff_over_r0 = np.minimum(r_phase_over_r0, r_amp_over_r0)
+    n_payload = PHASE_WINDOW_N0 * r_eff_over_r0 ** PHASE_WINDOW_S
+    crossover_ratio = 1.0 / PHASE_WINDOW_RAMP_OVER_R0
 
     csv_path = results_dir / "threshold_scaling_scan.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as fh:
@@ -489,6 +483,9 @@ def write_threshold_scaling_outputs(summary: dict) -> None:
         writer.writerow(
             [
                 "f_over_f0",
+                "r_phase_over_r0",
+                "r_amp_over_r0",
+                "r_eff_over_r0",
                 "n_payload",
                 "classical_baseline",
                 "leff_varrho_1",
@@ -504,32 +501,45 @@ def write_threshold_scaling_outputs(summary: dict) -> None:
             writer.writerow(
                 [
                     float(f_ratio),
+                    float(r_phase_over_r0[idx]),
+                    float(r_amp_over_r0[idx]),
+                    float(r_eff_over_r0[idx]),
                     float(n_payload[idx]),
                     classical_baseline,
-                    float(n_payload[idx] * local_load / THRESHOLD_REDUNDANCIES[0]),
-                    float(n_payload[idx] * local_load / THRESHOLD_REDUNDANCIES[1]),
-                    float(n_payload[idx] * local_load / THRESHOLD_REDUNDANCIES[2]),
-                    float(local_load / ((summary["dimension"] - 1) * THRESHOLD_REDUNDANCIES[0])),
-                    float(local_load / ((summary["dimension"] - 1) * THRESHOLD_REDUNDANCIES[1])),
-                    float(local_load / ((summary["dimension"] - 1) * THRESHOLD_REDUNDANCIES[2])),
+                    float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[0]),
+                    float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[1]),
+                    float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[2]),
+                    float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[0])),
+                    float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[1])),
+                    float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[2])),
                 ]
             )
 
     fig, (ax_field, ax_scale) = plt.subplots(1, 2, figsize=(7.2, 3.1), constrained_layout=True)
 
-    ax_field.plot(r, a_low, color="#1f4e79", lw=2.0, label=r"low $f$")
-    ax_field.plot(r, a_high, color="#b03a2e", lw=2.0, label=r"high $f$")
-    ax_field.axhline(a_thr, color="black", ls=":", lw=1.0)
-    ax_field.axvline(r_low, color="#1f4e79", ls="--", lw=1.0)
-    ax_field.axvline(r_high, color="#b03a2e", ls="--", lw=1.0)
-    ax_field.set_xlabel(r"distance $r/\ell_0$")
-    ax_field.set_ylabel(r"coordination field $A_f(r)/A_0$")
-    ax_field.set_title("Threshold entrainment")
-    ax_field.legend(frameon=False, fontsize=8, loc="upper right")
-    ax_field.text(0.05, 0.08, r"$A_{\rm thr}$", transform=ax_field.transAxes, fontsize=8)
+    ax_field.loglog(freq_ratio, r_phase_over_r0, color="#1f4e79", lw=2.0,
+                    label=r"$R_{\phi}(f)/R_0 \propto f^{-1}$")
+    ax_field.loglog(freq_ratio, r_amp_over_r0, color="#b03a2e", lw=2.0, ls="--",
+                    label=r"$R_{\rm amp}/R_0$")
+    ax_field.loglog(freq_ratio, r_eff_over_r0, color="#4c956c", lw=2.2,
+                    label=r"$R_{\rm eff}(f)/R_0$")
+    ax_field.axvline(crossover_ratio, color="black", ls=":", lw=1.0)
+    ax_field.set_xlabel(r"carrier frequency $f/f_0$")
+    ax_field.set_ylabel(r"normalized coordination radius")
+    ax_field.set_title("Phase-window coordination")
+    ax_field.invert_xaxis()
+    ax_field.legend(frameon=False, fontsize=8, loc="lower left")
+    ax_field.text(
+        0.05,
+        0.08,
+        r"$R_{\rm eff}=\min(R_{\rm amp},R_{\phi})$" "\n"
+        r"$R_{\phi}=v\Delta\phi_{\max}/(2\pi f)$",
+        transform=ax_field.transAxes,
+        fontsize=8,
+    )
 
     colors = ["#4c956c", "#6c5ce7", "#b08968"]
-    for color, redundancy in zip(colors, THRESHOLD_REDUNDANCIES):
+    for color, redundancy in zip(colors, PHASE_WINDOW_REDUNDANCIES):
         leff = n_payload * local_load / redundancy
         ax_scale.loglog(
             freq_ratio,
@@ -546,7 +556,7 @@ def write_threshold_scaling_outputs(summary: dict) -> None:
         0.05,
         0.08,
         rf"$L_{{\rm ion}}\approx {local_load:.2e}$" "\n"
-        rf"$N_0={int(THRESHOLD_N0):d},\ \beta={THRESHOLD_BETA:.1f}$",
+        rf"$N_0={int(PHASE_WINDOW_N0):d},\ s={PHASE_WINDOW_S:.0f},\ R_{{\rm amp}}/R_0={PHASE_WINDOW_RAMP_OVER_R0:.0f}$",
         transform=ax_scale.transAxes,
         fontsize=8,
     )
@@ -581,7 +591,7 @@ def write_payload_benchmarks(summary: dict) -> None:
         )
         for n_payload in BENCHMARK_N_VALUES:
             classical_baseline = n_payload * d_minus_1
-            for redundancy in THRESHOLD_REDUNDANCIES:
+            for redundancy in PHASE_WINDOW_REDUNDANCIES:
                 leff = n_payload * local_load / redundancy
                 writer.writerow(
                     [
@@ -727,7 +737,7 @@ def main() -> None:
     summary, scan_rows = summarize_ion_channel()
     write_outputs(summary, scan_rows)
     write_figure(summary, scan_rows)
-    write_threshold_scaling_outputs(summary)
+    write_phase_window_scaling_outputs(summary)
     write_payload_benchmarks(summary)
     write_biological_anchor_outputs(summary)
 
