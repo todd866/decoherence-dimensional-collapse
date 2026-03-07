@@ -113,9 +113,9 @@ D_{\mathrm{obs}}=\beta_0+\beta_1\log \widetilde N+\beta_2 H_{\mathrm{payload}}+\
 $$
 That matters because it reduces the disagreement to one coefficient test. If `β4` stays dominant after the payload and carrier controls, this paper loses.
 
-Section 5.1 now also has two rebuilt carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the layered E/I carrier proxy gives `θ_min ≈ 89.66°` and `χ ≈ 1.11×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
+Section 5.1 now also has two rebuilt carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the Potjans-Diesmann cortical-column proxy gives `θ_min ≈ 89.37°` and `χ ≈ 2.83×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
 
-Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload.”
+Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload,” even after moving to the less favorable Potjans-Diesmann proxy.
 
 ## Claim tiers
 

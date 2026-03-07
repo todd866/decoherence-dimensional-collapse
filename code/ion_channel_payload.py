@@ -985,9 +985,13 @@ def load_neural_carrier_proxy_anchors(root: Path) -> list[dict[str, str | float 
         anchor_row = max(model_rows, key=lambda entry: float(entry["gamma_over_j"]))
         dimension = int(anchor_row.get("dimension", 10))
         collapse = f"{dimension * dimension - 1}->{dimension - 1}"
+        system_label = {
+            "Synthetic gamma": "Carrier (Synth.)",
+            "Potjans-Diesmann": "Carrier (P-D)",
+        }.get(model, f"Carrier ({model})")
         anchors.append(
             {
-                "system": f"Carrier ({model})",
+                "system": system_label,
                 "role": "carrier-proxy",
                 "status": "rebuilt-proxy",
                 "dimension": dimension,
@@ -1060,8 +1064,8 @@ def write_biological_anchor_outputs(summary: dict) -> None:
         "PE545": {"color": "#d97904", "marker": "s"},
         "Ion channel": {"color": "#4c956c", "marker": "D"},
         "Protein mid-fold": {"color": "#6c757d", "marker": "^"},
-        "Carrier (Synthetic gamma)": {"color": "#7b2cbf", "marker": "P"},
-        "Carrier (Laminar E/I)": {"color": "#9d4edd", "marker": "X"},
+        "Carrier (Synth.)": {"color": "#7b2cbf", "marker": "P"},
+        "Carrier (P-D)": {"color": "#9d4edd", "marker": "X"},
     }
 
     ax.axhspan(87.0, 90.0, color="#e8f1f2", alpha=0.9, zorder=0)
@@ -1082,13 +1086,12 @@ def write_biological_anchor_outputs(summary: dict) -> None:
             linewidth=0.7,
             zorder=3,
         )
-        ax.text(
-            x_val * 1.06,
-            y_val + 0.08,
-            system,
-            fontsize=8,
-            color=s["color"],
-        )
+        label_offsets = {
+            "Carrier (Synth.)": (1.05, 0.10),
+            "Carrier (P-D)": (1.05, -0.10),
+        }
+        mult_x, delta_y = label_offsets.get(system, (1.06, 0.08))
+        ax.text(x_val * mult_x, y_val + delta_y, system, fontsize=8, color=s["color"])
 
     ax.set_xscale("log")
     ax.set_xlim(0.8, 80.0)

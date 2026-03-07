@@ -152,7 +152,7 @@ The carrier/payload split is also already quantitative in the rebuilt outputs:
 - Ion-channel payload: `χ ≈ 2.76×10^-4`
 - Protein mid-fold payload: `χ ≈ 3.66×10^-4`
 - Synthetic gamma carrier at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
-- Laminar E/I carrier at `γ/J_max = 50`: `χ ≈ 1.11×10^-5`
+- Potjans-Diesmann carrier at `γ/J_max = 50`: `χ ≈ 2.83×10^-5`
 
 So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while both carrier proxies are already materially closer to the classical limit.
 
@@ -192,11 +192,11 @@ For the synthetic gamma-band microcircuit:
 - `γ/J_max = 10`: `θ_min ≈ 89.74°`, `χ ≈ 5.58×10^-6`
 - `γ/J_max = 50`: `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6`
 
-For the layered E/I carrier proxy:
+For the Potjans-Diesmann cortical-column proxy:
 
-- `γ/J_max = 1`: `θ_min ≈ 89.34°`, `χ ≈ 5.52×10^-5`
-- `γ/J_max = 10`: `θ_min ≈ 89.64°`, `χ ≈ 1.32×10^-5`
-- `γ/J_max = 50`: `θ_min ≈ 89.66°`, `χ ≈ 1.11×10^-5`
+- `γ/J_max = 1`: `θ_min ≈ 88.27°`, `χ ≈ 2.63×10^-4`
+- `γ/J_max = 10`: `θ_min ≈ 89.15°`, `χ ≈ 5.13×10^-5`
+- `γ/J_max = 50`: `θ_min ≈ 89.37°`, `χ ≈ 2.83×10^-5`
 
 That is the rebuilt carrier-side evidence for the paper’s split:
 
@@ -204,7 +204,7 @@ $$
 \chi_{\mathrm{carrier}} \ll \chi_{\mathrm{payload}}.
 $$
 
-At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `25×` to `74×` smaller than the ion-channel payload `χ` at its biological point.
+At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `10×` to `74×` smaller than the ion-channel payload `χ` at its biological point.
 
 ## Main scaling objects
 

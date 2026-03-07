@@ -4,7 +4,7 @@
 This script computes only the carrier-side geometry the rebuilt paper needs:
 
 - a synthetic gamma-band cortical microcircuit
-- a reduced laminar E/I carrier proxy
+- a reduced Potjans-Diesmann cortical-column carrier proxy
 - principal-angle geometry at a few proxy dephasing ratios
 - explicit high-dephasing proxy points showing carrier classicality
 
@@ -38,29 +38,10 @@ NEURAL_READOUT_PS = 5.0
 NEURAL_DT_FS = 1.0
 PROXY_GAMMA_OVER_J = [1.0, 10.0, 50.0]
 
-LAMINAR_FREQS_HZ = np.array([48, 60, 44, 56, 34, 46, 28, 40], dtype=np.float64)
-LAMINAR_SCALE = 50.0  # cm^-1 per Hz
-LAMINAR_WITHIN_LAYER_HZ = [5.0, 5.0, 4.5, 4.0]
-LAMINAR_FEEDFORWARD_HZ = {
-    (2, 0): 3.5,  # L4E -> L23E
-    (0, 4): 2.5,  # L23E -> L5E
-    (4, 6): 3.0,  # L5E -> L6E
-    (6, 2): 2.0,  # L6E -> L4E
-}
-LAMINAR_INHIBITORY_HZ = {
-    (1, 3): 2.0,
-    (3, 5): 2.0,
-    (5, 7): 1.5,
-}
-LAMINAR_CROSS_EI_HZ = {
-    (0, 3): 1.0,
-    (2, 5): 1.0,
-    (4, 7): 1.0,
-    (6, 1): 0.8,
-}
-LAMINAR_TARGET_SITES = [6, 7]
-LAMINAR_KAPPA_PS = [0.5, 0.5]
-LAMINAR_INITIAL_SITE = 2
+PD_FREQS_HZ = np.array([3.0, 6.0, 5.0, 8.0, 7.0, 9.0, 1.0, 4.0], dtype=np.float64)
+PD_TARGET_SITES = [6, 7]
+PD_KAPPA_PS = [0.5, 0.5]
+PD_INITIAL_SITE = 2
 
 
 def build_neural_gamma_hamiltonian() -> np.ndarray:
@@ -77,31 +58,32 @@ def build_neural_gamma_hamiltonian() -> np.ndarray:
     return h_cm
 
 
-def build_laminar_ei_hamiltonian() -> np.ndarray:
-    """8x8 layered E/I carrier proxy in cm^-1."""
-    h_cm = np.diag(LAMINAR_FREQS_HZ * LAMINAR_SCALE)
+def build_potjans_diesmann_hamiltonian() -> np.ndarray:
+    """8x8 Potjans-Diesmann-inspired cortical column Hamiltonian in cm^-1.
 
-    for layer_idx, (exc_idx, inh_idx) in enumerate([(0, 1), (2, 3), (4, 5), (6, 7)]):
-        coupling = LAMINAR_WITHIN_LAYER_HZ[layer_idx] * LAMINAR_SCALE
-        h_cm[exc_idx, inh_idx] = coupling
-        h_cm[inh_idx, exc_idx] = coupling
-
-    for (src, dst), coupling_hz in LAMINAR_FEEDFORWARD_HZ.items():
-        coupling = coupling_hz * LAMINAR_SCALE
-        h_cm[src, dst] = coupling
-        h_cm[dst, src] = coupling
-
-    for (src, dst), coupling_hz in LAMINAR_INHIBITORY_HZ.items():
-        coupling = coupling_hz * LAMINAR_SCALE
-        h_cm[src, dst] = coupling
-        h_cm[dst, src] = coupling
-
-    for (src, dst), coupling_hz in LAMINAR_CROSS_EI_HZ.items():
-        coupling = coupling_hz * LAMINAR_SCALE
-        h_cm[src, dst] = coupling
-        h_cm[dst, src] = coupling
-
-    return h_cm
+    Rows/cols are L2/3e, L2/3i, L4e, L4i, L5e, L5i, L6e, L6i.
+    Connection probabilities are taken from Table 5 of Potjans & Diesmann 2014
+    and converted into a symmetric effective coupling matrix.
+    """
+    d = 8
+    c = np.array([
+        [0.101, 0.169, 0.044, 0.082, 0.032, 0.0,   0.008, 0.0  ],
+        [0.135, 0.137, 0.032, 0.052, 0.075, 0.0,   0.004, 0.0  ],
+        [0.008, 0.006, 0.050, 0.135, 0.007, 0.0003,0.045, 0.0  ],
+        [0.069, 0.003, 0.079, 0.160, 0.003, 0.0,   0.106, 0.0  ],
+        [0.100, 0.062, 0.051, 0.006, 0.083, 0.373, 0.020, 0.0  ],
+        [0.055, 0.027, 0.026, 0.002, 0.060, 0.316, 0.009, 0.0  ],
+        [0.016, 0.007, 0.021, 0.017, 0.057, 0.020, 0.040, 0.225],
+        [0.036, 0.001, 0.003, 0.001, 0.028, 0.008, 0.066, 0.144],
+    ], dtype=np.float64)
+    j_raw = np.sqrt(c * c.T)
+    signs = np.ones(d)
+    signs[[1, 3, 5, 7]] = -1.0
+    sign_matrix = np.outer(signs, signs)
+    j_eff = j_raw * sign_matrix
+    np.fill_diagonal(j_eff, 0.0)
+    coupling_scale = 200.0 / np.max(np.abs(j_eff))
+    return np.diag(PD_FREQS_HZ * NEURAL_GAMMA_SCALE) + j_eff * coupling_scale
 
 
 def compute_proxy_rows(
@@ -164,11 +146,11 @@ def write_proxy_outputs() -> None:
     )
     rows.extend(
         compute_proxy_rows(
-            model="Laminar E/I",
-            h_cm=build_laminar_ei_hamiltonian(),
-            target_sites=LAMINAR_TARGET_SITES,
-            kappa_ps=LAMINAR_KAPPA_PS,
-            initial_site=LAMINAR_INITIAL_SITE,
+            model="Potjans-Diesmann",
+            h_cm=build_potjans_diesmann_hamiltonian(),
+            target_sites=PD_TARGET_SITES,
+            kappa_ps=PD_KAPPA_PS,
+            initial_site=PD_INITIAL_SITE,
         )
     )
 
