@@ -158,7 +158,7 @@ So the current analysis shows the separation the paper is arguing for: payload a
 
 ## What would falsify this
 
-The paper is not trying to win by rhetoric. It makes a direct empirical wager against a frequency-as-dimensionality view:
+The paper is not trying to win by rhetoric. It makes a direct empirical wager against a simpler frequency-dominant interpretation:
 
 - if measured dimensionality tracks carrier frequency after controlling for entrained payload size and payload diversity, this paper is wrong
 - if preserving large-scale carrier coherence while reducing available payload sites leaves dimensionality mostly unchanged, this paper is wrong

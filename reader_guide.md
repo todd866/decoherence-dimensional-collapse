@@ -93,7 +93,7 @@ That matters because it broadens the payload class beyond ion conduction without
 
 Figure 2 is the cleanest ion-channel geometry figure: it shows the minimum-angle scan across $\gamma/J_{\max}$ and the biological-point principal-angle spectrum that the argument actually uses.
 
-Figure 3 is the intuition object: it shows the disagreement with the frequency-as-dimensionality view in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
+Figure 3 is the intuition object: it shows the disagreement with a frequency-dominant reading in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
 
 Figure 4 is the bridge object: it makes the low-frequency claim explicit in one soft coupling model instead of leaving it as pure verbal intuition.
 
@@ -106,7 +106,7 @@ Table 2 is the bridge object in compact numerical form: with `f0 = 40 Hz` as the
 
 Table 3 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
 
-Table 4 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
+Table 4 is the falsifiability object: it states exactly how the present carrier-payload view differs from a simpler frequency-dominant reading. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
 
 Table 5 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
 

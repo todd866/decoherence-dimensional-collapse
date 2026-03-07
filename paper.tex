@@ -55,7 +55,7 @@ High-dimensional neural activity is often discussed as if it were primarily a pr
 
 This paper develops a different answer. The claim is not that low-frequency oscillations are themselves quantum, nor that high dimensionality automatically implies non-classicality. The claim is narrower and stronger: biological systems are plausibly organized as \emph{carrier-payload architectures}. At macroscopic scale, oscillatory carriers can be deep classical. At molecular scale, the modules being coordinated can remain near the quantum-classical boundary. Dimensionality then scales with the coordinated payload, not with carrier frequency itself. The disagreement with a frequency-centric picture is therefore not about whether fast bursts matter. It is about \emph{where the dimensionality resides}: in this paper, fast activity can index access or routing, while low-frequency carriers can dominate effective dimensionality by coordinating a larger payload.
 
-The mathematical basis for that claim comes from decoherence geometry. Decoherence is the standard route by which quantum dynamics lose phase-sensitive distinguishability and approach classical pointer descriptions \cite{zeh1970interpretation,zurek1981pointer,zurek2003decoherence,schlosshauer2005decoherence}. A $d$-level quantum system occupies a $(d^2-1)$-dimensional state manifold under the Bures metric \cite{braunstein1994statistical,petz1996monotone}. Complete dephasing collapses this manifold onto the $(d-1)$-dimensional classical probability simplex under the Fisher--Rao metric \cite{rao1945information,amari1985differential}. The collapse is therefore not just loss of ``quantumness'' in an informal sense; it is a geometric destruction of distinguishable directions in state space.
+The mathematical basis for that claim comes from decoherence geometry. Decoherence is the standard route by which quantum dynamics lose phase-sensitive distinguishability and approach classical pointer descriptions \cite{zeh1970interpretation,zurek1981pointer,zurek2003decoherence,schlosshauer2005decoherence}. A $d$-level quantum system occupies a $(d^2-1)$-dimensional state manifold under the Bures metric \cite{bures1969extension,braunstein1994statistical,petz1996monotone}. Complete dephasing collapses this manifold onto the $(d-1)$-dimensional classical probability simplex under the Fisher--Rao metric \cite{rao1945information,amari1985differential}. The collapse is therefore not just loss of ``quantumness'' in an informal sense; it is a geometric destruction of distinguishable directions in state space.
 
 That perspective is already useful in quantum biology. Photosynthetic complexes are known to operate in regimes where intermediate dephasing can improve transport efficiency \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. What has been missing is a language for saying how classical or non-classical those biologically relevant operating points actually are. The Bures principal-angle framework supplies that language.
 
@@ -333,11 +333,11 @@ with soft-min coordination radius
 R_{\mathrm{eff}}^{(\eta)}(f)=
 \left(R_{\mathrm{amp}}^{-\eta}+R_\phi(f)^{-\eta}\right)^{-1/\eta}.
 \end{equation}
-If payload modules populate an effective spatial support of dimension $s$ with density $\rho_m$, then the weighted payload size is
+If payload modules populate an effective spatial support of dimension $s$ with spatial density $\nu_m$, then the weighted payload size is
 \begin{equation}
 \label{eq:soft-payload-count}
 \widetilde N(f)=
-\rho_m C_s \Gamma\!\left(1+\frac{s}{\eta}\right)
+\nu_m C_s \Gamma\!\left(1+\frac{s}{\eta}\right)
 \left(R_{\mathrm{eff}}^{(\eta)}(f)\right)^s,
 \end{equation}
 where $C_s=\pi^{s/2}/\Gamma(s/2+1)$ is the volume of the unit $s$-ball. In the phase-limited regime $R_\phi(f)\ll R_{\mathrm{amp}}$, this still gives $\widetilde N(f)\propto f^{-s}$; at sufficiently low frequency the growth saturates smoothly at the amplitude ceiling instead of hitting a hard cutoff.
@@ -348,7 +348,7 @@ Assume the soft phase-coupling model above, a common payload dimension $d_m$, an
 \begin{equation}
 D_{\mathrm{coord}}(E(f))
 \ge
-\rho_m C_s \Gamma\!\left(1+\frac{s}{\eta}\right)
+\nu_m C_s \Gamma\!\left(1+\frac{s}{\eta}\right)
 \left(R_{\mathrm{eff}}^{(\eta)}(f)\right)^s
 \left[(d_m-1)+\frac{pL_\star}{\varrho_\star}\right]
 \end{equation}
@@ -468,21 +468,21 @@ The carrier-payload view yields direct predictions:
 \item The right computational bottleneck is not whether classical surrogates exist in principle, but how expensive it is to preserve the effective payload $\mathcal{L}_{\mathrm{eff}}$ rather than projecting it away, even when the fractional uplift $\Phi$ is modest.
 \end{enumerate}
 
-These predictions are useful only if they are contrasted with the position the paper is trying to replace. Table~\ref{tab:rival-predictions} states that contrast in the sharpest operational form available in the present draft.
+These predictions are useful only if they are contrasted with a simpler frequency-dominant interpretation. Table~\ref{tab:rival-predictions} states that contrast in the sharpest operational form available in the present draft.
 
 \begin{table}[t]
 \centering
 \small
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.2cm}YY@{}}
 \toprule
-Observable or manipulation & Frequency-as-dimensionality expectation & Carrier-payload expectation \\
+Observable or manipulation & Frequency-dominant expectation & Carrier-payload expectation \\
 \midrule
 Cross-condition variation in measured dimensionality & Dimensionality should increase primarily with carrier frequency or burstiness. & Dimensionality should increase primarily with entrained payload size and payload diversity, even when the carrier is slower. \\
 Hold large-scale carrier coherence fixed while reducing available payload sites or payload diversity & Only modest changes in dimensionality are expected if the carrier spectrum is preserved. & Effective dimensionality should fall because the payload, not the carrier frequency, is where state-space richness resides. \\
 Compare low-frequency broad-coordination states with high-frequency local-access states & High-frequency states should appear more dimensional because they are spectrally faster. & Low-frequency states can appear more dimensional when they coordinate a larger payload ensemble, even if high-frequency states remain better markers of local access or routing. \\
 \bottomrule
 \end{tabularx}
-\caption{Rival empirical expectations. The paper does not deny that high-frequency bursts can correlate with flexible access or gating. It denies the stronger inference that carrier frequency itself is the primary locus of dimensionality.}
+\caption{Alternative empirical expectations. The paper does not deny that high-frequency bursts can correlate with flexible access or gating. It denies the stronger inference that carrier frequency itself is the primary locus of dimensionality.}
 \label{tab:rival-predictions}
 \end{table}
 
@@ -517,7 +517,7 @@ D_{\mathrm{obs}}
 +\beta_4 \log f
 +\varepsilon,
 \end{equation}
-where $D_{\mathrm{obs}}$ is an observed neural dimensionality measure, $\widetilde N$ is the coordinated territory or weighted payload size, $H_{\mathrm{payload}}$ is a payload-diversity proxy, and $C_{\mathrm{carrier}}$ is a carrier-coherence proxy. The carrier-payload picture predicts $\beta_1,\beta_2>0$ and, crucially, that $\beta_4$ should shrink toward zero once $\widetilde N$, $H_{\mathrm{payload}}$, and $C_{\mathrm{carrier}}$ are included. The frequency-as-dimensionality view predicts the opposite: frequency should remain a dominant positive predictor even after those controls are applied. That regression-level disagreement is the shortest empirical route to deciding between the two pictures.
+where $D_{\mathrm{obs}}$ is an observed neural dimensionality measure, $\widetilde N$ is the coordinated territory or weighted payload size, $H_{\mathrm{payload}}$ is a payload-diversity proxy, and $C_{\mathrm{carrier}}$ is a carrier-coherence proxy. The carrier-payload picture predicts $\beta_1,\beta_2>0$ and, crucially, that $\beta_4$ should shrink toward zero once $\widetilde N$, $H_{\mathrm{payload}}$, and $C_{\mathrm{carrier}}$ are included. The frequency-dominant interpretation predicts the opposite: frequency should remain a dominant positive predictor even after those controls are applied. That regression-level disagreement is the shortest empirical route to deciding between the two pictures.
 
 \section{Discussion}
 \label{sec:discussion}
