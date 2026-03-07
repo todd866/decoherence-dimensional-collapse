@@ -96,13 +96,13 @@ The generated summary files are:
 
 ## Current anchor set
 
-| System | Role | Source | `γ_bio/J_max` | `θ_min^bio` | Current use |
-|---|---|---|---:|---:|---|
-| FMO | Proof of principle | Rebuilt from validated Hamiltonian | 1.14 | 87.67° | Functional near-boundary photosynthesis anchor |
-| PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | Independent photosynthetic confirmation of the same band |
-| Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | Fresh rebuilt-repo molecular anchor |
-| Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | Fresh secondary payload anchor |
-| Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | Gamma proxy gives `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6` already at `γ/J_max = 50` |
+| System | Role | Source | `γ_bio/J_max` | `θ_min^bio` | `χ^bio` | Current use |
+|---|---|---|---:|---:|---:|---|
+| FMO | Proof of principle | Rebuilt from validated Hamiltonian | 1.14 | 87.67° | `5.42×10^-4` | Functional near-boundary photosynthesis anchor |
+| PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | `8.80×10^-5` | Independent photosynthetic confirmation of the same band |
+| Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | `2.76×10^-4` | Fresh rebuilt-repo molecular anchor |
+| Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | `3.66×10^-4` | Fresh secondary payload anchor |
+| Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | `3.72×10^-6` | Gamma proxy gives `θ_min ≈ 89.78°` already at `γ/J_max = 50` |
 
 The new anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the rebuilt ion-channel point, and the rebuilt protein mid-fold point --- all sit in the same near-boundary band, while the rebuilt neural carrier proxy is already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the rebuilt payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
 
