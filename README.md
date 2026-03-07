@@ -61,12 +61,27 @@ $$
 So the ion-channel payload is not strongly quantum and not fully classical. It is
 boundary-near and slightly non-classical in exactly the sense the paper needs.
 
+A compact sensitivity sweep over
+$$
+J_{\max}\in\{15,20,30,40\}\,\mathrm{cm}^{-1},
+\qquad
+\gamma\in\{100,150,200,250,300\}\,\mathrm{cm}^{-1}
+$$
+keeps the same qualitative result:
+$$
+86.43^\circ \le \theta_{\min} \le 88.93^\circ,
+\qquad
+1.53\times10^{-4}\le \chi \le 1.55\times10^{-3}.
+$$
+So the ion-channel anchor is parameter-sensitive, but not a one-point artifact.
+
 The generated summary files are:
 
 - [results/photosynthetic_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_points.csv)
 - [results/photosynthetic_anchor_runs.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_runs.csv)
 - [results/ion_channel_summary.json](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_summary.json)
 - [results/ion_channel_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_scan.csv)
+- [results/ion_channel_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_sensitivity.csv)
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 - [results/threshold_scaling_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_scan.csv)
 - [results/biological_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/biological_anchor_points.csv)
@@ -241,6 +256,7 @@ This produces:
 - `results/photosynthetic_anchor_runs.csv`
 - `results/ion_channel_summary.json`
 - `results/ion_channel_scan.csv`
+- `results/ion_channel_sensitivity.csv`
 - `results/ion_payload_benchmarks.csv`
 - `results/threshold_scaling_scan.csv`
 - `results/biological_anchor_points.csv`

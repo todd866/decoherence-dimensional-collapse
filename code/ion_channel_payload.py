@@ -12,6 +12,7 @@ This script computes one concrete molecular payload anchor:
 Outputs:
 - results/ion_channel_summary.json
 - results/ion_channel_scan.csv
+- results/ion_channel_sensitivity.csv
 - results/ion_payload_benchmarks.csv
 - results/threshold_scaling_scan.csv
 - results/biological_anchor_points.csv
@@ -58,6 +59,8 @@ PHASE_WINDOW_N0 = 1.0e4
 PHASE_WINDOW_REDUNDANCIES = [1.0, 10.0, 100.0]
 PHASE_WINDOW_RAMP_OVER_R0 = 4.0
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
+ION_CHANNEL_SENSITIVITY_J_VALUES = [15.0, 20.0, 30.0, 40.0]
+ION_CHANNEL_SENSITIVITY_GAMMA_VALUES = [100.0, 150.0, 200.0, 250.0, 300.0]
 
 # Fallback legacy anchors, used only if the rebuilt photosynthetic summary
 # has not yet been generated.
@@ -98,6 +101,15 @@ def build_ion_channel_hamiltonian() -> np.ndarray:
 
 H_ION_CHANNEL = build_ion_channel_hamiltonian()
 ION_CHANNEL_JMAX_CM = ION_CHANNEL_J_NN_CM
+
+
+def build_ion_channel_hamiltonian_with_coupling(j_nn_cm: float) -> np.ndarray:
+    """4x4 KcsA-like selectivity-filter Hamiltonian with variable coupling."""
+    h_cm = np.diag(ION_CHANNEL_SITE_ENERGIES_CM)
+    for idx in range(3):
+        h_cm[idx, idx + 1] = j_nn_cm
+        h_cm[idx + 1, idx] = j_nn_cm
+    return h_cm
 
 
 def kappa_ps_to_radfs(kappa_ps: float) -> float:
@@ -319,6 +331,40 @@ def geometry_snapshot(gamma_cm: float) -> dict[str, float | list[float]]:
     }
 
 
+def compute_ion_channel_sensitivity_rows() -> list[dict[str, float]]:
+    """Sweep a small, physically reasonable ion-channel parameter band."""
+    rows: list[dict[str, float]] = []
+    for j_nn_cm in ION_CHANNEL_SENSITIVITY_J_VALUES:
+        h_cm = build_ion_channel_hamiltonian_with_coupling(j_nn_cm)
+        for gamma_cm in ION_CHANNEL_SENSITIVITY_GAMMA_VALUES:
+            rho0 = np.zeros((4, 4), dtype=complex)
+            rho0[ION_CHANNEL_INITIAL_SITE, ION_CHANNEL_INITIAL_SITE] = 1.0
+            rho = evolve_lindblad_sink(
+                h_cm,
+                gamma_cm,
+                ION_CHANNEL_TARGET_SITES,
+                ION_CHANNEL_KAPPA_PS,
+                rho0,
+                t_final_ps=GEOMETRY_READOUT_PS,
+                dt_fs=DT_FS,
+            )
+            rho_reg = regularize_density_matrix(rho)
+            angles_rad = np.sort(principal_angles(rho_reg))
+            theta_min_deg = float(np.degrees(angles_rad[0]))
+            chi = float(non_classicality_index(angles_rad))
+            rows.append(
+                {
+                    "j_nn_cm": float(j_nn_cm),
+                    "gamma_cm": float(gamma_cm),
+                    "gamma_over_j": float(gamma_cm / j_nn_cm),
+                    "theta_min_deg": theta_min_deg,
+                    "chi": chi,
+                    "local_load": float(local_nonclassical_load(chi, 4)),
+                }
+            )
+    return rows
+
+
 def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
     """Compute a reproducible ion-channel anchor summary."""
     gamma_over_j_values = np.logspace(-2, np.log10(30.0), SCAN_POINTS)
@@ -359,6 +405,9 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
         t_final_ps=TRANSPORT_WINDOW_PS,
         dt_fs=DT_FS,
     )
+    sensitivity_rows = compute_ion_channel_sensitivity_rows()
+    sensitivity_theta = [row["theta_min_deg"] for row in sensitivity_rows]
+    sensitivity_chi = [row["chi"] for row in sensitivity_rows]
 
     summary = {
         "model": "KcsA-like selectivity filter",
@@ -381,6 +430,12 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
         "geometry_readout_ps": GEOMETRY_READOUT_PS,
         "transport_window_ps": TRANSPORT_WINDOW_PS,
         "scan_points": len(scan_rows),
+        "sensitivity_j_values_cm": ION_CHANNEL_SENSITIVITY_J_VALUES,
+        "sensitivity_gamma_values_cm": ION_CHANNEL_SENSITIVITY_GAMMA_VALUES,
+        "sensitivity_theta_min_deg_min": float(min(sensitivity_theta)),
+        "sensitivity_theta_min_deg_max": float(max(sensitivity_theta)),
+        "sensitivity_chi_min": float(min(sensitivity_chi)),
+        "sensitivity_chi_max": float(max(sensitivity_chi)),
     }
     return summary, scan_rows
 
@@ -567,6 +622,30 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
     plt.close(fig)
 
 
+def write_ion_channel_sensitivity() -> None:
+    """Write a compact robustness sweep for the ion-channel anchor."""
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    rows = compute_ion_channel_sensitivity_rows()
+    csv_path = results_dir / "ion_channel_sensitivity.csv"
+    with csv_path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(
+            fh,
+            fieldnames=[
+                "j_nn_cm",
+                "gamma_cm",
+                "gamma_over_j",
+                "theta_min_deg",
+                "chi",
+                "local_load",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def write_payload_benchmarks(summary: dict) -> None:
     """Write a compact benchmark table for concrete entrained site counts."""
     root = Path(__file__).resolve().parents[1]
@@ -737,6 +816,7 @@ def main() -> None:
     summary, scan_rows = summarize_ion_channel()
     write_outputs(summary, scan_rows)
     write_figure(summary, scan_rows)
+    write_ion_channel_sensitivity()
     write_phase_window_scaling_outputs(summary)
     write_payload_benchmarks(summary)
     write_biological_anchor_outputs(summary)
@@ -747,11 +827,16 @@ def main() -> None:
     print(f"eta(bio)         : {summary['eta_bio']:.6f}")
     print(f"theta_min(bio)   : {summary['theta_min_bio_deg']:.3f} deg")
     print(f"chi(bio)         : {summary['chi_bio']:.6e}")
+    print(
+        "sensitivity      : "
+        f"theta in [{summary['sensitivity_theta_min_deg_min']:.3f}, {summary['sensitivity_theta_min_deg_max']:.3f}] deg, "
+        f"chi in [{summary['sensitivity_chi_min']:.3e}, {summary['sensitivity_chi_max']:.3e}]"
+    )
     print(f"peak scan gamma/J: {summary['transport_scan_peak_gamma_over_jmax']:.3f}")
     print(f"peak scan eta    : {summary['transport_scan_peak_eta']:.6f}")
     print(f"peak interior?   : {summary['transport_scan_peak_interior']}")
     print("Wrote results/ion_channel_summary.json, results/ion_channel_scan.csv,")
-    print("results/{threshold_scaling_scan,ion_payload_benchmarks,biological_anchor_points}.csv,")
+    print("results/{ion_channel_sensitivity,threshold_scaling_scan,ion_payload_benchmarks,biological_anchor_points}.csv,")
     print("and figures/{biological_anchor_map,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
 
 

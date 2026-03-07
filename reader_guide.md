@@ -53,6 +53,19 @@ $$
 \chi\approx 2.76\times 10^{-4}.
 $$
 
+It also includes a compact robustness sweep over
+$$
+J_{\max}\in\{15,20,30,40\}\,\mathrm{cm}^{-1},
+\qquad
+\gamma\in\{100,150,200,250,300\}\,\mathrm{cm}^{-1},
+$$
+which keeps the payload in the same boundary-near band:
+$$
+86.43^\circ \le \theta_{\min} \le 88.93^\circ,
+\qquad
+1.53\times10^{-4}\le \chi \le 1.55\times10^{-3}.
+$$
+
 Figure 1 is the proof-of-principle bridge: it places FMO, PE545, and the rebuilt ion-channel point on the same biological operating map, making the near-boundary band visible at a glance.
 
 Figure 2 is the cleanest fresh rebuilt-repo object: it shows the bounded trap scan only to locate the modeled operating point, and then shows the principal-angle spectrum that actually matters for the argument.

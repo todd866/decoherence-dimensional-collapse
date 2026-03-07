@@ -12,6 +12,23 @@
   ],
   "model": "KcsA-like selectivity filter",
   "scan_points": 25,
+  "sensitivity_chi_max": 0.001548496885578058,
+  "sensitivity_chi_min": 0.00015332102623386915,
+  "sensitivity_gamma_values_cm": [
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+  ],
+  "sensitivity_j_values_cm": [
+    15.0,
+    20.0,
+    30.0,
+    40.0
+  ],
+  "sensitivity_theta_min_deg_max": 88.93094409237341,
+  "sensitivity_theta_min_deg_min": 86.43261757550044,
   "target_sites": [
     3
   ],
