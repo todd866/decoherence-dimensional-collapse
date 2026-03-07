@@ -88,6 +88,9 @@ Figure 4 is the bridge object: it makes the low-frequency claim explicit in one 
 
 It now does one extra job that matters: the solid curves are a heterogeneous soft-field simulation, while the dashed curves are the analytic soft envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
 
+There is now also a parameter-band check behind that figure. The repo writes
+[results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv), which shows that the analytic bridge stays monotone across `s ∈ {1,2,3}`, `η ∈ {1,2,4}`, and `R_amp/R0 ∈ {2,4,8}`, while the heterogeneous 2D field check stays monotone across the corresponding `η` and `R_amp/R0` ranges. That matters because the low-`f` inversion is now robust to a real parameter band, not just one default bridge setting.
+
 Table 2 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
 
 Table 3 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.

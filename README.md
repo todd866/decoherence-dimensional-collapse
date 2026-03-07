@@ -94,6 +94,7 @@ The generated summary files are:
 - [results/ion_channel_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_sensitivity.csv)
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 - [results/threshold_scaling_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_scan.csv)
+- [results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv)
 - [results/biological_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/biological_anchor_points.csv)
 - [figures/biological_anchor_map.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/biological_anchor_map.pdf)
 - [figures/carrier_payload_schematic.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/carrier_payload_schematic.pdf)
@@ -238,6 +239,14 @@ This is not a fitted cortical law. It is the first explicit model in the rebuilt
 
 The bridge figure now also includes a heterogeneous soft-field check: distributed amplitude scales and phase tolerances are simulated over a 2D payload field and normalized to the same baseline at `f = f0`. The low-`f` advantage survives that heterogeneity rather than depending on a single hard cutoff.
 
+That statement is now backed by an explicit bridge sensitivity sweep in
+[results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv):
+
+- analytic soft bridge: sweeping `s ∈ {1,2,3}`, `η ∈ {1,2,4}`, and `R_amp/R0 ∈ {2,4,8}` keeps the gain monotone and yields low/high-frequency gain factors from `6` to `3.9×10^3`
+- heterogeneous 2D field check: with support dimension fixed at `s = 2`, sweeping `η` and `R_amp/R0` over the same ranges keeps the gain monotone and yields factors from `35` to `325`
+
+So the low-`f` inversion is not tied to one hand-picked bridge parameter set.
+
 Using the actual ion-channel anchor, the local payload load is
 
 $$
@@ -328,6 +337,7 @@ This produces:
 - `results/ion_channel_sensitivity.csv`
 - `results/ion_payload_benchmarks.csv`
 - `results/threshold_scaling_scan.csv`
+- `results/threshold_scaling_sensitivity.csv`
 - `results/biological_anchor_points.csv`
 - `results/neural_carrier_proxy.csv`
 - `figures/biological_anchor_map.pdf`

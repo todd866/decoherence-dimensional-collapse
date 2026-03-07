@@ -61,6 +61,9 @@ PHASE_WINDOW_N0 = 1.0e4
 PHASE_WINDOW_REDUNDANCIES = [1.0, 10.0, 100.0]
 PHASE_WINDOW_RAMP_OVER_R0 = 4.0
 PHASE_WINDOW_SOFT_ETA = 2.0
+PHASE_WINDOW_SENSITIVITY_S_VALUES = [1.0, 2.0, 3.0]
+PHASE_WINDOW_SENSITIVITY_RAMP_VALUES = [2.0, 4.0, 8.0]
+PHASE_WINDOW_SENSITIVITY_ETA_VALUES = [1.0, 2.0, 4.0]
 PHASE_WINDOW_HETERO_SEED = 7
 PHASE_WINDOW_HETERO_MODULES = 12000
 PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 = 6.0
@@ -523,36 +526,27 @@ def write_figure(summary: dict, scan_rows: list[dict[str, float]]) -> None:
     plt.close(fig)
 
 
-def write_phase_window_scaling_outputs(summary: dict) -> None:
-    """Write a soft phase-coupling bridge figure and CSV using the ion-channel anchor."""
-    root = Path(__file__).resolve().parents[1]
-    results_dir = root / "results"
-    figures_dir = root / "figures"
-    results_dir.mkdir(exist_ok=True)
-    figures_dir.mkdir(exist_ok=True)
-
+def compute_soft_bridge_curves(
+    *,
+    s_dim: float,
+    ramp_over_r0: float,
+    eta_soft: float,
+) -> dict[str, np.ndarray | float]:
+    """Compute analytic and heterogeneous soft bridge curves for one parameter set."""
     freq_ratio = np.logspace(np.log10(0.25), np.log10(4.0), 300)
-    local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
-    eta = PHASE_WINDOW_SOFT_ETA
-    r_phase_over_r0 = freq_ratio ** (-1.0)
-    r_amp_over_r0 = np.full_like(freq_ratio, PHASE_WINDOW_RAMP_OVER_R0)
-    inv_reff_eta = r_amp_over_r0 ** (-eta) + r_phase_over_r0 ** (-eta)
-    r_eff_over_r0 = inv_reff_eta ** (-1.0 / eta)
-    r_eff_ref = (PHASE_WINDOW_RAMP_OVER_R0 ** (-eta) + 1.0) ** (-1.0 / eta)
-    n_payload = PHASE_WINDOW_N0 * (r_eff_over_r0 / r_eff_ref) ** PHASE_WINDOW_S
-    crossover_ratio = 1.0 / PHASE_WINDOW_RAMP_OVER_R0
 
-    # Heterogeneous payload field: modules occupy a 2D disc and vary in both
-    # amplitude decay length and phase-tolerance radius at f0. Coupling is
-    # weighted continuously rather than thresholded:
-    #   w_i(f) = exp[-(r/R_amp,i)^eta - (r/R_phi,i(f))^eta]
-    # The scale factor is chosen so the heterogeneous field matches N0 at
-    # f=f0, making the comparison about shape rather than arbitrary normalization.
+    r_phase_over_r0 = freq_ratio ** (-1.0)
+    r_amp_over_r0 = np.full_like(freq_ratio, ramp_over_r0)
+    inv_reff_eta = r_amp_over_r0 ** (-eta_soft) + r_phase_over_r0 ** (-eta_soft)
+    r_eff_over_r0 = inv_reff_eta ** (-1.0 / eta_soft)
+    r_eff_ref = (ramp_over_r0 ** (-eta_soft) + 1.0) ** (-1.0 / eta_soft)
+    n_payload = PHASE_WINDOW_N0 * (r_eff_over_r0 / r_eff_ref) ** s_dim
+
     rng = np.random.default_rng(PHASE_WINDOW_HETERO_SEED)
     radii = PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 * np.sqrt(rng.random(PHASE_WINDOW_HETERO_MODULES))
     ramp_i = np.exp(
         rng.normal(
-            loc=np.log(PHASE_WINDOW_RAMP_OVER_R0),
+            loc=np.log(ramp_over_r0),
             scale=PHASE_WINDOW_HETERO_LOGSIGMA,
             size=PHASE_WINDOW_HETERO_MODULES,
         )
@@ -564,12 +558,106 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
             size=PHASE_WINDOW_HETERO_MODULES,
         )
     )
-    weights_f0 = np.exp(-((radii / ramp_i) ** eta) - ((radii / rphi0_i) ** eta))
+    weights_f0 = np.exp(-((radii / ramp_i) ** eta_soft) - ((radii / rphi0_i) ** eta_soft))
     hetero_scale = PHASE_WINDOW_N0 / max(float(np.mean(weights_f0)), 1e-12)
     n_payload_hetero = np.zeros_like(freq_ratio)
     for idx, f_ratio in enumerate(freq_ratio):
-        weights = np.exp(-((radii / ramp_i) ** eta) - ((f_ratio * radii / rphi0_i) ** eta))
+        weights = np.exp(-((radii / ramp_i) ** eta_soft) - ((f_ratio * radii / rphi0_i) ** eta_soft))
         n_payload_hetero[idx] = hetero_scale * float(np.mean(weights))
+
+    return {
+        "freq_ratio": freq_ratio,
+        "r_phase_over_r0": r_phase_over_r0,
+        "r_eff_over_r0": r_eff_over_r0,
+        "n_payload_analytic": n_payload,
+        "n_payload_heterogeneous": n_payload_hetero,
+        "analytic_gain_low_over_high": float(n_payload[0] / n_payload[-1]),
+        "hetero_gain_low_over_high": float(n_payload_hetero[0] / n_payload_hetero[-1]),
+        "monotone_analytic": float(np.all(np.diff(n_payload) <= 1e-9)),
+        "monotone_heterogeneous": float(np.all(np.diff(n_payload_hetero) <= 1e-9)),
+    }
+
+
+def write_phase_window_sensitivity_outputs(summary: dict) -> None:
+    """Write a compact parameter sweep for the soft carrier bridge."""
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
+    csv_path = results_dir / "threshold_scaling_sensitivity.csv"
+
+    with csv_path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(
+            [
+                "s_dim",
+                "eta_soft",
+                "ramp_over_r0",
+                "analytic_gain_low_over_high",
+                "hetero_gain_low_over_high",
+                "monotone_analytic",
+                "monotone_heterogeneous",
+                "leff_low_varrho_1",
+                "leff_high_varrho_1",
+            ]
+        )
+        for s_dim in PHASE_WINDOW_SENSITIVITY_S_VALUES:
+            for eta_soft in PHASE_WINDOW_SENSITIVITY_ETA_VALUES:
+                for ramp_over_r0 in PHASE_WINDOW_SENSITIVITY_RAMP_VALUES:
+                    curves = compute_soft_bridge_curves(
+                        s_dim=s_dim,
+                        ramp_over_r0=ramp_over_r0,
+                        eta_soft=eta_soft,
+                    )
+                    if abs(s_dim - PHASE_WINDOW_S) < 1e-12:
+                        n_payload_hetero = curves["n_payload_heterogeneous"]
+                        hetero_gain = curves["hetero_gain_low_over_high"]
+                        monotone_heterogeneous = int(bool(curves["monotone_heterogeneous"]))
+                        leff_low_varrho_1 = float(n_payload_hetero[0] * local_load / PHASE_WINDOW_REDUNDANCIES[0])
+                        leff_high_varrho_1 = float(n_payload_hetero[-1] * local_load / PHASE_WINDOW_REDUNDANCIES[0])
+                    else:
+                        hetero_gain = ""
+                        monotone_heterogeneous = ""
+                        leff_low_varrho_1 = ""
+                        leff_high_varrho_1 = ""
+                    writer.writerow(
+                        [
+                            s_dim,
+                            eta_soft,
+                            ramp_over_r0,
+                            curves["analytic_gain_low_over_high"],
+                            hetero_gain,
+                            int(bool(curves["monotone_analytic"])),
+                            monotone_heterogeneous,
+                            leff_low_varrho_1,
+                            leff_high_varrho_1,
+                        ]
+                    )
+
+
+def write_phase_window_scaling_outputs(summary: dict) -> None:
+    """Write a soft phase-coupling bridge figure and CSV using the ion-channel anchor."""
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "results"
+    figures_dir = root / "figures"
+    results_dir.mkdir(exist_ok=True)
+    figures_dir.mkdir(exist_ok=True)
+
+    local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
+    eta = PHASE_WINDOW_SOFT_ETA
+    curves = compute_soft_bridge_curves(
+        s_dim=PHASE_WINDOW_S,
+        ramp_over_r0=PHASE_WINDOW_RAMP_OVER_R0,
+        eta_soft=eta,
+    )
+    freq_ratio = curves["freq_ratio"]
+    r_phase_over_r0 = curves["r_phase_over_r0"]
+    r_amp_over_r0 = np.full_like(freq_ratio, PHASE_WINDOW_RAMP_OVER_R0)
+    r_eff_over_r0 = curves["r_eff_over_r0"]
+    n_payload = curves["n_payload_analytic"]
+    n_payload_hetero = curves["n_payload_heterogeneous"]
+    crossover_ratio = 1.0 / PHASE_WINDOW_RAMP_OVER_R0
 
     csv_path = results_dir / "threshold_scaling_scan.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as fh:
@@ -1042,6 +1130,7 @@ def main() -> None:
     write_figure(summary, scan_rows)
     write_ion_channel_sensitivity()
     write_phase_window_scaling_outputs(summary)
+    write_phase_window_sensitivity_outputs(summary)
     write_payload_benchmarks(summary)
     write_biological_anchor_outputs(summary)
     write_carrier_payload_schematic()
@@ -1061,7 +1150,7 @@ def main() -> None:
     print(f"peak scan eta    : {summary['transport_scan_peak_eta']:.6f}")
     print(f"peak interior?   : {summary['transport_scan_peak_interior']}")
     print("Wrote results/ion_channel_summary.json, results/ion_channel_scan.csv,")
-    print("results/{ion_channel_sensitivity,threshold_scaling_scan,ion_payload_benchmarks,biological_anchor_points}.csv,")
+    print("results/{ion_channel_sensitivity,threshold_scaling_scan,threshold_scaling_sensitivity,ion_payload_benchmarks,biological_anchor_points}.csv,")
     print("and figures/{biological_anchor_map,carrier_payload_schematic,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
 
 

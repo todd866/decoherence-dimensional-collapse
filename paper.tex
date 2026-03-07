@@ -372,6 +372,8 @@ w_i(f)=\exp\!\left[-\left(\frac{r_i}{R_{{\rm amp},i}}\right)^\eta-\left(\frac{r_
 \]
 The simulation is normalized so that $\widetilde N(f_0)=N_0$. The resulting payload load tracks the analytic soft bridge near $f\sim f_0$, remains monotone as frequency falls, and still gives an approximately $1.4\times10^2$ gain in coordinated payload between $f/f_0=4$ and $0.25$ at $\varrho=1$ over the plotted range. So the inversion is not an artifact of a hard cutoff: it survives distributed tolerances, continuous weighting, and finite support.
 
+A coarse sensitivity sweep makes that claim materially stronger. In the analytic bridge, varying $s\in\{1,2,3\}$, $\eta\in\{1,2,4\}$, and $R_{\mathrm{amp}}/R_0\in\{2,4,8\}$ keeps the low-frequency gain monotone in every case and produces gain factors between $6$ and $3.9\times10^3$ across the same $f/f_0=4\to0.25$ range. For the heterogeneous 2D field check (so $s=2$ is fixed by construction), varying $\eta$ and $R_{\mathrm{amp}}/R_0$ over the same ranges again keeps the gain monotone and yields factors between roughly $35$ and $325$. The exact magnitude is model-dependent, as it should be, but the qualitative inversion is not confined to the default choice $(s,\eta,R_{\mathrm{amp}}/R_0)=(2,2,4)$.
+
 Using the rebuilt-repo ion-channel anchor makes the scale of the effect explicit. For the 4-site selectivity-filter model,
 \begin{equation}
 \label{eq:lion}
