@@ -121,6 +121,8 @@ $$
 \chi_{\mathrm{carrier}} \ll \chi_{\mathrm{payload}}.
 $$
 
+At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `74×` smaller than the ion-channel payload `χ` at its biological point.
+
 ## Main scaling objects
 
 For module $i$ with local dimension $d_i$ and non-classicality $\chi_i$, define the local non-classical load
