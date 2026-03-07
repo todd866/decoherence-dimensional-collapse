@@ -88,11 +88,13 @@ The generated summary files are:
 - [results/threshold_scaling_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_scan.csv)
 - [results/biological_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/biological_anchor_points.csv)
 - [figures/biological_anchor_map.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/biological_anchor_map.pdf)
+- [figures/carrier_payload_schematic.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/carrier_payload_schematic.pdf)
 - [figures/ion_channel_anchor.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/ion_channel_anchor.pdf)
 - [figures/threshold_entrainment_scaling.pdf](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/figures/threshold_entrainment_scaling.pdf)
 
 ![Biological anchor map](figures/biological_anchor_map.png)
 ![Ion-channel anchor](figures/ion_channel_anchor.png)
+![Carrier/payload schematic](figures/carrier_payload_schematic.png)
 
 ## Current anchor set
 

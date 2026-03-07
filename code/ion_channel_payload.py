@@ -18,6 +18,8 @@ Outputs:
 - results/biological_anchor_points.csv
 - figures/biological_anchor_map.pdf
 - figures/biological_anchor_map.png
+- figures/carrier_payload_schematic.pdf
+- figures/carrier_payload_schematic.png
 - figures/ion_channel_anchor.pdf
 - figures/ion_channel_anchor.png
 - figures/threshold_entrainment_scaling.pdf
@@ -917,6 +919,117 @@ def write_biological_anchor_outputs(summary: dict) -> None:
     plt.close(fig)
 
 
+def write_carrier_payload_schematic() -> None:
+    """Draw a conceptual carrier/payload schematic for the manuscript."""
+    root = Path(__file__).resolve().parents[1]
+    figures_dir = root / "figures"
+    figures_dir.mkdir(exist_ok=True)
+
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 4.1), constrained_layout=True)
+
+    x_positions = np.linspace(0.12, 0.88, 7)
+    y_positions = np.linspace(0.16, 0.58, 4)
+    payload_points = np.array([(x, y) for y in y_positions for x in x_positions], dtype=float)
+    carrier_color = "#355070"
+    payload_color = "#d17a22"
+    muted = "#c8ccd0"
+
+    configs = [
+        {
+            "ax": axes[0],
+            "title": "High-$f$ local access",
+            "subtitle": r"small $|E(f)|$, fast routing",
+            "wave_cycles": 4.8,
+            "radius": 0.18,
+            "center": np.array([0.5, 0.38]),
+        },
+        {
+            "ax": axes[1],
+            "title": "Low-$f$ broad coordination",
+            "subtitle": r"large $|E(f)|$, deep-classical carrier",
+            "wave_cycles": 1.8,
+            "radius": 0.34,
+            "center": np.array([0.5, 0.38]),
+        },
+    ]
+
+    for cfg in configs:
+        ax = cfg["ax"]
+        center = cfg["center"]
+        radius = float(cfg["radius"])
+
+        distances = np.linalg.norm(payload_points - center, axis=1)
+        engaged = distances <= radius
+        inactive = ~engaged
+
+        ax.scatter(
+            payload_points[inactive, 0],
+            payload_points[inactive, 1],
+            s=32,
+            color=muted,
+            edgecolor="white",
+            linewidth=0.5,
+            zorder=2,
+        )
+        ax.scatter(
+            payload_points[engaged, 0],
+            payload_points[engaged, 1],
+            s=46,
+            color=payload_color,
+            edgecolor="white",
+            linewidth=0.6,
+            zorder=3,
+        )
+
+        theta = np.linspace(0.0, 2.0 * np.pi, 300)
+        ax.plot(
+            center[0] + radius * np.cos(theta),
+            center[1] + radius * np.sin(theta),
+            color=carrier_color,
+            ls="--",
+            lw=1.2,
+            alpha=0.7,
+            zorder=1,
+        )
+
+        xs = np.linspace(0.02, 0.98, 500)
+        ys = 0.84 + 0.055 * np.sin(2.0 * np.pi * cfg["wave_cycles"] * xs)
+        ax.plot(xs, ys, color=carrier_color, lw=2.4, zorder=4)
+
+        ax.annotate(
+            "",
+            xy=(center[0], center[1] + radius * 0.82),
+            xytext=(center[0], 0.76),
+            arrowprops={"arrowstyle": "->", "color": carrier_color, "lw": 1.5},
+            zorder=4,
+        )
+
+        ax.text(0.04, 0.93, cfg["title"], transform=ax.transAxes, fontsize=11, weight="bold")
+        ax.text(0.04, 0.86, cfg["subtitle"], transform=ax.transAxes, fontsize=9, color="#444444")
+        ax.text(0.05, 0.77, r"carrier: $\chi \approx 0$", transform=ax.transAxes, fontsize=9, color=carrier_color)
+        ax.text(0.05, 0.08, r"payload modules: $\chi > 0$", transform=ax.transAxes, fontsize=9, color=payload_color)
+        ax.text(
+            0.68,
+            0.08,
+            rf"$|E(f)|={int(engaged.sum())}$",
+            transform=ax.transAxes,
+            fontsize=9,
+            color="#444444",
+            bbox={"boxstyle": "round,pad=0.2", "facecolor": "white", "edgecolor": "#cccccc"},
+        )
+
+        ax.set_xlim(0.0, 1.0)
+        ax.set_ylim(0.0, 1.0)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+
+    fig.savefig(figures_dir / "carrier_payload_schematic.pdf", bbox_inches="tight")
+    fig.savefig(figures_dir / "carrier_payload_schematic.png", dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     summary, scan_rows = summarize_ion_channel()
     write_outputs(summary, scan_rows)
@@ -925,6 +1038,7 @@ def main() -> None:
     write_phase_window_scaling_outputs(summary)
     write_payload_benchmarks(summary)
     write_biological_anchor_outputs(summary)
+    write_carrier_payload_schematic()
 
     print("Ion-channel payload summary")
     print("=" * 32)
@@ -942,7 +1056,7 @@ def main() -> None:
     print(f"peak interior?   : {summary['transport_scan_peak_interior']}")
     print("Wrote results/ion_channel_summary.json, results/ion_channel_scan.csv,")
     print("results/{ion_channel_sensitivity,threshold_scaling_scan,ion_payload_benchmarks,biological_anchor_points}.csv,")
-    print("and figures/{biological_anchor_map,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
+    print("and figures/{biological_anchor_map,carrier_payload_schematic,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
 
 
 if __name__ == "__main__":

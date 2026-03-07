@@ -42,10 +42,11 @@ Read:
 4. Table 1: anchor comparison
 5. Figure 1: biological anchor map
 6. Figure 2: ion-channel payload anchor
-7. Figure 3: phase-window scaling schematic
-8. Table 2: payload benchmark table
-9. Section 5.1: Neural oscillations as carriers
-10. Table 3: rival predictions
+7. Figure 3: carrier/payload schematic
+8. Figure 4: phase-window scaling schematic
+9. Table 2: payload benchmark table
+10. Section 5.1: Neural oscillations as carriers
+11. Table 3: rival predictions
 
 The ion-channel subsection now contains one actual rebuilt-repo anchor:
 
@@ -80,7 +81,9 @@ That matters because it broadens the payload class beyond ion conduction without
 
 Figure 2 is the cleanest fresh rebuilt-repo object: it shows the bounded trap scan only to locate the modeled operating point, and then shows the principal-angle spectrum that actually matters for the argument.
 
-Figure 3 is the bridge object: it makes the low-frequency claim explicit in one toy model instead of leaving it as pure verbal intuition.
+Figure 3 is the intuition object: it shows the disagreement with the frequency-as-dimensionality view in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
+
+Figure 4 is the bridge object: it makes the low-frequency claim explicit in one toy model instead of leaving it as pure verbal intuition.
 
 It now does one extra job that matters: the solid curves are a heterogeneous payload-field simulation, while the dashed curves are the analytic phase-window envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
 
