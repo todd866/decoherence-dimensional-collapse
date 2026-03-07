@@ -12,6 +12,7 @@
 *.json
 !results/
 !results/ion_channel_summary.json
+!results/protein_microdomain_summary.json
 !results/ion_channel_scan.csv
 
 # Python

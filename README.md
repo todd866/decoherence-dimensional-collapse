@@ -79,6 +79,8 @@ The generated summary files are:
 
 - [results/photosynthetic_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_points.csv)
 - [results/photosynthetic_anchor_runs.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_runs.csv)
+- [results/protein_microdomain_summary.json](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/protein_microdomain_summary.json)
+- [results/protein_microdomain_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/protein_microdomain_scan.csv)
 - [results/ion_channel_summary.json](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_summary.json)
 - [results/ion_channel_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_scan.csv)
 - [results/ion_channel_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_sensitivity.csv)
@@ -99,10 +101,24 @@ The generated summary files are:
 | FMO | Proof of principle | Rebuilt from validated Hamiltonian | 1.14 | 87.67° | Functional near-boundary photosynthesis anchor |
 | PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | Independent photosynthetic confirmation of the same band |
 | Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | Fresh rebuilt-repo molecular anchor |
-| Protein microdomain | Secondary payload | Planned | — | — | Payload extension, not yet recomputed here |
+| Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | Fresh secondary payload anchor |
 | Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | Gamma proxy gives `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6` already at `γ/J_max = 50` |
 
 The new anchor map is the compact visual summary: FMO, PE545, and the rebuilt ion-channel point all sit in the same near-boundary band. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the ion-channel point then shows that a neural payload candidate can inhabit it too.
+
+The rebuilt repo now also includes one secondary non-ion payload anchor in
+[code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py).
+For the illustrative 6-site mid-fold network:
+
+$$
+\gamma_{\mathrm{bio}}/J_{\max} = 7.69,
+\qquad
+\theta_{\min} \approx 88.21^\circ,
+\qquad
+\chi \approx 3.66\times 10^{-4}.
+$$
+
+That matters because it shows the payload story is not specific to ion conduction. A second low-entropy molecular machine lands in the same near-boundary band.
 
 The reduced rebuilt-repo photosynthesis path now also computes the optimum-point geometry:
 
@@ -232,6 +248,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 - [reader_guide.md](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/reader_guide.md): section-by-section reading guide
 - [build.sh](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/build.sh): local LaTeX build script
 - [code/photosynthetic_anchors.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/photosynthetic_anchors.py): reduced FMO/PE545 proof-of-principle computations
+- [code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py): illustrative protein mid-fold payload anchor
 - [code/ion_channel_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/ion_channel_payload.py): minimal ion-channel payload analysis
 - [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py): reduced neural carrier geometry proxy
 
@@ -254,6 +271,8 @@ This produces:
 - `paper.pdf`
 - `results/photosynthetic_anchor_points.csv`
 - `results/photosynthetic_anchor_runs.csv`
+- `results/protein_microdomain_summary.json`
+- `results/protein_microdomain_scan.csv`
 - `results/ion_channel_summary.json`
 - `results/ion_channel_scan.csv`
 - `results/ion_channel_sensitivity.csv`

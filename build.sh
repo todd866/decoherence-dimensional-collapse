@@ -8,6 +8,11 @@ if [[ "${REBUILD_ANCHORS:-0}" == "1" || ! -f results/photosynthetic_anchor_point
   refresh_anchors=1
 fi
 
+if [[ "${REBUILD_ANCHORS:-0}" == "1" || ! -f results/protein_microdomain_summary.json || ! -f results/protein_microdomain_scan.csv ]]; then
+  python3 code/protein_microdomain_payload.py
+  refresh_anchors=1
+fi
+
 if [[ "${REBUILD_ANCHORS:-0}" == "1" || "${refresh_anchors}" == "1" || ! -f results/ion_channel_summary.json || ! -f results/biological_anchor_points.csv ]]; then
   python3 code/ion_channel_payload.py
 fi

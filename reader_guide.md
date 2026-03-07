@@ -68,6 +68,14 @@ $$
 
 Figure 1 is the proof-of-principle bridge: it places FMO, PE545, and the rebuilt ion-channel point on the same biological operating map, making the near-boundary band visible at a glance.
 
+Section 4.3 is no longer only a placeholder. The rebuilt repo now includes a secondary protein payload anchor:
+$$
+\gamma_{\mathrm{bio}}/J_{\max}=7.69,\quad
+\theta_{\min}\approx 88.21^\circ,\quad
+\chi\approx 3.66\times 10^{-4}.
+$$
+That matters because it broadens the payload class beyond ion conduction without displacing ion channels from the main neural route.
+
 Figure 2 is the cleanest fresh rebuilt-repo object: it shows the bounded trap scan only to locate the modeled operating point, and then shows the principal-angle spectrum that actually matters for the argument.
 
 Figure 3 is the bridge object: it makes the low-frequency claim explicit in one toy model instead of leaving it as pure verbal intuition.

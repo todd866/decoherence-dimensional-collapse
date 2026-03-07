@@ -710,6 +710,28 @@ def load_photosynthetic_anchors(root: Path) -> list[dict[str, str | float | int]
     return rows
 
 
+def load_protein_microdomain_anchor(root: Path) -> dict[str, str | float | int] | None:
+    """Load the rebuilt protein microdomain anchor if present."""
+    summary_path = root / "results" / "protein_microdomain_summary.json"
+    if not summary_path.exists():
+        return None
+
+    with summary_path.open("r", encoding="utf-8") as fh:
+        summary = json.load(fh)
+
+    return {
+        "system": "Protein mid-fold",
+        "role": "secondary-payload",
+        "status": "rebuilt-computation",
+        "dimension": int(summary["dimension"]),
+        "collapse": "35->5",
+        "gamma_bio_over_jmax": float(summary["gamma_bio_over_jmax"]),
+        "theta_min_bio_deg": float(summary["theta_min_bio_deg"]),
+        "theta_reference": "biological point",
+        "provenance": "rebuilt-repo",
+    }
+
+
 def anchor_rows(summary: dict) -> list[dict[str, str | float | int]]:
     """Build the cross-system anchor list used by the manuscript."""
     root = Path(__file__).resolve().parents[1]
@@ -727,6 +749,9 @@ def anchor_rows(summary: dict) -> list[dict[str, str | float | int]]:
             "provenance": "rebuilt-repo",
         }
     )
+    protein_row = load_protein_microdomain_anchor(root)
+    if protein_row is not None:
+        rows.append(protein_row)
     return rows
 
 
@@ -764,6 +789,7 @@ def write_biological_anchor_outputs(summary: dict) -> None:
         "FMO": {"color": "#1f4e79", "marker": "o"},
         "PE545": {"color": "#d97904", "marker": "s"},
         "Ion channel": {"color": "#4c956c", "marker": "D"},
+        "Protein mid-fold": {"color": "#6c757d", "marker": "^"},
     }
 
     ax.axhspan(87.0, 90.0, color="#e8f1f2", alpha=0.9, zorder=0)
@@ -801,7 +827,7 @@ def write_biological_anchor_outputs(summary: dict) -> None:
     ax.text(
         0.03,
         0.06,
-        "FMO, PE545: rebuilt proof-of-principle\nIon channel: rebuilt computation",
+        "FMO, PE545: rebuilt proof-of-principle\nIon + protein: rebuilt payload anchors",
         transform=ax.transAxes,
         fontsize=8,
         bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "#cccccc"},

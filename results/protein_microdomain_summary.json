@@ -1,0 +1,33 @@
+{
+  "chi_bio": 0.00036562424601088364,
+  "dimension": 6,
+  "eta_bio": 0.2876137199139046,
+  "gamma_bio_cm": 200.0,
+  "gamma_bio_over_jmax": 7.6923076923076925,
+  "geometry_readout_ps": 5.0,
+  "initial_site": 0,
+  "jmax_cm": 26.0,
+  "kappa_ps": [
+    0.5
+  ],
+  "local_load_bio": 0.01096872738032651,
+  "model": "Illustrative protein mid-fold microdomain",
+  "scan_points": 25,
+  "target_sites": [
+    5
+  ],
+  "theta_min_bio_deg": 88.20667414943493,
+  "theta_spectrum_bio_deg": [
+    88.20667414943493,
+    88.83232811847606,
+    89.03481164900549,
+    89.39746992227914,
+    89.64138642341757
+  ],
+  "trace_after_bio_readout": 0.8457959108890435,
+  "transport_scan_peak_eta": 0.44168571092193204,
+  "transport_scan_peak_gamma_cm": 14.240786495134321,
+  "transport_scan_peak_gamma_over_jmax": 0.5477225575051662,
+  "transport_scan_peak_interior": true,
+  "transport_window_ps": 8.0
+}

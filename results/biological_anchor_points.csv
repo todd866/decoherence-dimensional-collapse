@@ -2,3 +2,4 @@ system,role,status,dimension,collapse,gamma_bio_over_jmax,theta_min_bio_deg,thet
 FMO,proof_of_principle,rebuilt-validated,7,48->6,1.1402508551881414,87.6706388019427,biological point (site-averaged),rebuilt-repo
 PE545,proof_of_principle,rebuilt-validated,8,63->7,7.880434782608695,89.02241689748926,biological point (site-averaged),rebuilt-repo
 Ion channel,primary-neural-payload,rebuilt-computation,4,15->3,6.666666666666667,88.54858845425703,biological point,rebuilt-repo
+Protein mid-fold,secondary-payload,rebuilt-computation,6,35->5,7.6923076923076925,88.20667414943493,biological point,rebuilt-repo

@@ -211,7 +211,7 @@ System & Role & Source & $\gamma_{\mathrm{bio}}/J_{\max}$ & $\theta_{\min}^{\mat
 FMO & Proof point & Fresh & 1.14 & $87.67^\circ$ & Functional near-boundary photosynthesis anchor. \\
 PE545 & Proof point & Fresh & 7.88 & $89.02^\circ$ & Independent photosynthetic confirmation of the same band. \\
 Ion channel & Neural payload & Fresh & 6.67 & $88.55^\circ$ & Fresh molecular anchor, with $\chi\approx 2.76\times 10^{-4}$. \\
-Prot.\ microd. & Payload ext. & Plan & --- & --- & Extension only; not yet recomputed here. \\
+Prot.\ microd. & Payload ext. & Fresh & 7.69 & $88.21^\circ$ & Fresh secondary payload anchor, with $\chi\approx 3.66\times 10^{-4}$. \\
 Neural oscillation & Carrier & Proxy & 50 & $89.78^\circ$ & Rebuilt gamma-band carrier proxy, already near classical. \\
 \bottomrule
 \end{tabularx}
@@ -222,7 +222,7 @@ Neural oscillation & Carrier & Proxy & 50 & $89.78^\circ$ & Rebuilt gamma-band c
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\linewidth]{biological_anchor_map.pdf}
-\caption{Biological operating points for the present molecular anchors, all computed in the rebuilt repo. FMO, PE545, and the ion-channel point all lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel point shows that a neural payload candidate can inhabit the same geometric band.}
+\caption{Biological operating points for the present molecular anchors, all computed in the rebuilt repo. FMO, PE545, the ion-channel point, and the protein mid-fold point all lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel and protein anchors show that neural-relevant molecular payload candidates can inhabit the same geometric band.}
 \label{fig:anchor-map}
 \end{figure}
 
@@ -251,7 +251,19 @@ A compact robustness sweep makes the same point without overselling the model. V
 
 \subsection{Protein microdomains as secondary payloads}
 
-Protein-folding microdomains, ligand-binding pockets, and other conformational substructures are still important, but in this paper they are secondary. They matter because they show the payload idea is not specific to ion conduction. A partially folded or metastable protein substructure can also be a low-entropy molecular machine with structured couplings, making it another plausible site where $\chi_i$ is small but nonzero \cite{dill2012protein}. That broadens the biological scope of the argument. It does not carry the neural case as directly as ion channels do.
+Protein-folding microdomains, ligand-binding pockets, and other conformational substructures remain secondary in this paper, but they are now secondary with an actual rebuilt anchor rather than only prose. Using the illustrative $d=6$ mid-fold network recovered from the earlier checkpoint and recomputed in the fresh pipeline,
+\begin{equation}
+H_{\mathrm{fold}}=
+\begin{pmatrix}
+20 & 25 & 12 & 0 & 0 & 0 \\
+25 & 35 & 18 & 22 & 0 & 0 \\
+12 & 18 & 42 & 20 & 10 & 0 \\
+0 & 22 & 20 & 50 & 24 & 12 \\
+0 & 0 & 10 & 24 & 38 & 26 \\
+0 & 0 & 0 & 12 & 26 & 28
+\end{pmatrix},
+\end{equation}
+with initial site $0$, target site $5$, $\kappa=0.5$\,ps$^{-1}$, and biological dephasing $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$, we obtain $J_{\max}=26$\,cm$^{-1}$ and therefore $\gamma_{\mathrm{bio}}/J_{\max}\approx 7.69$. At the biological point the same Lindblad-plus-geometry pipeline gives $\theta_{\min}\approx 88.21^\circ$ and $\chi\approx 3.66\times10^{-4}$, with a local load $L_{\mathrm{fold}}\approx 1.10\times10^{-2}$. So the folding microdomain lands in the same near-classical but non-classical region as the ion-channel payload. That broadens the payload story beyond excitability while preserving the present paper's hierarchy: ion channels remain the primary neural route, protein microdomains are the secondary generalization.
 
 \section{Low-Frequency Coordination and Intelligence}
 \label{sec:intelligence}
