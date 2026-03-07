@@ -1,6 +1,6 @@
 # Information Geometry of Classical Carriers and Non-Classical Payloads
 
-This repository is a fresh rebuild of the biological information-geometry project.
+This repository contains the current manuscript and analysis code for the biological information-geometry project.
 
 The new paper is organized around one claim:
 
@@ -46,14 +46,14 @@ The new manuscript uses that geometry to argue:
 ## Claim tiers
 
 - `theorem-level`: dimensional collapse, non-classicality index, extensive payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxies, soft phase-coupling bridge
+- `model-based`: photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxies, soft phase-coupling bridge
 - `hypothesis-level`: low-frequency / high-dimensional biological intelligence architecture
 
 The paper’s claim is deliberately narrower than “brains are quantum.” It is that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and falsifiable.
 
 ## Ion-channel anchor
 
-The rebuilt repo now includes one concrete neural payload computation in
+The current analysis now includes one concrete neural payload computation in
 [code/ion_channel_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/ion_channel_payload.py).
 
 For the minimal KcsA-like 4-site selectivity-filter model:
@@ -123,15 +123,15 @@ The generated summary files are:
 
 | System | Role | Source | `γ_bio/J_max` | `θ_min^bio` | `χ^bio` | Current use |
 |---|---|---|---:|---:|---:|---|
-| FMO | Proof of principle | Rebuilt from validated Hamiltonian | 1.14 | 87.67° | `5.42×10^-4` | Functional near-boundary photosynthesis anchor |
-| PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | `8.80×10^-5` | Independent photosynthetic confirmation of the same band |
-| Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | `2.76×10^-4` | Fresh rebuilt-repo molecular anchor |
-| Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | `3.66×10^-4` | Fresh secondary payload anchor |
-| Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | `3.72×10^-6` | Gamma proxy gives `θ_min ≈ 89.78°` already at `γ/J_max = 50` |
+| FMO | Proof of principle | Direct computation from validated Hamiltonian | 1.14 | 87.67° | `5.42×10^-4` | Functional near-boundary photosynthesis anchor |
+| PE545 | Proof of principle | Direct computation from validated Hamiltonian | 7.88 | 89.02° | `8.80×10^-5` | Independent photosynthetic confirmation of the same band |
+| Ion channel | Primary neural payload | Direct computation | 6.67 | 88.55° | `2.76×10^-4` | Molecular anchor for the primary neural payload route |
+| Protein mid-fold | Secondary payload | Direct computation | 7.69 | 88.21° | `3.66×10^-4` | Secondary payload anchor |
+| Neural oscillation | Carrier scale | Proxy model + theory | `≫1` | `→90°` | `3.72×10^-6` | Gamma proxy gives `θ_min ≈ 89.78°` already at `γ/J_max = 50` |
 
-The new anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the rebuilt ion-channel point, and the rebuilt protein mid-fold point --- all sit in the same near-boundary band, while two rebuilt neural carrier proxies are already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the rebuilt payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
+The anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the ion-channel point, and the protein mid-fold point --- all sit in the same near-boundary band, while two neural carrier proxies are already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
 
-The rebuilt repo now also includes one secondary non-ion payload anchor in
+The analysis also includes one secondary non-ion payload anchor in
 [code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py).
 For the illustrative 6-site mid-fold network:
 
@@ -145,7 +145,7 @@ $$
 
 That matters because it shows the payload story is not specific to ion conduction. A second low-entropy molecular machine lands in the same near-boundary band.
 
-The carrier/payload split is also already quantitative in the rebuilt outputs:
+The carrier/payload split is also already quantitative in the computed outputs:
 
 - FMO payload: `χ ≈ 5.42×10^-4`
 - PE545 payload: `χ ≈ 8.80×10^-5`
@@ -154,7 +154,7 @@ The carrier/payload split is also already quantitative in the rebuilt outputs:
 - Synthetic gamma carrier at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
 - Potjans-Diesmann carrier at `γ/J_max = 50`: `χ ≈ 2.83×10^-5`
 
-So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while both carrier proxies are already materially closer to the classical limit.
+So the current analysis shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while both carrier proxies are already materially closer to the classical limit.
 
 ## What would falsify this
 
@@ -166,14 +166,14 @@ The paper is not trying to win by rhetoric. It makes a direct empirical wager ag
 
 That contrast is stated explicitly in the manuscript's rival-predictions table.
 
-The reduced rebuilt-repo photosynthesis path now also computes the optimum-point geometry:
+The reduced photosynthesis path now also computes the optimum-point geometry:
 
 - FMO: `γ_opt/J_max ≈ 1.53`, `θ_min^opt ≈ 87.96°`, `η_opt ≈ 0.824`
 - PE545: `γ_opt/J_max ≈ 7.87`, `θ_min^opt ≈ 89.02°`, `η_opt ≈ 0.941`
 
 That is enough to support the proof-of-principle claim without restoring the entire old figure stack.
 
-In local-load units `L = \chi(d^2-d)`, the rebuilt biological points give:
+In local-load units `L = \chi(d^2-d)`, the biological operating points give:
 
 - FMO: `L_bio ≈ 2.28×10^-2`
 - PE545: `L_bio ≈ 4.93×10^-3`
@@ -183,7 +183,7 @@ That matters because it shows the ion-channel payload anchor is not being forced
 
 ## Neural carrier proxies
 
-The rebuilt repo now also includes reduced neural carrier computations in
+The analysis also includes reduced neural carrier computations in
 [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py).
 
 For the synthetic gamma-band microcircuit:
@@ -198,13 +198,13 @@ For the Potjans-Diesmann cortical-column proxy:
 - `γ/J_max = 10`: `θ_min ≈ 89.15°`, `χ ≈ 5.13×10^-5`
 - `γ/J_max = 50`: `θ_min ≈ 89.37°`, `χ ≈ 2.83×10^-5`
 
-That is the rebuilt carrier-side evidence for the paper’s split:
+That is the carrier-side evidence for the paper’s split:
 
 $$
 \chi_{\mathrm{carrier}} \ll \chi_{\mathrm{payload}}.
 $$
 
-At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `10×` to `74×` smaller than the ion-channel payload `χ` at its biological point.
+At the conservative reference point `γ/J_max = 50`, the carrier `χ` is already about `10×` to `74×` smaller than the ion-channel payload `χ` at its biological point.
 
 ## Main scaling objects
 
@@ -256,11 +256,11 @@ $$
 D_{\mathrm{coord}}(E(f)) \propto \left(R_{\mathrm{eff}}^{(\eta)}(f)\right)^s \propto f^{-s}.
 $$
 
-This is not a fitted cortical law. It is the first explicit model in the rebuilt draft showing how lower-frequency carriers can yield higher coordinated dimensionality while remaining classical, while also saturating once the amplitude ceiling is reached.
+This is not a fitted cortical law. It is the first explicit model in the current draft showing how lower-frequency carriers can yield higher coordinated dimensionality while remaining classical, while also saturating once the amplitude ceiling is reached.
 
 The bridge figure now also includes a heterogeneous soft-field check: distributed amplitude scales and phase tolerances are simulated over a 2D payload field and normalized to the same baseline at `f = f0`. The low-`f` advantage survives that heterogeneity rather than depending on a single hard cutoff.
 
-The rebuilt repo now also writes a band-level bridge summary in
+The analysis also writes a band-level bridge summary in
 [results/carrier_band_bridge.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/carrier_band_bridge.csv),
 using `f0 = 40 Hz` as the gamma reference. Under the default heterogeneous soft-field bridge:
 
@@ -269,7 +269,7 @@ using `f0 = 40 Hz` as the gamma reference. Under the default heterogeneous soft-
 - delta (`2 Hz`) gives about a `13.28×` payload gain
 - infraslow (`0.5 Hz`) gives about a `13.78×` payload gain
 
-So the low-frequency advantage in the rebuilt bridge is finite and saturating, not an unbounded divergence.
+So the low-frequency advantage in the bridge is finite and saturating, not an unbounded divergence.
 
 That statement is now backed by an explicit bridge sensitivity sweep in
 [results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv):
@@ -292,7 +292,7 @@ $$
 \left(\frac{R_{\mathrm{eff}}^{(\eta)}(f)}{R_{\mathrm{eff}}^{(\eta)}(f_0)}\right)^s
 $$
 
-for illustrative redundancy assumptions, so the bridge figure now carries actual rebuilt-repo numbers rather than only a normalized schematic.
+for illustrative redundancy assumptions, so the bridge figure now carries actual computed numbers rather than only a normalized schematic.
 
 In the heterogeneous field overlay, the effective ion payload still increases by about `1.4×10^2` between `f/f0 = 4` and `0.25` at `varrho = 1` over the plotted range. That is the right takeaway: the exact gain is model-dependent, but the inversion survives distributed tolerances, continuous weighting, and finite support.
 
@@ -339,7 +339,7 @@ $$
 \Phi_{\mathrm{ion}}\approx \frac{1.10\times 10^{-3}}{\varrho}.
 $$
 
-So the rebuilt draft is making a sober claim: the per-module uplift is small, but the absolute payload still scales linearly with entrained site count.
+So the draft is making a sober claim: the per-module uplift is small, but the absolute payload still scales linearly with entrained site count.
 
 The manuscript now includes a compact benchmark table and the same numbers are written to:
 
@@ -365,7 +365,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 ./build.sh
 ```
 
-`build.sh` uses cached reduced-anchor outputs by default and only recomputes them if they are missing.
+`build.sh` uses cached reduced-anchor outputs by default and recomputes them if they are missing or stale relative to the analysis scripts.
 
 To force a full numerical refresh:
 
@@ -398,7 +398,7 @@ This produces:
 
 This repo is intentionally narrow at the moment:
 
-- manuscript-first rebuild
+- manuscript-first workflow
 - theory and positioning first
 - only the anchor computations the draft currently uses: reduced photosynthesis proof of principle plus ion-channel payload geometry
 

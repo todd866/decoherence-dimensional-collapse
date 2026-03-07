@@ -1,0 +1,4 @@
+- Decoherence is formulated as a dimensional collapse from the $(d^2-1)$-dimensional Bures manifold to the $(d-1)$-dimensional Fisher--Rao simplex.
+- A non-classicality index $\chi$ derived from Bures principal angles quantifies residual coherence-sector geometry continuously rather than binarily.
+- Photosynthetic complexes, ion-channel payloads, and protein microdomains occupy a small-but-nonzero near-boundary band, while neural carrier proxies are substantially more classical.
+- A soft phase-coupling bridge shows how lower-frequency carriers can coordinate larger non-classical payloads and yields a regression-level falsification test against frequency-centric dimensionality accounts.

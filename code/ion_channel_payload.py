@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal ion-channel payload analysis for the rebuilt manuscript.
+"""Minimal ion-channel payload analysis for the manuscript.
 
 This script computes one concrete molecular payload anchor:
 
@@ -7,7 +7,7 @@ This script computes one concrete molecular payload anchor:
 - Lindblad dephasing + target trapping evolution
 - Bures principal-angle spectrum at the biological operating point
 - Non-classicality index chi
-- Transport optimum over a dimensionless gamma/J scan
+- Geometry scan over a dimensionless gamma/J grid
 
 Outputs:
 - results/ion_channel_summary.json
@@ -447,6 +447,7 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
 
     for gamma_over_j in gamma_over_j_values:
         gamma_cm = gamma_over_j * ION_CHANNEL_JMAX_CM
+        geometry = geometry_snapshot(gamma_cm)
         eta = compute_transport_efficiency(
             H_ION_CHANNEL,
             gamma_cm,
@@ -462,6 +463,8 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
                 "gamma_over_j": float(gamma_over_j),
                 "gamma_cm": float(gamma_cm),
                 "eta": eta_val,
+                "theta_min_deg": float(geometry["theta_min_deg"]),
+                "chi": float(geometry["chi"]),
             }
         )
         efficiencies.append(eta_val)
@@ -539,7 +542,7 @@ def write_outputs(summary: dict, scan_rows: list[dict[str, float]]) -> None:
     with scan_path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(
             fh,
-            fieldnames=["gamma_over_j", "gamma_cm", "eta"],
+            fieldnames=["gamma_over_j", "gamma_cm", "eta", "theta_min_deg", "chi"],
         )
         writer.writeheader()
         writer.writerows(scan_rows)
@@ -552,29 +555,31 @@ def write_figure(summary: dict, scan_rows: list[dict[str, float]]) -> None:
     figures_dir.mkdir(exist_ok=True)
 
     gamma_over_j = np.array([row["gamma_over_j"] for row in scan_rows], dtype=float)
-    eta = np.array([row["eta"] for row in scan_rows], dtype=float)
+    theta_min_scan = np.array([row["theta_min_deg"] for row in scan_rows], dtype=float)
     theta_spectrum = np.array(summary["theta_spectrum_bio_deg"], dtype=float)
 
-    fig, (ax_eta, ax_theta) = plt.subplots(1, 2, figsize=(7.0, 3.0), constrained_layout=True)
+    fig, (ax_scan, ax_theta) = plt.subplots(1, 2, figsize=(7.0, 3.0), constrained_layout=True)
 
-    ax_eta.semilogx(gamma_over_j, eta, color="#1f4e79", lw=2.0)
-    ax_eta.axvline(summary["gamma_bio_over_jmax"], color="#b03a2e", ls="--", lw=1.1)
-    ax_eta.scatter(
+    ax_scan.semilogx(gamma_over_j, theta_min_scan, color="#1f4e79", lw=2.0)
+    ax_scan.axvline(summary["gamma_bio_over_jmax"], color="#b03a2e", ls="--", lw=1.1)
+    ax_scan.axhline(90.0, color="black", ls=":", lw=1.0)
+    ax_scan.scatter(
         [summary["gamma_bio_over_jmax"]],
-        [summary["eta_bio"]],
+        [summary["theta_min_bio_deg"]],
         color="#b03a2e",
         s=24,
         zorder=3,
     )
-    ax_eta.set_xlabel(r"$\gamma/J_{\max}$")
-    ax_eta.set_ylabel(r"Bounded yield $\eta$")
-    ax_eta.set_title("Trap scan")
-    ax_eta.text(
+    ax_scan.set_xlabel(r"$\gamma/J_{\max}$")
+    ax_scan.set_ylabel(r"$\theta_{\min}$ (degrees)")
+    ax_scan.set_title("Geometry scan")
+    ax_scan.set_ylim(max(0.0, float(np.min(theta_min_scan)) - 2.0), 90.2)
+    ax_scan.text(
         0.05,
         0.10,
         "bio point",
         color="#b03a2e",
-        transform=ax_eta.transAxes,
+        transform=ax_scan.transAxes,
         fontsize=8,
     )
 

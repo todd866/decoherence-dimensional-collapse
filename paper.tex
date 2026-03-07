@@ -32,7 +32,7 @@
 \graphicspath{{figures/}}
 
 \title{Information Geometry of Classical Carriers and\\ Non-Classical Payloads in Biological Information Processing}
-\author{Ian Todd\\
+\author{Ian Todd\thanks{ORCID: 0009-0002-6994-0917; Email: itod2305@uni.sydney.edu.au}\\
 Sydney Medical School\\
 University of Sydney\\
 Sydney, Australia}
@@ -43,17 +43,19 @@ Sydney, Australia}
 \maketitle
 
 \begin{abstract}
-The central claim of this paper is that dimensionality in biological information processing need not live in carrier frequency. Decoherence maps a $d$-level quantum system from a $(d^2-1)$-dimensional Bures state manifold onto a $(d-1)$-dimensional Fisher--Rao simplex, annihilating the $d^2-d$ coherence directions. This dimensional collapse supplies a continuous non-classicality index $\chi$ from Bures principal angles, allowing one to quantify not only whether a system is classical or quantum, but how much non-classical structure remains geometrically accessible. We use that geometry to distinguish \emph{classical carriers} from \emph{non-classical payloads}. Photosynthetic exciton transport provides the proof of principle: validated FMO and PE545 models operate near the quantum-classical boundary, showing that biologically functional dynamics can live in a near-classical but non-classical regime. Neural oscillations, by contrast, are deep classical at carrier scale. A minimal KcsA-like ion-channel payload calculation then gives a concrete neural-side anchor: at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the biological point remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times 10^{-4}$. We then show that deep-classical carriers do not force low-dimensionality. For molecular modules $i$ with local non-classical load $L_i=\chi_i(d_i^2-d_i)$, the redundancy-adjusted payload $\mathcal{L}_{\mathrm{eff}}(E)=\varrho_E^{-1}\sum_{i\in E}L_i$ is extensive whenever a nonzero fraction of modules sit near the boundary and redundancy is bounded. Under a minimal soft phase-coupling carrier model, coordinated dimensionality grows as the payload coordination radius expands and saturates smoothly at an amplitude ceiling: lower-frequency carriers can therefore support larger coordinated dimensionality not because the carrier itself is quantum, but because finite propagation and phase tolerance allow them to weight larger sets of molecular payload modules while adding little geometric mixing of their own. This reframes the usual high-frequency/high-dimensional intuition: frequency is a coordination scale, not the locus of dimensionality. The resulting picture is a multi-scale architecture in which deep-classical macroscopic waves coordinate an extensive near-boundary molecular substrate.
+Decoherence maps a $d$-level quantum system from a $(d^2-1)$-dimensional Bures state manifold onto a $(d-1)$-dimensional Fisher--Rao simplex, annihilating the $d^2-d$ coherence directions. This dimensional collapse yields a continuous non-classicality index $\chi$ from Bures principal angles, allowing one to quantify how much coherence-sector structure remains geometrically accessible. We use that geometry to distinguish \emph{classical carriers} from \emph{non-classical payloads}. Photosynthetic exciton transport provides the proof of principle: validated FMO and PE545 models operate near the quantum-classical boundary, showing that biologically functional dynamics can inhabit a near-classical but non-classical regime. Neural oscillations, by contrast, are expected to be deep classical at carrier scale. A minimal KcsA-like ion-channel calculation then gives a concrete neural payload anchor: at an illustrative biological operating point $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the model remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times 10^{-4}$. For molecular modules $i$ with local non-classical load $L_i=\chi_i(d_i^2-d_i)$, the redundancy-adjusted payload $\mathcal{L}_{\mathrm{eff}}(E)=\varrho_E^{-1}\sum_{i\in E}L_i$ is extensive whenever a nonzero fraction of modules sit near the boundary and redundancy is bounded. A minimal soft phase-coupling carrier model then shows how lower-frequency carriers can coordinate larger payload sets while remaining more classical themselves: coordinated dimensionality grows as the payload coordination radius expands and saturates at an amplitude ceiling. The resulting picture is a multi-scale architecture in which deep-classical macroscopic waves coordinate an extensive near-boundary molecular substrate. The present paper does not claim that this non-classical payload is already known to be functionally decisive for cognition; it establishes that the payload is nonzero, structured, extensive in coordinated site count, and empirically testable.
 \end{abstract}
+
+\noindent\textbf{Keywords:} decoherence; information geometry; quantum biology; neural oscillations; ion channels; dimensionality
 
 \section{Introduction}
 \label{sec:intro}
 
-High-dimensional neural activity is often discussed as if it were primarily a property of fast dynamics. In the working-memory literature, gamma and beta bursts are closely associated with access, gating, and mixed selectivity \cite{lundqvist2016gamma,miller2018working,rigotti2013importance,fusi2016neurons}. Read one way, that literature supports a simple heuristic: high frequency goes with high dimensionality. This paper argues that the heuristic places dimensionality in the wrong object. Frequency is a temporal property of a carrier. Dimensionality is a property of a state space. Those are not the same thing.
+High-dimensional neural activity is often discussed as if it were primarily a property of fast dynamics. In the working-memory literature, gamma and beta bursts are closely associated with access, gating, and mixed selectivity \cite{lundqvist2016gamma,miller2018working,rigotti2013importance,fusi2016neurons}. One frequency-centric reading of that literature supports a simple heuristic: high frequency goes with high dimensionality. This paper argues that the heuristic places dimensionality in the wrong object. Frequency is a temporal property of a carrier. Dimensionality is a property of a state space. Those are not the same thing.
 
-This paper develops a different answer. The claim is not that low-frequency oscillations are themselves quantum, nor that high dimensionality automatically implies non-classicality. The claim is narrower and stronger: biological systems are plausibly organized as \emph{carrier-payload architectures}. At macroscopic scale, oscillatory carriers can be deep classical. At molecular scale, the modules being coordinated can remain near the quantum-classical boundary. Dimensionality then scales with the coordinated payload, not with carrier frequency itself. The disagreement with the Miller-style picture is therefore not about whether fast bursts matter. It is about \emph{where the dimensionality resides}: in this paper, fast activity can index access or routing, while low-frequency carriers can dominate effective dimensionality by coordinating a larger payload.
+This paper develops a different answer. The claim is not that low-frequency oscillations are themselves quantum, nor that high dimensionality automatically implies non-classicality. The claim is narrower and stronger: biological systems are plausibly organized as \emph{carrier-payload architectures}. At macroscopic scale, oscillatory carriers can be deep classical. At molecular scale, the modules being coordinated can remain near the quantum-classical boundary. Dimensionality then scales with the coordinated payload, not with carrier frequency itself. The disagreement with a frequency-centric picture is therefore not about whether fast bursts matter. It is about \emph{where the dimensionality resides}: in this paper, fast activity can index access or routing, while low-frequency carriers can dominate effective dimensionality by coordinating a larger payload.
 
-The mathematical basis for that claim comes from decoherence geometry. A $d$-level quantum system occupies a $(d^2-1)$-dimensional state manifold under the Bures metric \cite{braunstein1994statistical,petz1996monotone}. Complete dephasing collapses this manifold onto the $(d-1)$-dimensional classical probability simplex under the Fisher--Rao metric \cite{rao1945information,amari1985differential}. The collapse is therefore not just loss of ``quantumness'' in an informal sense; it is a geometric destruction of distinguishable directions in state space.
+The mathematical basis for that claim comes from decoherence geometry. Decoherence is the standard route by which quantum dynamics lose phase-sensitive distinguishability and approach classical pointer descriptions \cite{zeh1970interpretation,zurek1981pointer,zurek2003decoherence,schlosshauer2005decoherence}. A $d$-level quantum system occupies a $(d^2-1)$-dimensional state manifold under the Bures metric \cite{braunstein1994statistical,petz1996monotone}. Complete dephasing collapses this manifold onto the $(d-1)$-dimensional classical probability simplex under the Fisher--Rao metric \cite{rao1945information,amari1985differential}. The collapse is therefore not just loss of ``quantumness'' in an informal sense; it is a geometric destruction of distinguishable directions in state space.
 
 That perspective is already useful in quantum biology. Photosynthetic complexes are known to operate in regimes where intermediate dephasing can improve transport efficiency \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. What has been missing is a language for saying how classical or non-classical those biologically relevant operating points actually are. The Bures principal-angle framework supplies that language.
 
@@ -61,7 +63,7 @@ The broader motivation is cognitive. If one assumes that dimensionality is carri
 
 The paper develops that thesis in four steps. Section~\ref{sec:geometry} states the core geometric facts of decoherence and defines the non-classicality index $\chi$. Section~\ref{sec:architecture} builds a carrier-payload formalism in which local module loads add into a redundancy-adjusted effective payload. Section~\ref{sec:anchors} uses photosynthesis as proof of principle and then prioritizes ion channels as the leading neural payload candidate, with protein microdomains as a secondary extension. Section~\ref{sec:intelligence} introduces a minimal soft phase-coupling bridge from carrier frequency to coordinated payload size and states the resulting low-frequency/high-dimensional consequence for biological computation. The central outcome is a change of locus: frequency is recast as a coordination parameter, while dimensionality lives in the coordinated payload.
 
-The burden of proof is therefore stratified. The geometric statements in Sections~\ref{sec:geometry} and \ref{sec:architecture} are theorem-level claims. The photosynthetic anchors, ion-channel payload, protein microdomain payload, and reduced carrier proxies are rebuilt model-based computations. The stronger neuroscience conclusion is intentionally narrower: the paper does not claim to have derived intelligence from quantum biology, only to have shown that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and directly falsifiable.
+The burden of proof is therefore stratified. The geometric statements in Sections~\ref{sec:geometry} and \ref{sec:architecture} are theorem-level claims. The photosynthetic anchors, ion-channel payload, protein microdomain payload, and reduced carrier proxies are model-based computations. The stronger neuroscience conclusion is intentionally narrower: the paper does not claim to have derived intelligence from quantum biology, only to have shown that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and directly falsifiable.
 
 \section{Geometry of the Quantum-Classical Boundary}
 \label{sec:geometry}
@@ -86,7 +88,7 @@ Equivalently, the $d^2-d$ off-diagonal coherence directions are annihilated, and
 \end{theorem}
 
 \begin{proof}
-The image of $\dec$ is the set of diagonal density matrices, which is the classical simplex $\Delta_{d-1}$. Any derivative in an off-diagonal direction vanishes after applying $\dec$, so those directions drop out of the quantum Fisher information matrix. The surviving diagonal block is exactly the classical Fisher information of the populations. Hence only $d-1$ distinguishable directions remain.
+The image of $\dec$ is the set of diagonal density matrices, which is the classical simplex $\Delta_{d-1}$. Any derivative in an off-diagonal direction vanishes after applying $\dec$, so those directions drop out of the quantum Fisher information matrix. For a diagonal state $\rho=\mathrm{diag}(p_1,\ldots,p_d)$ and a tangent vector $\delta\rho=\mathrm{diag}(\delta p_1,\ldots,\delta p_d)$ with $\sum_k\delta p_k=0$, the Bures/SLD metric reduces to $\sum_k (\delta p_k)^2/p_k$, i.e. the Fisher--Rao metric on the simplex \cite{braunstein1994statistical,petz1996monotone,rao1945information}. Hence only $d-1$ distinguishable directions remain.
 \end{proof}
 
 Theorem~\ref{thm:collapse} is the geometric core of the paper. It makes decoherence quantitative in the strongest possible sense: decoherence is a rank-reducing projection of state space, not merely a qualitative washing-out of phase information.
@@ -104,7 +106,7 @@ Let $\theta_1,\ldots,\theta_{d-1}$ be the Bures principal angles between the dia
 \end{equation}
 \end{definition}
 
-By construction, $\chi(\rho)\in[0,1]$. Diagonal states have $\theta_a=\pi/2$ for all $a$, hence $\chi=0$. Any state with geometric mixing between classical and coherence directions has $\chi>0$. The index is deliberately modest: it is not an entanglement measure, not a coherence monotone, and not a claim that a system is ``quantum'' in any maximal sense. It is a scalar summary of how much of the coherence sector remains geometrically accessible.
+By construction, $\chi(\rho)\in[0,1]$. Diagonal states have $\theta_a=\pi/2$ for all $a$, hence $\chi=0$. Any state with geometric mixing between classical and coherence directions has $\chi>0$. The index is deliberately modest: it is not an entanglement measure, not a coherence monotone, and not a claim that a system is ``quantum'' in any maximal sense. It is a scalar summary of how much of the coherence sector remains geometrically accessible. In the dynamical applications below, $\chi$ is evaluated on the full-rank regularized readout state produced by the corresponding Lindblad model at the stated operating point.
 
 \begin{remark}
 \label{rem:highd}
@@ -140,14 +142,14 @@ Let $E$ be a set of entrained modules and let $\varrho_E\ge 1$ be a redundancy f
 \label{eq:payload}
 \mathcal{L}_{\mathrm{eff}}(E)=\frac{1}{\varrho_E}\sum_{i\in E}L_i
 \end{equation}
-and the coordinated dimensionality
+and the effective coordinated-dimension score
 \begin{equation}
 \label{eq:dcoord}
 D_{\mathrm{coord}}(E)=\sum_{i\in E}(d_i-1)+\mathcal{L}_{\mathrm{eff}}(E).
 \end{equation}
 \end{definition}
 
-This separates classical capacity from non-classical uplift. The first term counts the surviving simplex dimensions. The second term counts the residual geometrically accessible coherence sector after redundancy compression.
+This separates classical capacity from non-classical uplift. The first term counts the surviving simplex dimensions. The second term counts the residual geometrically accessible coherence sector after redundancy compression. The sum should be read as an effective geometry score for accessible state-space richness, not as a literal manifold-dimension identity.
 
 \subsection{Extensive payload under nonzero module density}
 
@@ -199,35 +201,35 @@ Corollary~\ref{cor:lowf} is the formal version of the paper's headline thesis. L
 
 \subsection{Photosynthesis as proof of principle}
 
-Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In the reduced rebuilt-repo calculations based on the validated Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. Averaging over the two standard initial-site choices, FMO gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 1.53$ with $\theta_{\min}^{\mathrm{opt}}\approx 87.96^\circ$, while PE545 gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 7.87$ with $\theta_{\min}^{\mathrm{opt}}\approx 89.02^\circ$. At the biological operating point, the rebuilt scans give $\theta_{\min}^{\mathrm{bio}}\approx 87.67^\circ$ (FMO) and $89.02^\circ$ (PE545). In local-load units $L=\chi(d^2-d)$, those same biological points correspond to $L_{\mathrm{FMO}}^{\mathrm{bio}}\approx 2.28\times10^{-2}$ and $L_{\mathrm{PE545}}^{\mathrm{bio}}\approx 4.93\times10^{-3}$. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
+Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In calculations based on the validated Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. Averaging over the two standard initial-site choices, FMO gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 1.53$ with $\theta_{\min}^{\mathrm{opt}}\approx 87.96^\circ$, while PE545 gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 7.87$ with $\theta_{\min}^{\mathrm{opt}}\approx 89.02^\circ$. At the biological operating point, the scans give $\theta_{\min}^{\mathrm{bio}}\approx 87.67^\circ$ (FMO) and $89.02^\circ$ (PE545). In local-load units $L=\chi(d^2-d)$, those same biological points correspond to $L_{\mathrm{FMO}}^{\mathrm{bio}}\approx 2.28\times10^{-2}$ and $L_{\mathrm{PE545}}^{\mathrm{bio}}\approx 4.93\times10^{-3}$. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
 
-The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, show the split the paper needs: rebuilt molecular payload anchors cluster in the same near-boundary band as the rebuilt photosynthetic proof-of-principle calculations, while two rebuilt neural carrier proxies already sit farther right and closer to the classical limit. The comparison is not only angular: the ion-channel local load $L_{\mathrm{ion}}\approx 3.31\times10^{-3}$ is of the same order as PE545 at the biological point, so the neural payload anchor is not being placed in a wholly alien regime.
+The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, show the split the paper needs: molecular payload anchors cluster in the same near-boundary band as the photosynthetic proof-of-principle calculations, while two neural carrier proxies already sit farther right and closer to the classical limit. The comparison is not only angular: the ion-channel local load $L_{\mathrm{ion}}\approx 3.31\times10^{-3}$ is of the same order as PE545 at the biological point, so the neural payload anchor is not being placed in a wholly alien regime.
 
 \begin{table}[t]
 \centering
 \small
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}p{0.95cm}c c c >{\raggedright\arraybackslash}X@{}}
 \toprule
-System & Role & Src. & $\gamma_{\mathrm{bio}}/J_{\max}$ & $\theta_{\min}^{\mathrm{bio}}$ & $\chi^{\mathrm{bio}}$ & Use in draft \\
+System & Role & Type & $\gamma_{\mathrm{bio}}/J_{\max}$ & $\theta_{\min}^{\mathrm{bio}}$ & $\chi^{\mathrm{bio}}$ & Use in draft \\
 \midrule
-FMO & Proof point & Fresh & 1.14 & $87.67^\circ$ & $5.42\times 10^{-4}$ & Functional near-boundary photosynthesis anchor. \\
-PE545 & Proof point & Fresh & 7.88 & $89.02^\circ$ & $8.80\times 10^{-5}$ & Independent photosynthetic confirmation of the same band. \\
-Ion channel & Neural payload & Fresh & 6.67 & $88.55^\circ$ & $2.76\times 10^{-4}$ & Fresh molecular anchor for the primary neural payload route. \\
-Prot.\ microd. & Payload ext. & Fresh & 7.69 & $88.21^\circ$ & $3.66\times 10^{-4}$ & Fresh secondary payload anchor outside ion conduction. \\
-Synth.\ carrier & Carrier & Proxy & 50 & $89.78^\circ$ & $3.72\times 10^{-6}$ & Rebuilt synthetic gamma-band carrier proxy, already near classical. \\
-P-D carrier & Carrier & Proxy & 50 & $89.37^\circ$ & $2.83\times 10^{-5}$ & Rebuilt Potjans--Diesmann cortical-column proxy, still more classical than the payload band. \\
+FMO & Proof point & Direct & 1.14 & $87.67^\circ$ & $5.42\times 10^{-4}$ & Functional near-boundary photosynthesis anchor. \\
+PE545 & Proof point & Direct & 7.88 & $89.02^\circ$ & $8.80\times 10^{-5}$ & Independent photosynthetic confirmation of the same band. \\
+Ion channel & Neural payload & Direct & 6.67 & $88.55^\circ$ & $2.76\times 10^{-4}$ & Molecular anchor for the primary neural payload route. \\
+Prot.\ microd. & Payload ext. & Direct & 7.69 & $88.21^\circ$ & $3.66\times 10^{-4}$ & Secondary payload anchor outside ion conduction. \\
+Synth.\ carrier & Carrier & Proxy & 50 & $89.78^\circ$ & $3.72\times 10^{-6}$ & Synthetic gamma-band carrier proxy, already near classical. \\
+P-D carrier & Carrier & Proxy & 50 & $89.37^\circ$ & $2.83\times 10^{-5}$ & Potjans--Diesmann cortical-column proxy, still more classical than the payload band. \\
 \bottomrule
 \end{tabularx}
-\caption{Anchor systems used in the present draft. All rows are computed in the rebuilt repo. The photosynthetic models are reduced to the quantities this draft actually needs: biological-point and transport-optimum geometry from validated Hamiltonians. The neural rows report rebuilt carrier proxies at $\gamma/J_{\max}=50$ rather than the true biological limit $\gamma_{\mathrm{bio}}/J_{\max}\gg 1$; the latter only pushes the carriers further toward the classical limit.}
+\caption{Anchor systems used in the present draft. All rows are computed directly in the present analysis. The photosynthetic models are reduced to the quantities this draft actually needs: biological-point and transport-optimum geometry from validated Hamiltonians. The neural rows report carrier proxies at $\gamma/J_{\max}=50$ rather than the true biological limit $\gamma_{\mathrm{bio}}/J_{\max}\gg 1$; the latter only pushes the carriers further toward the classical limit.}
 \label{tab:anchors}
 \end{table}
 
-The table is doing more work than a simple operating-point list. Its $\chi$ column makes the carrier-payload separation explicit: payload anchors cluster in a small-but-nonzero non-classical band around $10^{-4}$, while the rebuilt carrier proxies are already down at $3.72\times10^{-6}$ and $2.83\times10^{-5}$ by $\gamma/J_{\max}=50$. The paper's central split is therefore not rhetorical; it is numerically visible in the anchor comparison itself.
+The table is doing more work than a simple operating-point list. Its $\chi$ column makes the carrier-payload separation explicit: payload anchors cluster in a small-but-nonzero non-classical band around $10^{-4}$, while the carrier proxies are already down at $3.72\times10^{-6}$ and $2.83\times10^{-5}$ by $\gamma/J_{\max}=50$. The paper's central split is therefore not rhetorical; it is numerically visible in the anchor comparison itself.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\linewidth]{biological_anchor_map.pdf}
-\caption{Biological operating points for the rebuilt anchor set. The molecular payload anchors --- FMO, PE545, the ion-channel point, and the protein mid-fold point --- cluster in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Two rebuilt neural carrier proxies sit farther right at $\gamma/J_{\max}=50$ and closer to the classical limit. The visual split is therefore the paper's central one: functional or candidate payload systems remain small-but-nonzero in $\chi$, while the carrier layer is already substantially more classical on the same geometry map.}
+\caption{Biological operating points for the anchor set. The molecular payload anchors --- FMO, PE545, the ion-channel point, and the protein mid-fold point --- cluster in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Two neural carrier proxies sit farther right at $\gamma/J_{\max}=50$ and closer to the classical limit. The visual split is therefore the paper's central one: functional or candidate payload systems remain small-but-nonzero in $\chi$, while the carrier layer is already substantially more classical on the same geometry map.}
 \label{fig:anchor-map}
 \end{figure}
 
@@ -235,7 +237,7 @@ The table is doing more work than a simple operating-point list. Its $\chi$ colu
 
 If the paper is meant to say something concrete about cognition, ion channels come first. They sit at the molecular interface between microscopic state transitions and population-level excitability; they exist in enormous copy number; and they offer a direct route from local non-classicality to large entrained site counts. Structurally, selectivity filters and gating assemblies are small-dimensional molecular machines with repeated motifs, constrained geometries, and biologically relevant couplings \cite{doyle1998structure,hille2001ion}. In the present framework that makes them the cleanest neural payload candidate: small local $d$, plausible boundary-near energy scales, and a direct path to large $N$.
 
-To keep the rebuilt repo honest, we computed a minimal 4-site KcsA-like selectivity-filter anchor directly in the fresh codebase. Using site energies $(30,45,45,30)$\,cm$^{-1}$, nearest-neighbor coupling $J_{\max}=30$\,cm$^{-1}$, biological dephasing $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$, and trapping from $S_1$ to $S_4$, the biological operating point sits at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$ with
+To make that claim concrete, we compute a minimal 4-site KcsA-like selectivity-filter anchor. Using site energies $(30,45,45,30)$\,cm$^{-1}$, nearest-neighbor coupling $J_{\max}=30$\,cm$^{-1}$, an illustrative protein-environment dephasing scale $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$, and trapping from $S_1$ to $S_4$, the biological operating point sits at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$ with
 \begin{equation}
 \theta_{\min}\approx 88.55^\circ,
 \qquad
@@ -246,11 +248,11 @@ The full principal-angle spectrum at the biological point is $(88.55^\circ,\,89.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\linewidth]{ion_channel_anchor.pdf}
-\caption{Minimal ion-channel payload anchor from the rebuilt repo. Left: bounded trapping yield for the KcsA-like 4-site model as a function of $\gamma/J_{\max}$, with the biological point marked. Right: the three Bures principal angles at the biological point. The left panel is shown only to locate the modeled operating range; because the bounded yield is edge-peaked in this simple trap model, it is not used as an ENAQT claim. The geometric result is the point of the figure: at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the ion-channel payload remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times10^{-4}$.}
+\caption{Minimal ion-channel payload anchor. Left: the minimum principal angle $\theta_{\min}$ for the KcsA-like 4-site model as a function of $\gamma/J_{\max}$, with the biological point marked. Right: the three Bures principal angles at the biological point. The geometric result is the point of the figure: at $\gamma_{\mathrm{bio}}/J_{\max}=6.67$, the ion-channel payload remains boundary-near with $\theta_{\min}\approx 88.55^\circ$ and $\chi\approx 2.76\times10^{-4}$.}
 \label{fig:ion-channel-anchor}
 \end{figure}
 
-The corresponding bounded transport scan in this simple trap model is edge-peaked rather than ENAQT-like, so transport optimization is \emph{not} the claim being made for ion channels here. The role of the model is narrower: it establishes a concrete boundary-near neural payload anchor in the rebuilt repo. That is exactly the regime needed by Proposition~\ref{prop:extensive}. If each channel carries only a very small local load, the aggregate payload can still be large whenever many channels are entrained and redundancy is not overwhelming. For the neural application, this is the most direct route from local geometry to system-level dimensionality.
+The role of the model is intentionally narrow: it establishes a concrete boundary-near neural payload anchor. That is exactly the regime needed by Proposition~\ref{prop:extensive}. If each channel carries only a very small local load, the aggregate payload can still be large whenever many channels are entrained and redundancy is not overwhelming. For the neural application, this is the most direct route from local geometry to system-level dimensionality.
 
 A compact robustness sweep makes the same point without overselling the model. Varying the nearest-neighbor coupling over $J_{\max}\in\{15,20,30,40\}$\,cm$^{-1}$ and the dephasing over $\gamma\in\{100,150,200,250,300\}$\,cm$^{-1}$ keeps the biological-readout geometry in the same band: across the entire $20$-point grid, $\theta_{\min}$ stays between $86.43^\circ$ and $88.93^\circ$, while $\chi$ stays between $1.53\times10^{-4}$ and $1.55\times10^{-3}$. Weaker coupling pushes the payload somewhat farther from the classical simplex; stronger coupling pulls it closer. But the sweep does not produce a collapse into either a strongly quantum or exactly classical regime. For the present thesis, that is the right robustness statement: the ion-channel payload anchor is parameter-sensitive, but not a one-point artifact.
 
@@ -258,7 +260,7 @@ The same is true at the level of minimal topology changes. Holding $J_{\max}=30$
 
 \subsection{Protein microdomains as secondary payloads}
 
-Protein-folding microdomains, ligand-binding pockets, and other conformational substructures remain secondary in this paper, but they are now secondary with an actual rebuilt anchor rather than only prose. Using the illustrative $d=6$ mid-fold network recovered from the earlier checkpoint and recomputed in the fresh pipeline,
+Protein-folding microdomains, ligand-binding pockets, and other conformational substructures remain secondary in this paper. To represent that class of molecular payloads explicitly, we use an illustrative coarse-grained $d=6$ mid-fold network,
 \begin{equation}
 H_{\mathrm{fold}}=
 \begin{pmatrix}
@@ -270,16 +272,16 @@ H_{\mathrm{fold}}=
 0 & 0 & 0 & 12 & 26 & 28
 \end{pmatrix},
 \end{equation}
-with initial site $0$, target site $5$, $\kappa=0.5$\,ps$^{-1}$, and biological dephasing $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$, we obtain $J_{\max}=26$\,cm$^{-1}$ and therefore $\gamma_{\mathrm{bio}}/J_{\max}\approx 7.69$. At the biological point the same Lindblad-plus-geometry pipeline gives $\theta_{\min}\approx 88.21^\circ$ and $\chi\approx 3.66\times10^{-4}$, with a local load $L_{\mathrm{fold}}\approx 1.10\times10^{-2}$. So the folding microdomain lands in the same near-classical but non-classical region as the ion-channel payload. That broadens the payload story beyond excitability while preserving the present paper's hierarchy: ion channels remain the primary neural route, protein microdomains are the secondary generalization.
+with initial site $0$, target site $5$, $\kappa=0.5$\,ps$^{-1}$, and illustrative biological dephasing $\gamma_{\mathrm{bio}}=200$\,cm$^{-1}$. This is not a structure-specific folding Hamiltonian; it is a coarse molecular payload model intended to place a mid-fold microdomain in the same energy-scale analysis as the ion-channel anchor and the photosynthetic complexes. The resulting values are $J_{\max}=26$\,cm$^{-1}$ and therefore $\gamma_{\mathrm{bio}}/J_{\max}\approx 7.69$. At the biological point the same Lindblad-plus-geometry pipeline gives $\theta_{\min}\approx 88.21^\circ$ and $\chi\approx 3.66\times10^{-4}$, with a local load $L_{\mathrm{fold}}\approx 1.10\times10^{-2}$. So the folding microdomain lands in the same near-classical but non-classical region as the ion-channel payload. That broadens the payload story beyond excitability while preserving the present paper's hierarchy: ion channels remain the primary neural route, protein microdomains are the secondary generalization \cite{dill2012protein}.
 
 \section{Low-Frequency Coordination and Intelligence}
 \label{sec:intelligence}
 
 \subsection{Classical carriers, non-classical payloads}
 
-Neural oscillations at behavioral timescales are expected to be deep classical carriers. At those scales, dephasing dominates so strongly that the carrier itself should have $\chi_{\mathrm{carrier}}\approx 0$. Two reduced rebuilt-repo carrier proxies confirm the direction of that limit. For a synthetic $d=10$ gamma microcircuit, $\theta_{\min}\approx 89.43^\circ$ with $\chi\approx 3.29\times10^{-5}$ already at $\gamma/J_{\max}=1$, and $\theta_{\min}\approx 89.78^\circ$ with $\chi\approx 3.72\times10^{-6}$ by the proxy point $\gamma/J_{\max}=50$. For a reduced Potjans--Diesmann cortical-column proxy ($d=8$; based on the cell-type specific microcircuit of \cite{potjans2014cell}), the same scan gives $\theta_{\min}\approx 88.27^\circ$ with $\chi\approx 2.63\times10^{-4}$ at $\gamma/J_{\max}=1$, and $\theta_{\min}\approx 89.37^\circ$ with $\chi\approx 2.83\times10^{-5}$ by $\gamma/J_{\max}=50$. So even the less classical of the two carriers still sits roughly $10\times$ below the ion-channel payload anchor in $\chi$ at the conservative proxy point. This is not a defect in the argument; it is the feature that makes the carrier useful. A deep-classical carrier can propagate, synchronize, and entrain without adding significant geometric mixing of its own. That is why low-frequency waves are candidates for large-scale control rather than obstacles to complexity.
+Neural oscillations at behavioral timescales are expected to be deep classical carriers. At those scales, dephasing dominates so strongly that the carrier itself should have $\chi_{\mathrm{carrier}}\approx 0$. Two reduced carrier proxies confirm the direction of that limit. For a synthetic $d=10$ gamma microcircuit, $\theta_{\min}\approx 89.43^\circ$ with $\chi\approx 3.29\times10^{-5}$ already at $\gamma/J_{\max}=1$, and $\theta_{\min}\approx 89.78^\circ$ with $\chi\approx 3.72\times10^{-6}$ by the reference point $\gamma/J_{\max}=50$. For a reduced Potjans--Diesmann cortical-column proxy ($d=8$; based on the cell-type specific microcircuit of \cite{potjans2014cell}), the same scan gives $\theta_{\min}\approx 88.27^\circ$ with $\chi\approx 2.63\times10^{-4}$ at $\gamma/J_{\max}=1$, and $\theta_{\min}\approx 89.37^\circ$ with $\chi\approx 2.83\times10^{-5}$ by $\gamma/J_{\max}=50$. So even the less classical of the two carriers still sits roughly $10\times$ below the ion-channel payload anchor in $\chi$ at the conservative reference point. This is not a defect in the argument; it is the feature that makes the carrier useful. A deep-classical carrier can propagate, synchronize, and entrain without adding significant geometric mixing of its own. That is why low-frequency waves are candidates for large-scale control rather than obstacles to complexity.
 
-The disagreement with the Miller-style high-frequency/high-dimensional intuition can now be stated cleanly. High-frequency bursts may indeed track local access or flexible routing \cite{lundqvist2016gamma,miller2018working}. This paper does not deny that. It denies the stronger inference that frequency itself is where dimensionality lives. Dimensionality resides in the coordinated substrate. If lower-frequency waves entrain larger cortical territories and therefore larger ion-channel payload sets \cite{buzsaki2012mechanisms}, then Corollary~\ref{cor:lowf} implies a higher coordinated dimensionality even when the carrier is more classical.
+The disagreement with a frequency-centric high-frequency/high-dimensional reading can now be stated cleanly. High-frequency bursts may indeed track local access or flexible routing \cite{lundqvist2016gamma,miller2018working}. This paper does not deny that. It denies the stronger inference that frequency itself is where dimensionality lives. Dimensionality resides in the coordinated substrate. If lower-frequency waves entrain larger cortical territories and therefore larger ion-channel payload sets \cite{buzsaki2012mechanisms}, then Corollary~\ref{cor:lowf} implies a higher coordinated dimensionality even when the carrier is more classical.
 
 \begin{figure}[t]
 \centering
@@ -306,7 +308,7 @@ The remaining question is how frequency enters the picture dynamically rather th
 \label{eq:carrier-field}
 A(r)=A_0\exp\!\left(-\frac{r}{\lambda}\right),
 \end{equation}
-where $r$ is distance from the source and $\lambda$ is an amplitude attenuation length. Instead of classifying a payload module as entrained or not entrained, we assign it a continuous coupling weight. Let
+where $r$ is distance from the source and $\lambda$ is an amplitude attenuation length. In the weighting model below we set $R_{\mathrm{amp}}=\lambda$, so the amplitude scale appearing in the kernels is just the attenuation length of the carrier field. Instead of classifying a payload module as entrained or not entrained, we assign it a continuous coupling weight. Let
 \begin{equation}
 \label{eq:entrained-set}
 w_A(r)=\exp\!\left[-\left(\frac{r}{R_{\mathrm{amp}}}\right)^\eta\right]
@@ -338,7 +340,7 @@ If payload modules populate an effective spatial support of dimension $s$ with d
 \rho_m C_s \Gamma\!\left(1+\frac{s}{\eta}\right)
 \left(R_{\mathrm{eff}}^{(\eta)}(f)\right)^s,
 \end{equation}
-where $C_s$ is the unit-ball volume factor. In the phase-limited regime $R_\phi(f)\ll R_{\mathrm{amp}}$, this still gives $\widetilde N(f)\propto f^{-s}$; at sufficiently low frequency the growth saturates smoothly at the amplitude ceiling instead of hitting a hard cutoff.
+where $C_s=\pi^{s/2}/\Gamma(s/2+1)$ is the volume of the unit $s$-ball. In the phase-limited regime $R_\phi(f)\ll R_{\mathrm{amp}}$, this still gives $\widetilde N(f)\propto f^{-s}$; at sufficiently low frequency the growth saturates smoothly at the amplitude ceiling instead of hitting a hard cutoff.
 
 \begin{proposition}[Soft phase-coupling scaling with saturation]
 \label{prop:threshold-scaling}
@@ -379,7 +381,7 @@ A coarse sensitivity sweep makes that claim materially stronger. In the analytic
 
 The same bridge is easier to read when expressed in familiar carrier bands. Taking $f_0=40$\,Hz as a gamma-band reference, the default heterogeneous soft-field model gives about a $3.17\times$ coordinated-payload gain at beta ($20$\,Hz), a $10.29\times$ gain at theta ($6$\,Hz), and then smooth saturation through delta and infraslow frequencies as the amplitude ceiling takes over. So the present model does not predict an unlimited low-frequency divergence. It predicts a finite, saturating coordination advantage as the carrier slows.
 
-Using the rebuilt-repo ion-channel anchor makes the scale of the effect explicit. For the 4-site selectivity-filter model,
+Using the ion-channel anchor makes the scale of the effect explicit. For the 4-site selectivity-filter model,
 \begin{equation}
 \label{eq:lion}
 L_{\mathrm{ion}}=\chi(d^2-d)\approx (2.76\times 10^{-4})\times 12 \approx 3.31\times 10^{-3}
@@ -413,6 +415,7 @@ Thus the aggregate non-classical payload is extensive in $N$, but the fractional
 \frac{1.10\times 10^{-3}}{\varrho},
 \end{equation}
 so the toy bridge says two things simultaneously: the per-channel effect is small, and the absolute payload load still scales linearly with the number of entrained channels.
+Whether a fractional uplift of this size is functionally amplified by real neural dynamics is an empirical question, not a claim already established here. The present point is narrower: the uplift is nonzero, geometrically structured, and extensive in coordinated site count.
 
 \begin{table}[t]
 \centering
@@ -428,7 +431,7 @@ Delta & $2$ & $0.05$ & $20.0$ & $13.28$ & $44.02$ \\
 Infraslow & $0.5$ & $0.0125$ & $80.0$ & $13.78$ & $45.68$ \\
 \bottomrule
 \end{tabular}
-\caption{Band-level interpretation of the default heterogeneous soft phase-coupling bridge, using the rebuilt ion-channel anchor with $N_0=10^4$, $R_{\mathrm{amp}}/R_0=4$, $\eta=2$, and redundancy factor $\varrho=10$. The gain saturates smoothly below theta because the amplitude ceiling, not phase lag, becomes the limiting scale.}
+\caption{Band-level interpretation of the default heterogeneous soft phase-coupling bridge, using the ion-channel anchor with $N_0=10^4$, $R_{\mathrm{amp}}/R_0=4$, $\eta=2$, and redundancy factor $\varrho=10$. The gain saturates smoothly below theta because the amplitude ceiling, not phase lag, becomes the limiting scale.}
 \label{tab:band-bridge}
 \end{table}
 
@@ -444,7 +447,7 @@ $10^4$ & $3.0\times 10^4$ & $3.31\times 10^1$ & $3.31$ & $3.31\times 10^{-1}$ \\
 $10^5$ & $3.0\times 10^5$ & $3.31\times 10^2$ & $3.31\times 10^1$ & $3.31$ \\
 \bottomrule
 \end{tabular}
-\caption{Ion-channel payload benchmarks at the biological point, using the rebuilt-repo anchor $L_{\mathrm{ion}}\approx 3.31\times 10^{-3}$ per channel. The corresponding fractional uplifts above the classical baseline are $\Phi_{\mathrm{ion}}\approx 1.10\times 10^{-3}$ for $\varrho=1$, $1.10\times 10^{-4}$ for $\varrho=10$, and $1.10\times 10^{-5}$ for $\varrho=100$. The message is not that the fraction is large; it is that the absolute non-classical payload remains extensive in $N$.}
+\caption{Ion-channel payload benchmarks at the biological point, using the anchor $L_{\mathrm{ion}}\approx 3.31\times 10^{-3}$ per channel. The corresponding fractional uplifts above the classical baseline are $\Phi_{\mathrm{ion}}\approx 1.10\times 10^{-3}$ for $\varrho=1$, $1.10\times 10^{-4}$ for $\varrho=10$, and $1.10\times 10^{-5}$ for $\varrho=100$. The message is not that the fraction is large; it is that the absolute non-classical payload remains extensive in $N$.}
 \label{tab:payload-benchmarks}
 \end{table}
 
@@ -523,13 +526,32 @@ The main gain of the present reformulation is conceptual clarity. The old binary
 
 Three claims survive scrutiny in the current draft. First, decoherence is a dimensional projection of state space. Second, near-boundary biological dynamics are real, with photosynthesis as the proof of principle. Third, low-frequency carrier advantage is mathematically coherent once dimensionality is relocated to the coordinated payload and coupled to frequency through a transparent soft phase-coupling model.
 
-Several things remain open. The rebuilt repo now has two neural-relevant payload anchors, but the molecular payload classes beyond photosynthesis, ion channels, and protein microdomains still need fresh computations. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a genuinely data-constrained carrier-to-payload coupling model beyond the reduced soft phase-coupling bridge introduced in Section~\ref{sec:intelligence}. Table~\ref{tab:measurement-program} is therefore important: it marks the shortest path from the present theory to an empirical attack. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
+Several things remain open. The current analysis includes reduced photosynthetic proof-of-principle anchors, two neural-relevant payload anchors, and two carrier proxies, but it does not yet span the broader family of molecular payload models or a data-constrained cortical carrier model. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a genuinely data-constrained carrier-to-payload coupling model beyond the reduced soft phase-coupling bridge introduced in Section~\ref{sec:intelligence}. Table~\ref{tab:measurement-program} is therefore important: it marks the shortest path from the present theory to an empirical attack. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
 
-It is also worth stating plainly what the rebuilt repo does and does not yet contain. It now computes the reduced photosynthetic proof-of-principle anchors, two concrete neural-side payload anchors directly, and two reduced neural carrier proxies. What it does \emph{not} yet contain is the full old figure stack or the broader family of molecular payload models beyond ion channels and protein microdomains. That is the right asymmetry for the present thesis-first draft: only the computations that sharpen the carrier-payload argument have been brought forward.
-
-The paper therefore makes a narrower but more defensible claim than strong quantum-cognition proposals. It does not say that neural oscillations are quantum. It does not say that high dimensionality forces non-classicality. It says that biological systems built from many structured molecular machines can carry an extensive non-classical payload if a nonzero density of those machines sits near the quantum-classical boundary. Large-scale low-frequency waves may then be the right place to look for intelligence because they are the best classical carriers of that payload. In neural tissue, ion channels are the first place to test that claim. The numerical lesson of the rebuilt draft is correspondingly sober: the local fractional uplift is small [Eq.~\eqref{eq:ion-uplift}], but the absolute payload remains extensive in entrained site count.
+The paper therefore makes a narrower but more defensible claim than strong quantum-cognition proposals. It does not say that neural oscillations are quantum. It does not say that high dimensionality forces non-classicality. It says that biological systems built from many structured molecular machines can carry an extensive non-classical payload if a nonzero density of those machines sits near the quantum-classical boundary. Large-scale low-frequency waves may then be the right place to look for intelligence because they are the best classical carriers of that payload. In neural tissue, ion channels are the first place to test that claim. The numerical lesson of the draft is correspondingly sober: the local fractional uplift is small [Eq.~\eqref{eq:ion-uplift}], but the absolute payload remains extensive in entrained site count, and whether that uplift is functionally consequential is an empirical question for the measurement program in Table~\ref{tab:measurement-program}.
 
 That is the full intended inversion of the usual intuition. Frequency is not dimensionality. Frequency is coordination. Dimensionality lives in the substrate being coordinated.
+
+\section*{Data and Code Availability}
+
+All code used to generate the results and figures in this manuscript is available in the accompanying GitHub repository:
+\href{https://github.com/todd866/decoherence-dimensional-collapse}{github.com/todd866/decoherence-dimensional-collapse}. The current draft is generated directly from the analysis scripts and result files in that repository.
+
+\section*{Acknowledgements}
+
+The author thanks colleagues and reviewers whose criticism helped sharpen the distinction between theorem-level geometry, model-based biological anchors, and hypothesis-level neuroscience consequences.
+
+\section*{Funding}
+
+No specific external funding supported this work.
+
+\section*{CRediT Authorship Contribution Statement}
+
+Ian Todd: Conceptualization, Methodology, Software, Formal analysis, Visualization, Writing---original draft, Writing---review \& editing.
+
+\section*{AI Use Disclosure}
+
+AI-assisted tools were used for code generation, numerical workflow iteration, and editorial revision. All mathematical claims, model choices, code paths, figures, and manuscript statements were checked and curated by the author.
 
 \bibliographystyle{unsrt}
 \bibliography{references}

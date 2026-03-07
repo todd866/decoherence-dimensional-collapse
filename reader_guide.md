@@ -50,7 +50,7 @@ Read:
 12. Table 4: rival predictions
 13. Table 5: operational measurement route
 
-The ion-channel subsection now contains one actual rebuilt-repo anchor:
+The ion-channel subsection now contains one explicit computed anchor:
 
 $$
 \gamma_{\mathrm{bio}}/J_{\max}=6.67,\quad
@@ -81,9 +81,9 @@ $$
 $$
 So the ion-channel anchor is not tied to one exact 4-site topology.
 
-Figure 1 is the proof-of-principle bridge: it places the rebuilt molecular payload anchors on one biological operating map and shows two rebuilt neural carrier proxies farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
+Figure 1 is the proof-of-principle bridge: it places the molecular payload anchors on one biological operating map and shows two neural carrier proxies farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
 
-Section 4.3 is no longer only a placeholder. The rebuilt repo now includes a secondary protein payload anchor:
+Section 4.3 is no longer only a placeholder. The analysis now includes a secondary protein payload anchor:
 $$
 \gamma_{\mathrm{bio}}/J_{\max}=7.69,\quad
 \theta_{\min}\approx 88.21^\circ,\quad
@@ -91,7 +91,7 @@ $$
 $$
 That matters because it broadens the payload class beyond ion conduction without displacing ion channels from the main neural route.
 
-Figure 2 is the cleanest fresh rebuilt-repo object: it shows the bounded trap scan only to locate the modeled operating point, and then shows the principal-angle spectrum that actually matters for the argument.
+Figure 2 is the cleanest ion-channel geometry figure: it shows the minimum-angle scan across $\gamma/J_{\max}$ and the biological-point principal-angle spectrum that the argument actually uses.
 
 Figure 3 is the intuition object: it shows the disagreement with the frequency-as-dimensionality view in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
 
@@ -116,14 +116,14 @@ D_{\mathrm{obs}}=\beta_0+\beta_1\log \widetilde N+\beta_2 H_{\mathrm{payload}}+\
 $$
 That matters because it reduces the disagreement to one coefficient test. If `β4` stays dominant after the payload and carrier controls, this paper loses.
 
-Section 5.1 now also has two rebuilt carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the Potjans-Diesmann cortical-column proxy gives `θ_min ≈ 89.37°` and `χ ≈ 2.83×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
+Section 5.1 now also has two carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the Potjans-Diesmann cortical-column proxy gives `θ_min ≈ 89.37°` and `χ ≈ 2.83×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
 
-Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload,” even after moving to the less favorable Potjans-Diesmann proxy.
+Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest direct evidence for “classical carrier, non-classical payload,” even after moving to the less favorable Potjans-Diesmann proxy.
 
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, fresh ion-channel and protein payload anchors from the rebuilt repo, two reduced carrier proxies, and a soft phase-coupling bridge linking carrier scale to payload scale
+- `model-based`: photosynthetic proof-of-principle anchors from validated Hamiltonians, ion-channel and protein payload anchors, two reduced carrier proxies, and a soft phase-coupling bridge linking carrier scale to payload scale
 - `hypothesis`: low-frequency/high-dimensional intelligence architecture
 
 ## What is deliberately not claimed
