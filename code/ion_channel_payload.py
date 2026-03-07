@@ -58,6 +58,10 @@ PHASE_WINDOW_S = 2.0
 PHASE_WINDOW_N0 = 1.0e4
 PHASE_WINDOW_REDUNDANCIES = [1.0, 10.0, 100.0]
 PHASE_WINDOW_RAMP_OVER_R0 = 4.0
+PHASE_WINDOW_HETERO_SEED = 7
+PHASE_WINDOW_HETERO_MODULES = 12000
+PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 = 6.0
+PHASE_WINDOW_HETERO_LOGSIGMA = 0.35
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
 ION_CHANNEL_SENSITIVITY_J_VALUES = [15.0, 20.0, 30.0, 40.0]
 ION_CHANNEL_SENSITIVITY_GAMMA_VALUES = [100.0, 150.0, 200.0, 250.0, 300.0]
@@ -532,6 +536,33 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
     n_payload = PHASE_WINDOW_N0 * r_eff_over_r0 ** PHASE_WINDOW_S
     crossover_ratio = 1.0 / PHASE_WINDOW_RAMP_OVER_R0
 
+    # Heterogeneous payload field: modules occupy a 2D disc and vary in both
+    # amplitude ceiling and phase tolerance at f0. The scale factor is chosen
+    # so the heterogeneous field matches N0 at f=f0, making the comparison
+    # about shape rather than arbitrary normalization.
+    rng = np.random.default_rng(PHASE_WINDOW_HETERO_SEED)
+    radii = PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 * np.sqrt(rng.random(PHASE_WINDOW_HETERO_MODULES))
+    ramp_i = np.exp(
+        rng.normal(
+            loc=np.log(PHASE_WINDOW_RAMP_OVER_R0),
+            scale=PHASE_WINDOW_HETERO_LOGSIGMA,
+            size=PHASE_WINDOW_HETERO_MODULES,
+        )
+    )
+    rphi0_i = np.exp(
+        rng.normal(
+            loc=0.0,
+            scale=PHASE_WINDOW_HETERO_LOGSIGMA,
+            size=PHASE_WINDOW_HETERO_MODULES,
+        )
+    )
+    raw_fraction_at_f0 = np.mean((radii <= ramp_i) & (radii <= rphi0_i))
+    hetero_scale = PHASE_WINDOW_N0 / max(raw_fraction_at_f0, 1e-12)
+    n_payload_hetero = np.zeros_like(freq_ratio)
+    for idx, f_ratio in enumerate(freq_ratio):
+        entrained = (radii <= ramp_i) & (radii <= (rphi0_i / f_ratio))
+        n_payload_hetero[idx] = hetero_scale * float(np.mean(entrained))
+
     csv_path = results_dir / "threshold_scaling_scan.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.writer(fh)
@@ -541,11 +572,15 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
                 "r_phase_over_r0",
                 "r_amp_over_r0",
                 "r_eff_over_r0",
-                "n_payload",
+                "n_payload_analytic",
+                "n_payload_heterogeneous",
                 "classical_baseline",
                 "leff_varrho_1",
                 "leff_varrho_10",
                 "leff_varrho_100",
+                "leff_hetero_varrho_1",
+                "leff_hetero_varrho_10",
+                "leff_hetero_varrho_100",
                 "uplift_frac_varrho_1",
                 "uplift_frac_varrho_10",
                 "uplift_frac_varrho_100",
@@ -560,10 +595,14 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
                     float(r_amp_over_r0[idx]),
                     float(r_eff_over_r0[idx]),
                     float(n_payload[idx]),
+                    float(n_payload_hetero[idx]),
                     classical_baseline,
                     float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[0]),
                     float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[1]),
                     float(n_payload[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[2]),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[0]),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[1]),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[2]),
                     float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[0])),
                     float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[1])),
                     float(local_load / ((summary["dimension"] - 1) * PHASE_WINDOW_REDUNDANCIES[2])),
@@ -596,22 +635,32 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
     colors = ["#4c956c", "#6c5ce7", "#b08968"]
     for color, redundancy in zip(colors, PHASE_WINDOW_REDUNDANCIES):
         leff = n_payload * local_load / redundancy
+        leff_hetero = n_payload_hetero * local_load / redundancy
         ax_scale.loglog(
             freq_ratio,
-            leff,
+            leff_hetero,
             color=color,
             lw=2.0,
             label=rf"$\varrho={int(redundancy)}$",
         )
+        ax_scale.loglog(
+            freq_ratio,
+            leff,
+            color=color,
+            lw=1.4,
+            ls="--",
+            alpha=0.8,
+        )
     ax_scale.set_xlabel(r"carrier frequency $f/f_0$")
     ax_scale.set_ylabel(r"effective payload load $\mathcal{L}_{\rm eff}$")
-    ax_scale.set_title(r"Ion-channel payload scaling")
+    ax_scale.set_title(r"Payload scaling: heterogeneous vs. analytic")
     ax_scale.invert_xaxis()
     ax_scale.text(
         0.05,
         0.08,
         rf"$L_{{\rm ion}}\approx {local_load:.2e}$" "\n"
-        rf"$N_0={int(PHASE_WINDOW_N0):d},\ s={PHASE_WINDOW_S:.0f},\ R_{{\rm amp}}/R_0={PHASE_WINDOW_RAMP_OVER_R0:.0f}$",
+        rf"$N_0={int(PHASE_WINDOW_N0):d},\ s={PHASE_WINDOW_S:.0f},\ R_{{\rm amp}}/R_0={PHASE_WINDOW_RAMP_OVER_R0:.0f}$" "\n"
+        r"solid: hetero field, dashed: analytic envelope",
         transform=ax_scale.transAxes,
         fontsize=8,
     )
