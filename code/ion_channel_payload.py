@@ -13,8 +13,10 @@ Outputs:
 - results/ion_channel_summary.json
 - results/ion_channel_scan.csv
 - results/ion_channel_sensitivity.csv
+- results/ion_channel_topology_sensitivity.csv
 - results/ion_payload_benchmarks.csv
 - results/threshold_scaling_scan.csv
+- results/threshold_scaling_sensitivity.csv
 - results/biological_anchor_points.csv
 - figures/biological_anchor_map.pdf
 - figures/biological_anchor_map.png
@@ -71,6 +73,8 @@ PHASE_WINDOW_HETERO_LOGSIGMA = 0.35
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
 ION_CHANNEL_SENSITIVITY_J_VALUES = [15.0, 20.0, 30.0, 40.0]
 ION_CHANNEL_SENSITIVITY_GAMMA_VALUES = [100.0, 150.0, 200.0, 250.0, 300.0]
+ION_CHANNEL_TOPOLOGY_DELTA_VALUES = [10.0, 15.0, 20.0]
+ION_CHANNEL_TOPOLOGY_JNNN_VALUES = [0.0, 5.0, 10.0]
 
 # Fallback legacy anchors, used only if the rebuilt photosynthetic summary
 # has not yet been generated.
@@ -100,13 +104,32 @@ LEGACY_ANCHORS = [
 ]
 
 
-def build_ion_channel_hamiltonian() -> np.ndarray:
-    """4x4 KcsA-like selectivity-filter Hamiltonian in cm^-1."""
-    h_cm = np.diag(ION_CHANNEL_SITE_ENERGIES_CM)
+def build_ion_channel_hamiltonian_with_params(
+    j_nn_cm: float,
+    inner_delta_cm: float = 15.0,
+    j_nnn_cm: float = 0.0,
+) -> np.ndarray:
+    """4x4 selectivity-filter Hamiltonian with simple topology controls."""
+    site_energies_cm = np.array([30.0, 30.0 + inner_delta_cm, 30.0 + inner_delta_cm, 30.0], dtype=np.float64)
+    h_cm = np.diag(site_energies_cm)
     for idx in range(3):
-        h_cm[idx, idx + 1] = ION_CHANNEL_J_NN_CM
-        h_cm[idx + 1, idx] = ION_CHANNEL_J_NN_CM
+        h_cm[idx, idx + 1] = j_nn_cm
+        h_cm[idx + 1, idx] = j_nn_cm
+    if j_nnn_cm > 0.0:
+        h_cm[0, 2] = j_nnn_cm
+        h_cm[2, 0] = j_nnn_cm
+        h_cm[1, 3] = j_nnn_cm
+        h_cm[3, 1] = j_nnn_cm
     return h_cm
+
+
+def build_ion_channel_hamiltonian() -> np.ndarray:
+    """Baseline 4x4 KcsA-like selectivity-filter Hamiltonian in cm^-1."""
+    return build_ion_channel_hamiltonian_with_params(
+        ION_CHANNEL_J_NN_CM,
+        inner_delta_cm=15.0,
+        j_nnn_cm=0.0,
+    )
 
 
 H_ION_CHANNEL = build_ion_channel_hamiltonian()
@@ -115,11 +138,7 @@ ION_CHANNEL_JMAX_CM = ION_CHANNEL_J_NN_CM
 
 def build_ion_channel_hamiltonian_with_coupling(j_nn_cm: float) -> np.ndarray:
     """4x4 KcsA-like selectivity-filter Hamiltonian with variable coupling."""
-    h_cm = np.diag(ION_CHANNEL_SITE_ENERGIES_CM)
-    for idx in range(3):
-        h_cm[idx, idx + 1] = j_nn_cm
-        h_cm[idx + 1, idx] = j_nn_cm
-    return h_cm
+    return build_ion_channel_hamiltonian_with_params(j_nn_cm, inner_delta_cm=15.0, j_nnn_cm=0.0)
 
 
 def kappa_ps_to_radfs(kappa_ps: float) -> float:
@@ -375,6 +394,44 @@ def compute_ion_channel_sensitivity_rows() -> list[dict[str, float]]:
     return rows
 
 
+def compute_ion_channel_topology_rows() -> list[dict[str, float]]:
+    """Sweep a small topology band around the baseline ion-channel anchor."""
+    rows: list[dict[str, float]] = []
+    for inner_delta_cm in ION_CHANNEL_TOPOLOGY_DELTA_VALUES:
+        for j_nnn_cm in ION_CHANNEL_TOPOLOGY_JNNN_VALUES:
+            h_cm = build_ion_channel_hamiltonian_with_params(
+                ION_CHANNEL_J_NN_CM,
+                inner_delta_cm=inner_delta_cm,
+                j_nnn_cm=j_nnn_cm,
+            )
+            rho0 = np.zeros((4, 4), dtype=complex)
+            rho0[ION_CHANNEL_INITIAL_SITE, ION_CHANNEL_INITIAL_SITE] = 1.0
+            rho = evolve_lindblad_sink(
+                h_cm,
+                ION_CHANNEL_BIO_GAMMA_CM,
+                ION_CHANNEL_TARGET_SITES,
+                ION_CHANNEL_KAPPA_PS,
+                rho0,
+                t_final_ps=GEOMETRY_READOUT_PS,
+                dt_fs=DT_FS,
+            )
+            rho_reg = regularize_density_matrix(rho)
+            angles_rad = np.sort(principal_angles(rho_reg))
+            theta_min_deg = float(np.degrees(angles_rad[0]))
+            chi = float(non_classicality_index(angles_rad))
+            rows.append(
+                {
+                    "inner_delta_cm": float(inner_delta_cm),
+                    "j_nnn_cm": float(j_nnn_cm),
+                    "gamma_over_j": float(ION_CHANNEL_BIO_GAMMA_CM / ION_CHANNEL_JMAX_CM),
+                    "theta_min_deg": theta_min_deg,
+                    "chi": chi,
+                    "local_load": float(local_nonclassical_load(chi, 4)),
+                }
+            )
+    return rows
+
+
 def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
     """Compute a reproducible ion-channel anchor summary."""
     gamma_over_j_values = np.logspace(-2, np.log10(30.0), SCAN_POINTS)
@@ -418,6 +475,9 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
     sensitivity_rows = compute_ion_channel_sensitivity_rows()
     sensitivity_theta = [row["theta_min_deg"] for row in sensitivity_rows]
     sensitivity_chi = [row["chi"] for row in sensitivity_rows]
+    topology_rows = compute_ion_channel_topology_rows()
+    topology_theta = [row["theta_min_deg"] for row in topology_rows]
+    topology_chi = [row["chi"] for row in topology_rows]
 
     summary = {
         "model": "KcsA-like selectivity filter",
@@ -446,6 +506,12 @@ def summarize_ion_channel() -> tuple[dict, list[dict[str, float]]]:
         "sensitivity_theta_min_deg_max": float(max(sensitivity_theta)),
         "sensitivity_chi_min": float(min(sensitivity_chi)),
         "sensitivity_chi_max": float(max(sensitivity_chi)),
+        "topology_delta_values_cm": ION_CHANNEL_TOPOLOGY_DELTA_VALUES,
+        "topology_j_nnn_values_cm": ION_CHANNEL_TOPOLOGY_JNNN_VALUES,
+        "topology_theta_min_deg_min": float(min(topology_theta)),
+        "topology_theta_min_deg_max": float(max(topology_theta)),
+        "topology_chi_min": float(min(topology_chi)),
+        "topology_chi_max": float(max(topology_chi)),
     }
     return summary, scan_rows
 
@@ -781,6 +847,30 @@ def write_ion_channel_sensitivity() -> None:
             fieldnames=[
                 "j_nn_cm",
                 "gamma_cm",
+                "gamma_over_j",
+                "theta_min_deg",
+                "chi",
+                "local_load",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_ion_channel_topology_sensitivity() -> None:
+    """Write a small topology sweep around the baseline ion-channel anchor."""
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    rows = compute_ion_channel_topology_rows()
+    csv_path = results_dir / "ion_channel_topology_sensitivity.csv"
+    with csv_path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(
+            fh,
+            fieldnames=[
+                "inner_delta_cm",
+                "j_nnn_cm",
                 "gamma_over_j",
                 "theta_min_deg",
                 "chi",
@@ -1129,6 +1219,7 @@ def main() -> None:
     write_outputs(summary, scan_rows)
     write_figure(summary, scan_rows)
     write_ion_channel_sensitivity()
+    write_ion_channel_topology_sensitivity()
     write_phase_window_scaling_outputs(summary)
     write_phase_window_sensitivity_outputs(summary)
     write_payload_benchmarks(summary)
@@ -1146,11 +1237,16 @@ def main() -> None:
         f"theta in [{summary['sensitivity_theta_min_deg_min']:.3f}, {summary['sensitivity_theta_min_deg_max']:.3f}] deg, "
         f"chi in [{summary['sensitivity_chi_min']:.3e}, {summary['sensitivity_chi_max']:.3e}]"
     )
+    print(
+        "topology sweep   : "
+        f"theta in [{summary['topology_theta_min_deg_min']:.3f}, {summary['topology_theta_min_deg_max']:.3f}] deg, "
+        f"chi in [{summary['topology_chi_min']:.3e}, {summary['topology_chi_max']:.3e}]"
+    )
     print(f"peak scan gamma/J: {summary['transport_scan_peak_gamma_over_jmax']:.3f}")
     print(f"peak scan eta    : {summary['transport_scan_peak_eta']:.6f}")
     print(f"peak interior?   : {summary['transport_scan_peak_interior']}")
     print("Wrote results/ion_channel_summary.json, results/ion_channel_scan.csv,")
-    print("results/{ion_channel_sensitivity,threshold_scaling_scan,threshold_scaling_sensitivity,ion_payload_benchmarks,biological_anchor_points}.csv,")
+    print("results/{ion_channel_sensitivity,ion_channel_topology_sensitivity,threshold_scaling_scan,threshold_scaling_sensitivity,ion_payload_benchmarks,biological_anchor_points}.csv,")
     print("and figures/{biological_anchor_map,carrier_payload_schematic,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
 
 

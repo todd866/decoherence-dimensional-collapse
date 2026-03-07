@@ -38,6 +38,20 @@
     89.22161298757165,
     89.91111710679547
   ],
+  "topology_chi_max": 0.00027703621433324075,
+  "topology_chi_min": 0.00021993128646652848,
+  "topology_delta_values_cm": [
+    10.0,
+    15.0,
+    20.0
+  ],
+  "topology_j_nnn_values_cm": [
+    0.0,
+    5.0,
+    10.0
+  ],
+  "topology_theta_min_deg_max": 88.76670459287985,
+  "topology_theta_min_deg_min": 88.54557176063284,
   "trace_after_bio_readout": 0.6991625278168943,
   "transport_scan_peak_eta": 0.6637082815005201,
   "transport_scan_peak_gamma_cm": 0.3,

@@ -70,6 +70,16 @@ $$
 1.53\times10^{-4}\le \chi \le 1.55\times10^{-3}.
 $$
 
+There is now a second, tighter robustness check at fixed `J_max = 30 cm^-1` and `γ_bio = 200 cm^-1`: the repo varies the inner-well asymmetry `Δ ∈ {10,15,20} cm^-1` and a next-nearest coupling `J_2 ∈ {0,5,10} cm^-1` in
+[results/ion_channel_topology_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_topology_sensitivity.csv).
+That keeps the payload point in a narrow band:
+$$
+88.55^\circ \le \theta_{\min} \le 88.77^\circ,
+\qquad
+2.20\times10^{-4}\le \chi \le 2.77\times10^{-4}.
+$$
+So the ion-channel anchor is not tied to one exact 4-site topology.
+
 Figure 1 is the proof-of-principle bridge: it places the rebuilt molecular payload anchors on one biological operating map and shows the rebuilt neural carrier proxy farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
 
 Section 4.3 is no longer only a placeholder. The rebuilt repo now includes a secondary protein payload anchor:

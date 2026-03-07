@@ -83,6 +83,19 @@ $$
 $$
 So the ion-channel anchor is parameter-sensitive, but not a one-point artifact.
 
+There is now also a small topology sweep in
+[results/ion_channel_topology_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_topology_sensitivity.csv).
+Holding `J_max = 30 cm^-1` and `γ_bio = 200 cm^-1` fixed, but varying the inner-well asymmetry
+`Δ ∈ {10,15,20} cm^-1` and a next-nearest coupling `J_2 ∈ {0,5,10} cm^-1`, keeps the biological-point geometry tightly clustered:
+
+$$
+88.55^\circ \le \theta_{\min} \le 88.77^\circ,
+\qquad
+2.20\times10^{-4}\le \chi \le 2.77\times10^{-4}.
+$$
+
+So the payload anchor is not tied to one exact 4-site chain topology.
+
 The generated summary files are:
 
 - [results/photosynthetic_anchor_points.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/photosynthetic_anchor_points.csv)
@@ -92,6 +105,7 @@ The generated summary files are:
 - [results/ion_channel_summary.json](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_summary.json)
 - [results/ion_channel_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_scan.csv)
 - [results/ion_channel_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_sensitivity.csv)
+- [results/ion_channel_topology_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_topology_sensitivity.csv)
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 - [results/threshold_scaling_scan.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_scan.csv)
 - [results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv)
@@ -350,6 +364,7 @@ This produces:
 - `results/ion_channel_summary.json`
 - `results/ion_channel_scan.csv`
 - `results/ion_channel_sensitivity.csv`
+- `results/ion_channel_topology_sensitivity.csv`
 - `results/ion_payload_benchmarks.csv`
 - `results/threshold_scaling_scan.csv`
 - `results/threshold_scaling_sensitivity.csv`
