@@ -43,6 +43,14 @@ The new manuscript uses that geometry to argue:
 2. Macroscopic neural oscillations are deep classical at carrier scale.
 3. Low-frequency waves can still support higher effective dimensionality by coordinating larger non-classical molecular payloads, with ion channels as the primary neural payload example.
 
+## Claim tiers
+
+- `theorem-level`: dimensional collapse, non-classicality index, extensive payload result under stated assumptions
+- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxy, phase-window bridge
+- `hypothesis-level`: low-frequency / high-dimensional biological intelligence architecture
+
+The paper’s claim is deliberately narrower than “brains are quantum.” It is that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and falsifiable.
+
 ## Ion-channel anchor
 
 The rebuilt repo now includes one concrete neural payload computation in
