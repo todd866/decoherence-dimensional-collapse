@@ -85,7 +85,7 @@ The generated summary files are:
 | PE545 | Proof of principle | Rebuilt from validated Hamiltonian | 7.88 | 89.02° | Independent photosynthetic confirmation of the same band |
 | Ion channel | Primary neural payload | Rebuilt computation | 6.67 | 88.55° | Fresh rebuilt-repo molecular anchor |
 | Protein microdomain | Secondary payload | Planned | — | — | Payload extension, not yet recomputed here |
-| Neural oscillation | Carrier scale | Theory | `≫1` | `→90°` | Deep-classical coordination process |
+| Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | Gamma proxy gives `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6` already at `γ/J_max = 50` |
 
 The new anchor map is the compact visual summary: FMO, PE545, and the rebuilt ion-channel point all sit in the same near-boundary band. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the ion-channel point then shows that a neural payload candidate can inhabit it too.
 
@@ -103,6 +103,23 @@ In local-load units `L = \chi(d^2-d)`, the rebuilt biological points give:
 - Ion channel: `L_bio ≈ 3.31×10^-3`
 
 That matters because it shows the ion-channel payload anchor is not being forced into a qualitatively different regime; it is already the same order as PE545.
+
+## Neural carrier proxy
+
+The rebuilt repo now also includes a reduced neural carrier computation in
+[code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py).
+
+For the synthetic gamma-band microcircuit:
+
+- `γ/J_max = 1`: `θ_min ≈ 89.43°`, `χ ≈ 3.29×10^-5`
+- `γ/J_max = 10`: `θ_min ≈ 89.74°`, `χ ≈ 5.58×10^-6`
+- `γ/J_max = 50`: `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6`
+
+That is the rebuilt carrier-side evidence for the paper’s split:
+
+$$
+\chi_{\mathrm{carrier}} \ll \chi_{\mathrm{payload}}.
+$$
 
 ## Main scaling objects
 
@@ -199,6 +216,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 - [build.sh](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/build.sh): local LaTeX build script
 - [code/photosynthetic_anchors.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/photosynthetic_anchors.py): reduced FMO/PE545 proof-of-principle computations
 - [code/ion_channel_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/ion_channel_payload.py): minimal ion-channel payload analysis
+- [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py): reduced neural carrier geometry proxy
 
 ## Build
 
@@ -224,6 +242,7 @@ This produces:
 - `results/ion_payload_benchmarks.csv`
 - `results/threshold_scaling_scan.csv`
 - `results/biological_anchor_points.csv`
+- `results/neural_carrier_proxy.csv`
 - `figures/biological_anchor_map.pdf`
 - `figures/ion_channel_anchor.pdf`
 - `figures/threshold_entrainment_scaling.pdf`

@@ -12,6 +12,10 @@ if [[ "${REBUILD_ANCHORS:-0}" == "1" || "${refresh_anchors}" == "1" || ! -f resu
   python3 code/ion_channel_payload.py
 fi
 
+if [[ "${REBUILD_ANCHORS:-0}" == "1" || ! -f results/neural_carrier_proxy.csv ]]; then
+  python3 code/neural_carrier_proxy.py
+fi
+
 pdflatex -interaction=nonstopmode paper.tex
 bibtex paper
 pdflatex -interaction=nonstopmode paper.tex
