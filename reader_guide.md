@@ -44,10 +44,11 @@ Read:
 6. Figure 2: ion-channel payload anchor
 7. Figure 3: carrier/payload schematic
 8. Figure 4: soft phase-coupling scaling schematic
-9. Table 2: payload benchmark table
-10. Section 5.1: Neural oscillations as carriers
-11. Table 3: rival predictions
-12. Table 4: operational measurement route
+9. Table 2: band-level bridge table
+10. Table 3: payload benchmark table
+11. Section 5.1: Neural oscillations as carriers
+12. Table 4: rival predictions
+13. Table 5: operational measurement route
 
 The ion-channel subsection now contains one actual rebuilt-repo anchor:
 
@@ -101,11 +102,13 @@ It now does one extra job that matters: the solid curves are a heterogeneous sof
 There is now also a parameter-band check behind that figure. The repo writes
 [results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv), which shows that the analytic bridge stays monotone across `s ∈ {1,2,3}`, `η ∈ {1,2,4}`, and `R_amp/R0 ∈ {2,4,8}`, while the heterogeneous 2D field check stays monotone across the corresponding `η` and `R_amp/R0` ranges. That matters because the low-`f` inversion is now robust to a real parameter band, not just one default bridge setting.
 
-Table 2 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
+Table 2 is the bridge object in compact numerical form: with `f0 = 40 Hz` as the gamma reference, the default heterogeneous bridge gives about `3.17×` payload gain at beta, `10.29×` at theta, and then smooth saturation through delta and infraslow as the amplitude ceiling takes over.
 
-Table 3 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
+Table 3 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
 
-Table 4 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
+Table 4 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
+
+Table 5 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
 
 Right after that, the paper now gives the minimal regression form of the wager:
 $$

@@ -377,6 +377,8 @@ The simulation is normalized so that $\widetilde N(f_0)=N_0$. The resulting payl
 
 A coarse sensitivity sweep makes that claim materially stronger. In the analytic bridge, varying $s\in\{1,2,3\}$, $\eta\in\{1,2,4\}$, and $R_{\mathrm{amp}}/R_0\in\{2,4,8\}$ keeps the low-frequency gain monotone in every case and produces gain factors between $6$ and $3.9\times10^3$ across the same $f/f_0=4\to0.25$ range. For the heterogeneous 2D field check (so $s=2$ is fixed by construction), varying $\eta$ and $R_{\mathrm{amp}}/R_0$ over the same ranges again keeps the gain monotone and yields factors between roughly $35$ and $325$. The exact magnitude is model-dependent, as it should be, but the qualitative inversion is not confined to the default choice $(s,\eta,R_{\mathrm{amp}}/R_0)=(2,2,4)$.
 
+The same bridge is easier to read when expressed in familiar carrier bands. Taking $f_0=40$\,Hz as a gamma-band reference, the default heterogeneous soft-field model gives about a $3.17\times$ coordinated-payload gain at beta ($20$\,Hz), a $10.29\times$ gain at theta ($6$\,Hz), and then smooth saturation through delta and infraslow frequencies as the amplitude ceiling takes over. So the present model does not predict an unlimited low-frequency divergence. It predicts a finite, saturating coordination advantage as the carrier slows.
+
 Using the rebuilt-repo ion-channel anchor makes the scale of the effect explicit. For the 4-site selectivity-filter model,
 \begin{equation}
 \label{eq:lion}
@@ -411,6 +413,24 @@ Thus the aggregate non-classical payload is extensive in $N$, but the fractional
 \frac{1.10\times 10^{-3}}{\varrho},
 \end{equation}
 so the toy bridge says two things simultaneously: the per-channel effect is small, and the absolute payload load still scales linearly with the number of entrained channels.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+Band & $f$ (Hz) & $f/f_0$ & $R_{\phi}/R_0$ & $\widetilde N_{\mathrm{hetero}}/N_0$ & $\mathcal{L}_{\mathrm{eff}}^{\mathrm{hetero}}(\varrho=10)$ \\
+\midrule
+Gamma & $40$ & $1.00$ & $1.00$ & $1.00$ & $3.31$ \\
+Beta & $20$ & $0.50$ & $2.00$ & $3.17$ & $10.51$ \\
+Theta & $6$ & $0.15$ & $6.67$ & $10.29$ & $34.09$ \\
+Delta & $2$ & $0.05$ & $20.0$ & $13.28$ & $44.02$ \\
+Infraslow & $0.5$ & $0.0125$ & $80.0$ & $13.78$ & $45.68$ \\
+\bottomrule
+\end{tabular}
+\caption{Band-level interpretation of the default heterogeneous soft phase-coupling bridge, using the rebuilt ion-channel anchor with $N_0=10^4$, $R_{\mathrm{amp}}/R_0=4$, $\eta=2$, and redundancy factor $\varrho=10$. The gain saturates smoothly below theta because the amplitude ceiling, not phase lag, becomes the limiting scale.}
+\label{tab:band-bridge}
+\end{table}
 
 \begin{table}[t]
 \centering

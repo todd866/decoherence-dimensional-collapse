@@ -70,6 +70,13 @@ PHASE_WINDOW_HETERO_SEED = 7
 PHASE_WINDOW_HETERO_MODULES = 12000
 PHASE_WINDOW_HETERO_DISC_RADIUS_OVER_R0 = 6.0
 PHASE_WINDOW_HETERO_LOGSIGMA = 0.35
+CARRIER_BAND_ROWS = [
+    ("Gamma", 40.0, 1.0),
+    ("Beta", 20.0, 0.5),
+    ("Theta", 6.0, 0.15),
+    ("Delta", 2.0, 0.05),
+    ("Infraslow", 0.5, 0.0125),
+]
 BENCHMARK_N_VALUES = [1.0e3, 1.0e4, 1.0e5]
 ION_CHANNEL_SENSITIVITY_J_VALUES = [15.0, 20.0, 30.0, 40.0]
 ION_CHANNEL_SENSITIVITY_GAMMA_VALUES = [100.0, 150.0, 200.0, 250.0, 300.0]
@@ -592,14 +599,15 @@ def write_figure(summary: dict, scan_rows: list[dict[str, float]]) -> None:
     plt.close(fig)
 
 
-def compute_soft_bridge_curves(
+def compute_soft_bridge_values(
+    freq_ratio: np.ndarray,
     *,
     s_dim: float,
     ramp_over_r0: float,
     eta_soft: float,
-) -> dict[str, np.ndarray | float]:
-    """Compute analytic and heterogeneous soft bridge curves for one parameter set."""
-    freq_ratio = np.logspace(np.log10(0.25), np.log10(4.0), 300)
+) -> dict[str, np.ndarray]:
+    """Compute analytic and heterogeneous soft bridge values on a chosen frequency grid."""
+    freq_ratio = np.asarray(freq_ratio, dtype=np.float64)
 
     r_phase_over_r0 = freq_ratio ** (-1.0)
     r_amp_over_r0 = np.full_like(freq_ratio, ramp_over_r0)
@@ -637,11 +645,34 @@ def compute_soft_bridge_curves(
         "r_eff_over_r0": r_eff_over_r0,
         "n_payload_analytic": n_payload,
         "n_payload_heterogeneous": n_payload_hetero,
-        "analytic_gain_low_over_high": float(n_payload[0] / n_payload[-1]),
-        "hetero_gain_low_over_high": float(n_payload_hetero[0] / n_payload_hetero[-1]),
-        "monotone_analytic": float(np.all(np.diff(n_payload) <= 1e-9)),
-        "monotone_heterogeneous": float(np.all(np.diff(n_payload_hetero) <= 1e-9)),
     }
+
+
+def compute_soft_bridge_curves(
+    *,
+    s_dim: float,
+    ramp_over_r0: float,
+    eta_soft: float,
+) -> dict[str, np.ndarray | float]:
+    """Compute analytic and heterogeneous soft bridge curves for one parameter set."""
+    freq_ratio = np.logspace(np.log10(0.25), np.log10(4.0), 300)
+    values = compute_soft_bridge_values(
+        freq_ratio,
+        s_dim=s_dim,
+        ramp_over_r0=ramp_over_r0,
+        eta_soft=eta_soft,
+    )
+    n_payload = values["n_payload_analytic"]
+    n_payload_hetero = values["n_payload_heterogeneous"]
+    values.update(
+        {
+            "analytic_gain_low_over_high": float(n_payload[0] / n_payload[-1]),
+            "hetero_gain_low_over_high": float(n_payload_hetero[0] / n_payload_hetero[-1]),
+            "monotone_analytic": float(np.all(np.diff(n_payload) <= 1e-9)),
+            "monotone_heterogeneous": float(np.all(np.diff(n_payload_hetero) <= 1e-9)),
+        }
+    )
+    return values
 
 
 def write_phase_window_sensitivity_outputs(summary: dict) -> None:
@@ -831,6 +862,64 @@ def write_phase_window_scaling_outputs(summary: dict) -> None:
     fig.savefig(figures_dir / "threshold_entrainment_scaling.pdf", bbox_inches="tight")
     fig.savefig(figures_dir / "threshold_entrainment_scaling.png", dpi=200, bbox_inches="tight")
     plt.close(fig)
+
+
+def write_carrier_band_outputs(summary: dict) -> None:
+    """Write a compact band-level bridge summary for gamma/beta/theta/delta."""
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    local_load = local_nonclassical_load(summary["chi_bio"], summary["dimension"])
+    freq_ratio = np.array([row[2] for row in CARRIER_BAND_ROWS], dtype=np.float64)
+    values = compute_soft_bridge_values(
+        freq_ratio,
+        s_dim=PHASE_WINDOW_S,
+        ramp_over_r0=PHASE_WINDOW_RAMP_OVER_R0,
+        eta_soft=PHASE_WINDOW_SOFT_ETA,
+    )
+
+    n_payload = values["n_payload_analytic"]
+    n_payload_hetero = values["n_payload_heterogeneous"]
+    n_payload_ref = float(n_payload[0])
+    n_payload_hetero_ref = float(n_payload_hetero[0])
+
+    csv_path = results_dir / "carrier_band_bridge.csv"
+    with csv_path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(
+            [
+                "band",
+                "frequency_hz",
+                "f_over_f0",
+                "r_phase_over_r0",
+                "r_eff_over_r0",
+                "n_payload_soft_analytic",
+                "n_payload_soft_heterogeneous",
+                "n_payload_rel_analytic",
+                "n_payload_rel_heterogeneous",
+                "leff_hetero_varrho_1",
+                "leff_hetero_varrho_10",
+                "leff_hetero_varrho_100",
+            ]
+        )
+        for idx, (band, frequency_hz, f_ratio) in enumerate(CARRIER_BAND_ROWS):
+            writer.writerow(
+                [
+                    band,
+                    frequency_hz,
+                    float(f_ratio),
+                    float(values["r_phase_over_r0"][idx]),
+                    float(values["r_eff_over_r0"][idx]),
+                    float(n_payload[idx]),
+                    float(n_payload_hetero[idx]),
+                    float(n_payload[idx] / n_payload_ref),
+                    float(n_payload_hetero[idx] / n_payload_hetero_ref),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[0]),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[1]),
+                    float(n_payload_hetero[idx] * local_load / PHASE_WINDOW_REDUNDANCIES[2]),
+                ]
+            )
 
 
 def write_ion_channel_sensitivity() -> None:
@@ -1232,6 +1321,7 @@ def main() -> None:
     write_ion_channel_topology_sensitivity()
     write_phase_window_scaling_outputs(summary)
     write_phase_window_sensitivity_outputs(summary)
+    write_carrier_band_outputs(summary)
     write_payload_benchmarks(summary)
     write_biological_anchor_outputs(summary)
     write_carrier_payload_schematic()
@@ -1256,7 +1346,7 @@ def main() -> None:
     print(f"peak scan eta    : {summary['transport_scan_peak_eta']:.6f}")
     print(f"peak interior?   : {summary['transport_scan_peak_interior']}")
     print("Wrote results/ion_channel_summary.json, results/ion_channel_scan.csv,")
-    print("results/{ion_channel_sensitivity,ion_channel_topology_sensitivity,threshold_scaling_scan,threshold_scaling_sensitivity,ion_payload_benchmarks,biological_anchor_points}.csv,")
+    print("results/{ion_channel_sensitivity,ion_channel_topology_sensitivity,threshold_scaling_scan,threshold_scaling_sensitivity,carrier_band_bridge,ion_payload_benchmarks,biological_anchor_points}.csv,")
     print("and figures/{biological_anchor_map,carrier_payload_schematic,ion_channel_anchor,threshold_entrainment_scaling}.{pdf,png}")
 
 

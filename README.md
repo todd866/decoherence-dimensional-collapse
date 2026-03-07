@@ -260,6 +260,17 @@ This is not a fitted cortical law. It is the first explicit model in the rebuilt
 
 The bridge figure now also includes a heterogeneous soft-field check: distributed amplitude scales and phase tolerances are simulated over a 2D payload field and normalized to the same baseline at `f = f0`. The low-`f` advantage survives that heterogeneity rather than depending on a single hard cutoff.
 
+The rebuilt repo now also writes a band-level bridge summary in
+[results/carrier_band_bridge.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/carrier_band_bridge.csv),
+using `f0 = 40 Hz` as the gamma reference. Under the default heterogeneous soft-field bridge:
+
+- beta (`20 Hz`) gives about a `3.17×` payload gain over gamma
+- theta (`6 Hz`) gives about a `10.29×` payload gain
+- delta (`2 Hz`) gives about a `13.28×` payload gain
+- infraslow (`0.5 Hz`) gives about a `13.78×` payload gain
+
+So the low-frequency advantage in the rebuilt bridge is finite and saturating, not an unbounded divergence.
+
 That statement is now backed by an explicit bridge sensitivity sweep in
 [results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv):
 
@@ -332,6 +343,7 @@ So the rebuilt draft is making a sober claim: the per-module uplift is small, bu
 
 The manuscript now includes a compact benchmark table and the same numbers are written to:
 
+- [results/carrier_band_bridge.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/carrier_band_bridge.csv)
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 
 ![Soft phase-coupling scaling](figures/threshold_entrainment_scaling.png)
@@ -373,6 +385,7 @@ This produces:
 - `results/ion_channel_sensitivity.csv`
 - `results/ion_channel_topology_sensitivity.csv`
 - `results/ion_payload_benchmarks.csv`
+- `results/carrier_band_bridge.csv`
 - `results/threshold_scaling_scan.csv`
 - `results/threshold_scaling_sensitivity.csv`
 - `results/biological_anchor_points.csv`
