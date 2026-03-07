@@ -13,12 +13,13 @@ if [[ "${REBUILD_ANCHORS:-0}" == "1" || ! -f results/protein_microdomain_summary
   refresh_anchors=1
 fi
 
-if [[ "${REBUILD_ANCHORS:-0}" == "1" || "${refresh_anchors}" == "1" || ! -f results/ion_channel_summary.json || ! -f results/biological_anchor_points.csv ]]; then
-  python3 code/ion_channel_payload.py
-fi
-
 if [[ "${REBUILD_ANCHORS:-0}" == "1" || ! -f results/neural_carrier_proxy.csv ]]; then
   python3 code/neural_carrier_proxy.py
+  refresh_anchors=1
+fi
+
+if [[ "${REBUILD_ANCHORS:-0}" == "1" || "${refresh_anchors}" == "1" || ! -f results/ion_channel_summary.json || ! -f results/biological_anchor_points.csv ]]; then
+  python3 code/ion_channel_payload.py
 fi
 
 pdflatex -interaction=nonstopmode paper.tex

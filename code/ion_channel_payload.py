@@ -967,30 +967,38 @@ def load_protein_microdomain_anchor(root: Path) -> dict[str, str | float | int] 
     }
 
 
-def load_neural_carrier_proxy_anchor(root: Path) -> dict[str, str | float | int] | None:
-    """Load the rebuilt neural carrier proxy anchor if present."""
+def load_neural_carrier_proxy_anchors(root: Path) -> list[dict[str, str | float | int]]:
+    """Load rebuilt neural carrier proxy anchors if present."""
     csv_path = root / "results" / "neural_carrier_proxy.csv"
     if not csv_path.exists():
-        return None
+        return []
 
     with csv_path.open("r", encoding="utf-8", newline="") as fh:
         rows = list(csv.DictReader(fh))
 
     if not rows:
-        return None
+        return []
 
-    row = max(rows, key=lambda entry: float(entry["gamma_over_j"]))
-    return {
-        "system": "Carrier proxy",
-        "role": "carrier-proxy",
-        "status": "rebuilt-proxy",
-        "dimension": 10,
-        "collapse": "99->9",
-        "gamma_bio_over_jmax": float(row["gamma_over_j"]),
-        "theta_min_bio_deg": float(row["theta_min_deg"]),
-        "theta_reference": "proxy point",
-        "provenance": "rebuilt-repo",
-    }
+    anchors: list[dict[str, str | float | int]] = []
+    for model in sorted({row["model"] for row in rows}):
+        model_rows = [row for row in rows if row["model"] == model]
+        anchor_row = max(model_rows, key=lambda entry: float(entry["gamma_over_j"]))
+        dimension = int(anchor_row.get("dimension", 10))
+        collapse = f"{dimension * dimension - 1}->{dimension - 1}"
+        anchors.append(
+            {
+                "system": f"Carrier ({model})",
+                "role": "carrier-proxy",
+                "status": "rebuilt-proxy",
+                "dimension": dimension,
+                "collapse": collapse,
+                "gamma_bio_over_jmax": float(anchor_row["gamma_over_j"]),
+                "theta_min_bio_deg": float(anchor_row["theta_min_deg"]),
+                "theta_reference": "proxy point",
+                "provenance": "rebuilt-repo",
+            }
+        )
+    return anchors
 
 
 def anchor_rows(summary: dict) -> list[dict[str, str | float | int]]:
@@ -1013,9 +1021,7 @@ def anchor_rows(summary: dict) -> list[dict[str, str | float | int]]:
     protein_row = load_protein_microdomain_anchor(root)
     if protein_row is not None:
         rows.append(protein_row)
-    carrier_row = load_neural_carrier_proxy_anchor(root)
-    if carrier_row is not None:
-        rows.append(carrier_row)
+    rows.extend(load_neural_carrier_proxy_anchors(root))
     return rows
 
 
@@ -1054,7 +1060,8 @@ def write_biological_anchor_outputs(summary: dict) -> None:
         "PE545": {"color": "#d97904", "marker": "s"},
         "Ion channel": {"color": "#4c956c", "marker": "D"},
         "Protein mid-fold": {"color": "#6c757d", "marker": "^"},
-        "Carrier proxy": {"color": "#7b2cbf", "marker": "P"},
+        "Carrier (Synthetic gamma)": {"color": "#7b2cbf", "marker": "P"},
+        "Carrier (Laminar E/I)": {"color": "#9d4edd", "marker": "X"},
     }
 
     ax.axhspan(87.0, 90.0, color="#e8f1f2", alpha=0.9, zorder=0)
@@ -1088,11 +1095,11 @@ def write_biological_anchor_outputs(summary: dict) -> None:
     ax.set_ylim(86.9, 90.2)
     ax.set_xlabel(r"Biological ratio $\gamma_{\mathrm{bio}}/J_{\max}$")
     ax.set_ylabel(r"Minimum angle at bio point $\theta_{\min}^{\rm bio}$")
-    ax.set_title("Payload anchors cluster left; carrier proxy sits deeper classical")
+    ax.set_title("Payload anchors cluster left; carrier proxies sit deeper classical")
     ax.text(
         0.03,
         0.06,
-        "Left cluster: rebuilt molecular payloads\nRight point: rebuilt neural carrier proxy",
+        "Left cluster: rebuilt molecular payloads\nRight points: rebuilt neural carrier proxies",
         transform=ax.transAxes,
         fontsize=8,
         bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "#cccccc"},

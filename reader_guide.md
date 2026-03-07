@@ -80,7 +80,7 @@ $$
 $$
 So the ion-channel anchor is not tied to one exact 4-site topology.
 
-Figure 1 is the proof-of-principle bridge: it places the rebuilt molecular payload anchors on one biological operating map and shows the rebuilt neural carrier proxy farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
+Figure 1 is the proof-of-principle bridge: it places the rebuilt molecular payload anchors on one biological operating map and shows two rebuilt neural carrier proxies farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
 
 Section 4.3 is no longer only a placeholder. The rebuilt repo now includes a secondary protein payload anchor:
 $$
@@ -113,14 +113,14 @@ D_{\mathrm{obs}}=\beta_0+\beta_1\log \widetilde N+\beta_2 H_{\mathrm{payload}}+\
 $$
 That matters because it reduces the disagreement to one coefficient test. If `β4` stays dominant after the payload and carrier controls, this paper loses.
 
-Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` already at `γ/J_max = 50`, so the carrier/payload split is no longer just verbal.
+Section 5.1 now also has two rebuilt carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the layered E/I carrier proxy gives `θ_min ≈ 89.66°` and `χ ≈ 1.11×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
 
-Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxy is already down at `χ ~ 10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload.”
+Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest rebuilt-repo evidence for “classical carrier, non-classical payload.”
 
 ## Claim tiers
 
 - `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, one fresh ion-channel payload anchor from the rebuilt repo, and a soft phase-coupling bridge linking carrier scale to payload scale
+- `model-based`: rebuilt photosynthetic proof-of-principle anchors from validated Hamiltonians, fresh ion-channel and protein payload anchors from the rebuilt repo, two reduced carrier proxies, and a soft phase-coupling bridge linking carrier scale to payload scale
 - `hypothesis`: low-frequency/high-dimensional intelligence architecture
 
 ## What is deliberately not claimed

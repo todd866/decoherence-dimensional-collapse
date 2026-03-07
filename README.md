@@ -46,7 +46,7 @@ The new manuscript uses that geometry to argue:
 ## Claim tiers
 
 - `theorem-level`: dimensional collapse, non-classicality index, extensive payload result under stated assumptions
-- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxy, soft phase-coupling bridge
+- `model-based`: rebuilt photosynthetic anchors, ion-channel payload anchor, protein microdomain payload anchor, reduced neural carrier proxies, soft phase-coupling bridge
 - `hypothesis-level`: low-frequency / high-dimensional biological intelligence architecture
 
 The paper’s claim is deliberately narrower than “brains are quantum.” It is that a classical-carrier/non-classical-payload architecture is mathematically coherent, biologically anchored, and falsifiable.
@@ -129,7 +129,7 @@ The generated summary files are:
 | Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | `3.66×10^-4` | Fresh secondary payload anchor |
 | Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | `3.72×10^-6` | Gamma proxy gives `θ_min ≈ 89.78°` already at `γ/J_max = 50` |
 
-The new anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the rebuilt ion-channel point, and the rebuilt protein mid-fold point --- all sit in the same near-boundary band, while the rebuilt neural carrier proxy is already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the rebuilt payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
+The new anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the rebuilt ion-channel point, and the rebuilt protein mid-fold point --- all sit in the same near-boundary band, while two rebuilt neural carrier proxies are already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the rebuilt payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
 
 The rebuilt repo now also includes one secondary non-ion payload anchor in
 [code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py).
@@ -151,9 +151,10 @@ The carrier/payload split is also already quantitative in the rebuilt outputs:
 - PE545 payload: `χ ≈ 8.80×10^-5`
 - Ion-channel payload: `χ ≈ 2.76×10^-4`
 - Protein mid-fold payload: `χ ≈ 3.66×10^-4`
-- Gamma-carrier proxy at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
+- Synthetic gamma carrier at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
+- Laminar E/I carrier at `γ/J_max = 50`: `χ ≈ 1.11×10^-5`
 
-So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while the carrier proxy is already orders of magnitude closer to the classical limit.
+So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while both carrier proxies are already materially closer to the classical limit.
 
 ## What would falsify this
 
@@ -180,9 +181,9 @@ In local-load units `L = \chi(d^2-d)`, the rebuilt biological points give:
 
 That matters because it shows the ion-channel payload anchor is not being forced into a qualitatively different regime; it is already the same order as PE545.
 
-## Neural carrier proxy
+## Neural carrier proxies
 
-The rebuilt repo now also includes a reduced neural carrier computation in
+The rebuilt repo now also includes reduced neural carrier computations in
 [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py).
 
 For the synthetic gamma-band microcircuit:
@@ -191,13 +192,19 @@ For the synthetic gamma-band microcircuit:
 - `γ/J_max = 10`: `θ_min ≈ 89.74°`, `χ ≈ 5.58×10^-6`
 - `γ/J_max = 50`: `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6`
 
+For the layered E/I carrier proxy:
+
+- `γ/J_max = 1`: `θ_min ≈ 89.34°`, `χ ≈ 5.52×10^-5`
+- `γ/J_max = 10`: `θ_min ≈ 89.64°`, `χ ≈ 1.32×10^-5`
+- `γ/J_max = 50`: `θ_min ≈ 89.66°`, `χ ≈ 1.11×10^-5`
+
 That is the rebuilt carrier-side evidence for the paper’s split:
 
 $$
 \chi_{\mathrm{carrier}} \ll \chi_{\mathrm{payload}}.
 $$
 
-At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `74×` smaller than the ion-channel payload `χ` at its biological point.
+At the conservative proxy point `γ/J_max = 50`, the carrier `χ` is already about `25×` to `74×` smaller than the ion-channel payload `χ` at its biological point.
 
 ## Main scaling objects
 
@@ -338,7 +345,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 - [code/photosynthetic_anchors.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/photosynthetic_anchors.py): reduced FMO/PE545 proof-of-principle computations
 - [code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py): illustrative protein mid-fold payload anchor
 - [code/ion_channel_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/ion_channel_payload.py): minimal ion-channel payload analysis
-- [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py): reduced neural carrier geometry proxy
+- [code/neural_carrier_proxy.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/neural_carrier_proxy.py): reduced neural carrier geometry proxies
 
 ## Build
 
