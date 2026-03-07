@@ -18,8 +18,9 @@ Read:
 2. Section 1: Introduction
 3. Section 3: Carrier-Payload Architecture
 4. Section 5.3: minimal phase-window carrier model
-5. Section 5: Low-Frequency Coordination and Intelligence
-6. Section 6: Discussion
+5. Section 5.4: rival predictions table
+6. Section 5: Low-Frequency Coordination and Intelligence
+7. Section 6: Discussion
 
 ### If you want the geometry
 
@@ -44,6 +45,7 @@ Read:
 7. Figure 3: phase-window scaling schematic
 8. Table 2: payload benchmark table
 9. Section 5.1: Neural oscillations as carriers
+10. Table 3: rival predictions
 
 The ion-channel subsection now contains one actual rebuilt-repo anchor:
 
@@ -66,7 +68,7 @@ $$
 1.53\times10^{-4}\le \chi \le 1.55\times10^{-3}.
 $$
 
-Figure 1 is the proof-of-principle bridge: it places FMO, PE545, and the rebuilt ion-channel point on the same biological operating map, making the near-boundary band visible at a glance.
+Figure 1 is the proof-of-principle bridge: it places the rebuilt molecular payload anchors on one biological operating map and shows the rebuilt neural carrier proxy farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
 
 Section 4.3 is no longer only a placeholder. The rebuilt repo now includes a secondary protein payload anchor:
 $$
@@ -83,6 +85,8 @@ Figure 3 is the bridge object: it makes the low-frequency claim explicit in one 
 It now does one extra job that matters: the solid curves are a heterogeneous payload-field simulation, while the dashed curves are the analytic phase-window envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
 
 Table 2 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
+
+Table 3 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
 
 Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` already at `γ/J_max = 50`, so the carrier/payload split is no longer just verbal.
 

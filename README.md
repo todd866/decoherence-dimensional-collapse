@@ -104,7 +104,7 @@ The generated summary files are:
 | Protein mid-fold | Secondary payload | Rebuilt computation | 7.69 | 88.21° | Fresh secondary payload anchor |
 | Neural oscillation | Carrier scale | Rebuilt proxy + theory | `≫1` | `→90°` | Gamma proxy gives `θ_min ≈ 89.78°`, `χ ≈ 3.72×10^-6` already at `γ/J_max = 50` |
 
-The new anchor map is the compact visual summary: FMO, PE545, and the rebuilt ion-channel point all sit in the same near-boundary band. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the ion-channel point then shows that a neural payload candidate can inhabit it too.
+The new anchor map is the compact visual summary. The molecular payload anchors --- FMO, PE545, the rebuilt ion-channel point, and the rebuilt protein mid-fold point --- all sit in the same near-boundary band, while the rebuilt neural carrier proxy is already pushed rightward toward the classical limit. That is the concrete reason photosynthesis remains in the paper. It is the proof of principle that functional biology can inhabit this regime, and the rebuilt payload anchors then show that neural-relevant molecular candidates can inhabit it too without collapsing the carrier/payload distinction.
 
 The rebuilt repo now also includes one secondary non-ion payload anchor in
 [code/protein_microdomain_payload.py](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/code/protein_microdomain_payload.py).
@@ -129,6 +129,16 @@ The carrier/payload split is also already quantitative in the rebuilt outputs:
 - Gamma-carrier proxy at `γ/J_max = 50`: `χ ≈ 3.72×10^-6`
 
 So the fresh repo now shows the separation the paper is arguing for: payload anchors sit in a small-but-nonzero non-classical band, while the carrier proxy is already orders of magnitude closer to the classical limit.
+
+## What would falsify this
+
+The paper is not trying to win by rhetoric. It makes a direct empirical wager against a frequency-as-dimensionality view:
+
+- if measured dimensionality tracks carrier frequency after controlling for entrained payload size and payload diversity, this paper is wrong
+- if preserving large-scale carrier coherence while reducing available payload sites leaves dimensionality mostly unchanged, this paper is wrong
+- if low-frequency broad-coordination states never exceed high-frequency local-access states once payload size is accounted for, this paper is wrong
+
+That contrast is stated explicitly in the manuscript's rival-predictions table.
 
 The reduced rebuilt-repo photosynthesis path now also computes the optimum-point geometry:
 

@@ -199,7 +199,7 @@ Corollary~\ref{cor:lowf} is the formal version of the paper's headline thesis. L
 
 Photosynthetic exciton transport is the cleanest biological proof of principle because the quantum-to-classical tradeoff is already functionally established \cite{engel2007evidence,mohseni2008environment,plenio2008dephasing,rebentrost2009environment,cao2020quantum}. In the reduced rebuilt-repo calculations based on the validated Hamiltonians of Adolphs--Renger and Novoderezhkin \cite{adolphs2006proteins,novoderezhkin2010excitation}, the transport optimum occurs in a near-classical regime rather than at maximal coherence. Averaging over the two standard initial-site choices, FMO gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 1.53$ with $\theta_{\min}^{\mathrm{opt}}\approx 87.96^\circ$, while PE545 gives $\gamma_{\mathrm{opt}}/J_{\max}\approx 7.87$ with $\theta_{\min}^{\mathrm{opt}}\approx 89.02^\circ$. At the biological operating point, the rebuilt scans give $\theta_{\min}^{\mathrm{bio}}\approx 87.67^\circ$ (FMO) and $89.02^\circ$ (PE545). In local-load units $L=\chi(d^2-d)$, those same biological points correspond to $L_{\mathrm{FMO}}^{\mathrm{bio}}\approx 2.28\times10^{-2}$ and $L_{\mathrm{PE545}}^{\mathrm{bio}}\approx 4.93\times10^{-3}$. This is exactly the regime the present framework is built to describe: biologically relevant function with $\chi>0$ but principal angles already close to $\pi/2$.
 
-The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, show that the rebuilt ion-channel point lands in the same geometric band as the rebuilt photosynthetic proof-of-principle calculations. The comparison is not only angular: the ion-channel local load $L_{\mathrm{ion}}\approx 3.31\times10^{-3}$ is of the same order as PE545 at the biological point, so the neural payload anchor is not being placed in a wholly alien regime.
+The role of photosynthesis in this paper is strategic. It shows that the near-boundary regime is not empty rhetoric. Biology can already be shown to function there. That makes it plausible that other molecular biological systems may also carry small but nonzero local loads. Table~\ref{tab:anchors} and Figure~\ref{fig:anchor-map} summarize the current anchor set and, just as importantly, show the split the paper needs: rebuilt molecular payload anchors cluster in the same near-boundary band as the rebuilt photosynthetic proof-of-principle calculations, while the rebuilt neural carrier proxy already sits farther right and closer to the classical limit. The comparison is not only angular: the ion-channel local load $L_{\mathrm{ion}}\approx 3.31\times10^{-3}$ is of the same order as PE545 at the biological point, so the neural payload anchor is not being placed in a wholly alien regime.
 
 \begin{table}[t]
 \centering
@@ -215,7 +215,7 @@ Prot.\ microd. & Payload ext. & Fresh & 7.69 & $88.21^\circ$ & Fresh secondary p
 Neural oscillation & Carrier & Proxy & 50 & $89.78^\circ$ & Rebuilt gamma-band carrier proxy, already near classical. \\
 \bottomrule
 \end{tabularx}
-\caption{Anchor systems used in the present draft. FMO, PE545, and the ion-channel point are all computed in the rebuilt repo, with the photosynthetic models reduced to the quantities this draft actually needs: biological-point and transport-optimum geometry from validated Hamiltonians. The neural row reports the rebuilt carrier proxy at $\gamma/J_{\max}=50$ rather than the true biological limit $\gamma_{\mathrm{bio}}/J_{\max}\gg 1$; the latter only pushes the carrier further toward the classical limit.}
+\caption{Anchor systems used in the present draft. All rows are computed in the rebuilt repo. The photosynthetic models are reduced to the quantities this draft actually needs: biological-point and transport-optimum geometry from validated Hamiltonians. The neural row reports the rebuilt carrier proxy at $\gamma/J_{\max}=50$ rather than the true biological limit $\gamma_{\mathrm{bio}}/J_{\max}\gg 1$; the latter only pushes the carrier further toward the classical limit.}
 \label{tab:anchors}
 \end{table}
 
@@ -224,7 +224,7 @@ The table is doing more work than a simple operating-point list. In $\chi$-space
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\linewidth]{biological_anchor_map.pdf}
-\caption{Biological operating points for the present molecular anchors, all computed in the rebuilt repo. FMO, PE545, the ion-channel point, and the protein mid-fold point all lie in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. Photosynthesis therefore serves its intended role in the rebuilt draft: it is the proof of principle that functional biology can live in a near-classical but non-classical regime, while the ion-channel and protein anchors show that neural-relevant molecular payload candidates can inhabit the same geometric band.}
+\caption{Biological operating points for the rebuilt anchor set. The molecular payload anchors --- FMO, PE545, the ion-channel point, and the protein mid-fold point --- cluster in the same near-boundary band, with $\theta_{\min}^{\mathrm{bio}}$ between roughly $87.7^\circ$ and $89.0^\circ$. The rebuilt neural carrier proxy sits farther right at $\gamma/J_{\max}=50$ and closer to the classical limit. The visual split is therefore the paper's central one: functional or candidate payload systems remain small-but-nonzero in $\chi$, while the carrier is already substantially more classical on the same geometry map.}
 \label{fig:anchor-map}
 \end{figure}
 
@@ -420,6 +420,24 @@ The carrier-payload view yields direct predictions:
 \item If low-frequency rhythms have larger phase-tolerant coordination radii, then the coordinated dimensionality should scale with entrained territory size as in Proposition~\ref{prop:threshold-scaling}, not with frequency alone.
 \item The right computational bottleneck is not whether classical surrogates exist in principle, but how expensive it is to preserve the effective payload $\mathcal{L}_{\mathrm{eff}}$ rather than projecting it away, even when the fractional uplift $\Phi$ is modest.
 \end{enumerate}
+
+These predictions are useful only if they are contrasted with the position the paper is trying to replace. Table~\ref{tab:rival-predictions} states that contrast in the sharpest operational form available in the present draft.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.2cm}YY@{}}
+\toprule
+Observable or manipulation & Frequency-as-dimensionality expectation & Carrier-payload expectation \\
+\midrule
+Cross-condition variation in measured dimensionality & Dimensionality should increase primarily with carrier frequency or burstiness. & Dimensionality should increase primarily with entrained payload size and payload diversity, even when the carrier is slower. \\
+Hold large-scale carrier coherence fixed while reducing available payload sites or payload diversity & Only modest changes in dimensionality are expected if the carrier spectrum is preserved. & Effective dimensionality should fall because the payload, not the carrier frequency, is where state-space richness resides. \\
+Compare low-frequency broad-coordination states with high-frequency local-access states & High-frequency states should appear more dimensional because they are spectrally faster. & Low-frequency states can appear more dimensional when they coordinate a larger payload ensemble, even if high-frequency states remain better markers of local access or routing. \\
+\bottomrule
+\end{tabularx}
+\caption{Rival empirical expectations. The paper does not deny that high-frequency bursts can correlate with flexible access or gating. It denies the stronger inference that carrier frequency itself is the primary locus of dimensionality.}
+\label{tab:rival-predictions}
+\end{table}
 
 \section{Discussion}
 \label{sec:discussion}
