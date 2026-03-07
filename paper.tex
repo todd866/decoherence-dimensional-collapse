@@ -458,6 +458,25 @@ Compare low-frequency broad-coordination states with high-frequency local-access
 \label{tab:rival-predictions}
 \end{table}
 
+The paper is testable without direct molecular-state tomography. In practice, $\chi_i$ and $L_i$ can be treated as latent payload variables, while the model's observable consequences appear in conditional relationships between carrier coherence, coordinated territory size, payload diversity, and recorded neural dimensionality. The right empirical question is therefore not ``is the carrier fast?'' but ``after controlling for carrier coherence, does measured dimensionality track the size and diversity of the coordinated payload better than it tracks carrier frequency alone?'' Table~\ref{tab:measurement-program} states that route in operational terms.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.05cm}YY@{}}
+\toprule
+Theoretical object & Practical proxy & Carrier-payload expectation \\
+\midrule
+Carrier coherence / stability & Low-frequency phase locking, coherence radius, or cross-area synchrony & A more reliable carrier should improve dimensional coordination mainly by enlarging the territory over which a payload can be entrained, not by increasing dimensionality on frequency alone. \\
+Entrained payload size $\lvert E(f)\rvert$ & Spatial footprint of phase-locked tissue, laminar recruitment span, or effective coordination territory & Conditional on comparable payload statistics, larger coordinated territory should predict larger measured dimensionality. \\
+Payload diversity / availability & Channel or receptor diversity proxies, pharmacological availability of conductance classes, or cell-type conductance richness & Reducing payload diversity at fixed carrier coherence should reduce dimensionality even if the carrier spectrum is preserved. \\
+Observed coordinated dimensionality & Participation ratio, cross-validated manifold dimension, shattering dimension, or mixed-selectivity capacity \cite{rigotti2013importance,fusi2016neurons} & Dimensionality should be better explained by coordinated territory and payload diversity than by carrier frequency alone. \\
+\bottomrule
+\end{tabularx}
+\caption{Operational measurement route for the carrier-payload program. The proposal does not require direct measurement of molecular $\chi_i$ in the first instance. It requires testing whether recorded dimensionality is better predicted by coordinated territory and payload diversity than by carrier frequency alone.}
+\label{tab:measurement-program}
+\end{table}
+
 \section{Discussion}
 \label{sec:discussion}
 
@@ -465,7 +484,7 @@ The main gain of the present reformulation is conceptual clarity. The old binary
 
 Three claims survive scrutiny in the current draft. First, decoherence is a dimensional projection of state space. Second, near-boundary biological dynamics are real, with photosynthesis as the proof of principle. Third, low-frequency carrier advantage is mathematically coherent once dimensionality is relocated to the coordinated payload and coupled to frequency through a transparent soft phase-coupling model.
 
-Several things remain open. The rebuilt repo now has two neural-relevant payload anchors, but the molecular payload classes beyond photosynthesis, ion channels, and protein microdomains still need fresh computations. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a genuinely data-constrained carrier-to-payload coupling model beyond the reduced soft phase-coupling bridge introduced in Section~\ref{sec:intelligence}. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
+Several things remain open. The rebuilt repo now has two neural-relevant payload anchors, but the molecular payload classes beyond photosynthesis, ion channels, and protein microdomains still need fresh computations. The redundancy factor $\varrho_E$ needs empirical grounding rather than remaining a formal placeholder. And the neuroscience side still needs a genuinely data-constrained carrier-to-payload coupling model beyond the reduced soft phase-coupling bridge introduced in Section~\ref{sec:intelligence}. Table~\ref{tab:measurement-program} is therefore important: it marks the shortest path from the present theory to an empirical attack. Those are real gaps. They are also the right gaps: they are downstream of a coherent theory rather than upstream of one.
 
 It is also worth stating plainly what the rebuilt repo does and does not yet contain. It now computes the reduced photosynthetic proof-of-principle anchors, two concrete neural-side payload anchors directly, and a reduced neural carrier proxy. What it does \emph{not} yet contain is the full old figure stack or the broader family of molecular payload models beyond ion channels and protein microdomains. That is the right asymmetry for the present thesis-first draft: only the computations that sharpen the carrier-payload argument have been brought forward.
 

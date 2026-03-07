@@ -248,12 +248,28 @@ per channel at the biological point. The new soft phase-coupling figure then plo
 
 $$
 \mathcal{L}_{\mathrm{eff}}(f)\approx \frac{N_0L_{\mathrm{ion}}}{\varrho}
-\min\!\left(\frac{R_{\mathrm{amp}}}{R_0},\frac{f_0}{f}\right)^s
+\left(\frac{R_{\mathrm{eff}}^{(\eta)}(f)}{R_{\mathrm{eff}}^{(\eta)}(f_0)}\right)^s
 $$
 
 for illustrative redundancy assumptions, so the bridge figure now carries actual rebuilt-repo numbers rather than only a normalized schematic.
 
-In the heterogeneous field overlay, the effective ion payload still increases by about `2.8×10^2` between `f/f0 = 4` and `0.25` at `varrho = 1` over the plotted range. That is the right takeaway: the exact exponent is model-dependent, but the inversion survives distributed tolerances and finite support.
+In the heterogeneous field overlay, the effective ion payload still increases by about `1.4×10^2` between `f/f0 = 4` and `0.25` at `varrho = 1` over the plotted range. That is the right takeaway: the exact gain is model-dependent, but the inversion survives distributed tolerances, continuous weighting, and finite support.
+
+## Measurement route
+
+The repo is now explicit about how this thesis should be tested. Direct molecular-state tomography is not the first requirement. The operational wager is conditional:
+
+- after controlling for carrier coherence, measured neural dimensionality should track coordinated territory better than carrier frequency alone
+- after controlling for carrier coherence, reducing payload diversity or payload availability should reduce dimensionality
+- low-frequency broad-coordination states should outperform high-frequency local-access states on dimensionality when the coordinated payload is larger
+
+In practical terms, the theory-side objects map to experimental proxies like this:
+
+- coordinated territory `|E(f)|` -> spatial footprint of phase-locking or cross-area synchrony
+- payload diversity -> channel/receptor diversity, pharmacological conductance availability, or cell-type conductance richness
+- observed dimensionality -> participation ratio, cross-validated manifold dimension, shattering dimension, or mixed-selectivity capacity
+
+That is the real falsifiability route for the current draft.
 
 For homogeneous payload modules, the fractional uplift above the classical baseline is
 
@@ -273,7 +289,7 @@ The manuscript now includes a compact benchmark table and the same numbers are w
 
 - [results/ion_payload_benchmarks.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_payload_benchmarks.csv)
 
-![Phase-window scaling](figures/threshold_entrainment_scaling.png)
+![Soft phase-coupling scaling](figures/threshold_entrainment_scaling.png)
 
 ## Files
 

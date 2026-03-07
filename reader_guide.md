@@ -47,6 +47,7 @@ Read:
 9. Table 2: payload benchmark table
 10. Section 5.1: Neural oscillations as carriers
 11. Table 3: rival predictions
+12. Table 4: operational measurement route
 
 The ion-channel subsection now contains one actual rebuilt-repo anchor:
 
@@ -90,6 +91,8 @@ It now does one extra job that matters: the solid curves are a heterogeneous sof
 Table 2 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
 
 Table 3 is the falsifiability object: it states exactly how the present carrier-payload view differs from a frequency-as-dimensionality view. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
+
+Table 4 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
 
 Section 5.1 now also has one rebuilt carrier-side proxy: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` already at `γ/J_max = 50`, so the carrier/payload split is no longer just verbal.
 
