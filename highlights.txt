@@ -1,4 +1,5 @@
-- Decoherence is formulated as a dimensional collapse from the $(d^2-1)$-dimensional Bures manifold to the $(d-1)$-dimensional Fisher--Rao simplex.
-- A non-classicality index $\chi$ derived from Bures principal angles quantifies residual coherence-sector geometry continuously rather than binarily.
-- Photosynthetic complexes, ion-channel payloads, and protein microdomains occupy a small-but-nonzero near-boundary band, while neural carrier proxies are substantially more classical.
-- A soft phase-coupling bridge shows how lower-frequency carriers can coordinate larger non-classical payloads and yields a regression-level falsification test against frequency-centric dimensionality accounts.
+- Decoherence is formalized as dimensional collapse from d^2-1 to d-1 dimensions, yielding a continuous non-classicality index chi.
+- Photosynthetic, ion-channel, and protein-microdomain anchors inhabit a near-boundary band; neural carriers are substantially more classical.
+- The non-classical payload is extensive in entrained module count, giving a carrier-payload architecture for multi-scale biological systems.
+- A hybrid simulation protocol follows directly: classical carrier dynamics plus small Lindblad equations for near-boundary payload modules, scaling linearly when inter-module correlations are negligible.
+- The same architecture suggests an engineering hypothesis in which classical oscillatory coordination replaces qubit isolation.

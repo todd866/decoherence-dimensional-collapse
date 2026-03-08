@@ -1,56 +1,47 @@
 # Reader Guide
 
-## What this draft is trying to do
+## What this paper does
 
-This is not a generic quantum-biology paper.
+This is not a generic quantum-biology paper. It makes one argument precise and derives two practical consequences:
 
-It is trying to make one argument precise:
-
-> low-frequency waves can support high effective dimensionality because they are reliable classical carriers of large non-classical molecular payloads, with ion channels as the primary neural payload candidate.
+> Biological systems exhibit a carrier-payload architecture where deep-classical macroscopic carriers coordinate an extensive near-boundary molecular substrate. This implies (1) a hybrid simulation protocol and (2) a speculative engineering direction for computing.
 
 ## How to read it
 
-### If you want the thesis fast
+### Fast path (thesis + consequences)
 
-Read:
-
-1. [paper.tex](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/paper.tex), Abstract
+1. Abstract
 2. Section 1: Introduction
-3. Section 3: Carrier-Payload Architecture
-4. Section 5.3: minimal soft phase-coupling carrier model
-5. Section 5.4: rival predictions table
-6. Section 5: Low-Frequency Coordination and Intelligence
-7. Section 6: Discussion
+3. Section 3: Carrier-Payload Architecture (especially Proposition 3.3)
+4. Section 5.2: Hybrid simulation protocol
+5. Section 5.4: Empirical predictions (rival predictions table + regression test)
+6. Section 6: Discussion
 
-### If you want the geometry
-
-Read:
+### Geometry path
 
 1. Section 2.1: Dimensional collapse
-2. Section 2.2: Non-classicality index
+2. Section 2.2: Non-classicality index $\chi$
 3. Section 3.1: Local payload load
-4. Section 3.2: Extensive payload theorem
-5. Section 3.3: Low-frequency coordination corollary
+4. Section 3.2: Redundancy-adjusted effective payload
+5. Section 3.3: Extensive payload under nonzero module density
+6. Section 3.4: Low-frequency advantage as a coordination statement
 
-### If you want the biological anchors
+### Biological anchors path
 
-Read:
-
-1. Section 4.1: Photosynthesis
+1. Section 4.1: Photosynthesis as proof of principle
 2. Section 4.2: Ion channels as the primary payload example
 3. Section 4.3: Protein microdomains as secondary payloads
-4. Table 1: anchor comparison
-5. Figure 1: biological anchor map
-6. Figure 2: ion-channel payload anchor
-7. Figure 3: carrier/payload schematic
-8. Figure 4: soft phase-coupling scaling schematic
-9. Table 2: band-level bridge table
-10. Table 3: payload benchmark table
-11. Section 5.1: Neural oscillations as carriers
-12. Table 4: rival predictions
-13. Table 5: operational measurement route
+4. Table 1: Anchor comparison (the $\chi$ gap between payload and carrier)
+5. Figure 1: Biological anchor map
+6. Figure 2: Ion-channel payload anchor
+7. Figure 3: Carrier-payload schematic
+8. Figure 4: Soft phase-coupling bridge
+9. Table 2: Rival predictions
+10. Table 3: Operational measurement route
 
-The ion-channel subsection now contains one explicit computed anchor:
+## Key numbers
+
+Ion-channel selectivity-filter anchor:
 
 $$
 \gamma_{\mathrm{bio}}/J_{\max}=6.67,\quad
@@ -58,81 +49,28 @@ $$
 \chi\approx 2.76\times 10^{-4}.
 $$
 
-It also includes a compact robustness sweep over
-$$
-J_{\max}\in\{15,20,30,40\}\,\mathrm{cm}^{-1},
-\qquad
-\gamma\in\{100,150,200,250,300\}\,\mathrm{cm}^{-1},
-$$
-which keeps the payload in the same boundary-near band:
+Robustness sweep ($J_{\max}\in\{15,20,30,40\}$, $\gamma\in\{100,150,200,250,300\}$ cm$^{-1}$):
+
 $$
 86.43^\circ \le \theta_{\min} \le 88.93^\circ,
 \qquad
 1.53\times10^{-4}\le \chi \le 1.55\times10^{-3}.
 $$
 
-There is now a second, tighter robustness check at fixed `J_max = 30 cm^-1` and `γ_bio = 200 cm^-1`: the repo varies the inner-well asymmetry `Δ ∈ {10,15,20} cm^-1` and a next-nearest coupling `J_2 ∈ {0,5,10} cm^-1` in
-[results/ion_channel_topology_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/ion_channel_topology_sensitivity.csv).
-That keeps the payload point in a narrow band:
-$$
-88.55^\circ \le \theta_{\min} \le 88.77^\circ,
-\qquad
-2.20\times10^{-4}\le \chi \le 2.77\times10^{-4}.
-$$
-So the ion-channel anchor is not tied to one exact 4-site topology.
-
-Figure 1 is the proof-of-principle bridge: it places the molecular payload anchors on one biological operating map and shows two neural carrier proxies farther right and closer to the classical limit. That makes the carrier/payload split visible at a glance instead of leaving it distributed across text and tables.
-
-Section 4.3 is no longer only a placeholder. The analysis now includes a secondary protein payload anchor:
-$$
-\gamma_{\mathrm{bio}}/J_{\max}=7.69,\quad
-\theta_{\min}\approx 88.21^\circ,\quad
-\chi\approx 3.66\times 10^{-4}.
-$$
-That matters because it broadens the payload class beyond ion conduction without displacing ion channels from the main neural route.
-
-Figure 2 is the cleanest ion-channel geometry figure: it shows the minimum-angle scan across $\gamma/J_{\max}$ and the biological-point principal-angle spectrum that the argument actually uses.
-
-Figure 3 is the intuition object: it shows the disagreement with a frequency-dominant reading in one glance. High frequency can still mark local access, while low frequency can coordinate a larger payload.
-
-Figure 4 is the bridge object: it makes the low-frequency claim explicit in one soft coupling model instead of leaving it as pure verbal intuition.
-
-It now does one extra job that matters: the solid curves are a heterogeneous soft-field simulation, while the dashed curves are the analytic soft envelope. The low-frequency advantage survives that heterogeneity, so the inversion is not being smuggled in by a single sharp threshold.
-
-There is now also a parameter-band check behind that figure. The repo writes
-[results/threshold_scaling_sensitivity.csv](/Users/iantodd/Projects/highdimensional/physics/70_decoherence_dimensional_collapse/results/threshold_scaling_sensitivity.csv), which shows that the analytic bridge stays monotone across `s ∈ {1,2,3}`, `η ∈ {1,2,4}`, and `R_amp/R0 ∈ {2,4,8}`, while the heterogeneous 2D field check stays monotone across the corresponding `η` and `R_amp/R0` ranges. That matters because the low-`f` inversion is now robust to a real parameter band, not just one default bridge setting.
-
-Table 2 is the bridge object in compact numerical form: with `f0 = 40 Hz` as the gamma reference, the default heterogeneous bridge gives about `3.17×` payload gain at beta, `10.29×` at theta, and then smooth saturation through delta and infraslow as the amplitude ceiling takes over.
-
-Table 3 is the interpretation object: it shows that the ion-channel uplift fraction is small, but the absolute payload still grows linearly with entrained site count.
-
-Table 4 is the falsifiability object: it states exactly how the present carrier-payload view differs from a simpler frequency-dominant reading. If dimensionality tracks carrier frequency after controlling for payload size and payload diversity, this paper loses.
-
-Table 5 is the execution object: it translates the theory variables into things a neuroscience paper could actually measure. The current draft no longer hides behind direct molecular tomography as a prerequisite. The test is conditional and practical: carrier coherence, coordinated territory, payload diversity, and observed manifold dimensionality.
-
-Right after that, the paper now gives the minimal regression form of the wager:
-$$
-D_{\mathrm{obs}}=\beta_0+\beta_1\log \widetilde N+\beta_2 H_{\mathrm{payload}}+\beta_3 C_{\mathrm{carrier}}+\beta_4\log f+\varepsilon.
-$$
-That matters because it reduces the disagreement to one coefficient test. If `β4` stays dominant after the payload and carrier controls, this paper loses.
-
-Section 5.1 now also has two carrier-side proxies: the synthetic gamma microcircuit gives `θ_min ≈ 89.78°` and `χ ≈ 3.72×10^-6` at `γ/J_max = 50`, while the Potjans-Diesmann cortical-column proxy gives `θ_min ≈ 89.37°` and `χ ≈ 2.83×10^-5`. The carrier/payload split is therefore no longer resting on one synthetic microcircuit.
-
-Read Table 1 with that in mind: it now shows the `χ` gap directly. The payload anchors sit at `χ ~ 10^-4`, while the carrier proxies are already down at `χ ~ 10^-5` to `10^-6`. That quantitative separation is the paper’s cleanest direct evidence for “classical carrier, non-classical payload,” even after moving to the less favorable Potjans-Diesmann proxy.
+The carrier/payload $\chi$ gap: payload anchors at $\sim 10^{-4}$, carrier proxies at $\sim 10^{-5}$ to $10^{-6}$.
 
 ## Claim tiers
 
-- `proved`: dimensional collapse, metric restriction, geometric definitions, extensive-payload result under stated assumptions
-- `model-based`: photosynthetic proof-of-principle anchors from validated Hamiltonians, ion-channel and protein payload anchors, two reduced carrier proxies, and a soft phase-coupling bridge linking carrier scale to payload scale
-- `hypothesis`: low-frequency/high-dimensional intelligence architecture
+- **Theorem-level:** dimensional collapse, metric restriction, $\chi$ definition, extensive-payload result under stated assumptions
+- **Model-based:** photosynthetic anchors from validated Hamiltonians, ion-channel and protein payload anchors, two reduced carrier proxies, soft phase-coupling bridge
+- **Methodological:** hybrid simulation protocol (classical carriers + Lindblad payloads)
+- **Speculative:** computing architecture direction (classical oscillatory coordination replacing qubit isolation)
 
 ## What is deliberately not claimed
 
-- not “high dimensionality automatically implies quantumness”
-- not “neural oscillations are quantum”
-- not “classical models are impossible”
+- Neural oscillations are quantum
+- High dimensionality automatically implies non-classicality
+- Classical models are impossible
+- The non-classical payload is already known to be functionally decisive
 
-The claim is narrower:
-
-- large biological systems can carry an extensive non-classical payload if a nonzero fraction of their molecular modules sit near the boundary
-- low-frequency carriers matter because they can coordinate more of that payload
+The claim is narrower: biological systems can carry an extensive non-classical payload if a nonzero fraction of molecular modules sits near the boundary; the carrier-payload architecture provides a simulation framework; and the whole picture is testable.
